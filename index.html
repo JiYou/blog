@@ -207,8 +207,8 @@
     <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2016/09/12/hello-world/" class="article-date">
-  	<time datetime="2016-09-12T13:51:05.000Z" itemprop="datePublished">2016-09-12</time>
+      <a href="/blog/2016/09/15/hello-world/" class="article-date">
+  	<time datetime="2016-09-15T14:26:14.000Z" itemprop="datePublished">2016-09-15</time>
 </a>
     </div>
   
@@ -221,7 +221,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/12/hello-world/">Mac上搭建Hexo+Github博客</a>
+      <a class="article-title" href="/blog/2016/09/15/hello-world/">Mac上搭建Hexo+Github博客</a>
     </h1>
   
 
@@ -231,6 +231,11 @@
     <div class="article-entry" itemprop="articleBody">
       
         <p>这篇博客主要是介绍如何在Mac上搭建<code>Hexo+Github</code>博客。</p>
+<p><strong>其实最重要的还是认真读文档</strong></p>
+<ul>
+<li><a href="https://hexo.io/zh-cn/docs/" target="_blank" rel="external">https://hexo.io/zh-cn/docs/</a></li>
+</ul>
+<p>使用Hexo的好处。</p>
 <ul>
 <li>可以使用Markdown来写作。</li>
 <li>格式非常好看。</li>
@@ -240,7 +245,13 @@
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">https://nodejs.org/en/download/</div></pre></td></tr></table></figure>
 <p>我这里是<code>Mac</code>操作系统，所以下载的是<code>Mac</code>的安装包。</p>
 <h1 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h1><p>安装完成<code>nodejs</code>之后，开始安装<code>Hexo</code>。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">sudo npm install -g hexo</div><div class="line"><span class="comment"># 安装图片插件</span></div></pre></td></tr></table></figure>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">sudo npm install -g hexo</div></pre></td></tr></table></figure>
+<h1 id="懒人包"><a href="#懒人包" class="headerlink" title="懒人包"></a>懒人包</h1><p>其实大多数时候，我们都只是希望找到一个框架怎么用？懒得去一步一步配置，那么这个时候。<br>如果有个参考的可以进行配置，应该就很爽了。</p>
+<p>所以，我把我的所有的配置都放在一个github上。当安装好npm和hexo之后，就可以直接使用了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">https://github.com/JiYou/blogtemplate.git</div></pre></td></tr></table></figure>
+<p>使用的时候，先<code>clone</code>下来，然后再运行：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">hexo g</div><div class="line">hexo s</div></pre></td></tr></table></figure>
+<p>就可以了(后面的内容就可以不用看了)。</p>
 <p>这里要注意使用<code>sudo</code>，这是因为在安装的时候，需要添加一些<code>lib</code>库。</p>
 <h1 id="第一个博客"><a href="#第一个博客" class="headerlink" title="第一个博客"></a>第一个博客</h1><p>开始生成第一个博客：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">sudo hexo init blog</div></pre></td></tr></table></figure>
@@ -290,6 +301,9 @@
 
 
 
+
+
+  
 
 
 
