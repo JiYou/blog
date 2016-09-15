@@ -28,9 +28,9 @@ Assignment: HW: shell
 Assignment: Lab 1: C, Assembly, Tools, and Bootstrapping
 
 Boot xv6这里只介绍第一次作业的情况，后面章节再介绍第一课">
-<meta property="og:image" content="https://jiyou.github.io/blog/../../../../img/gdb-settings.jpeg">
-<meta property="og:image" content="https://jiyou.github.io/blog/../../../../img/gdb-setting-ok.jpeg">
-<meta property="og:updated_time" content="2016-09-15T15:45:27.000Z">
+<meta property="og:image" content="https://jiyou.github.io/blog/gdb-settings.jpeg">
+<meta property="og:image" content="https://jiyou.github.io/blog/gdb-setting-ok.jpeg">
+<meta property="og:updated_time" content="2016-09-15T15:49:38.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MIT 6.828 JOS课程1：搭建实验环境">
 <meta name="twitter:description" content="课程进度
@@ -42,7 +42,7 @@ Assignment: HW: shell
 Assignment: Lab 1: C, Assembly, Tools, and Bootstrapping
 
 Boot xv6这里只介绍第一次作业的情况，后面章节再介绍第一课">
-<meta name="twitter:image" content="https://jiyou.github.io/blog/../../../../img/gdb-settings.jpeg">
+<meta name="twitter:image" content="https://jiyou.github.io/blog/gdb-settings.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
   
@@ -296,7 +296,7 @@ Boot xv6这里只介绍第一次作业的情况，后面章节再介绍第一课
 <p><strong>qemu/gdb-server</strong><br><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /opt/xv6-public</div><div class="line">root@7c8d7a387d68:/opt/xv6-public<span class="comment"># make qemu-nox-gdb</span></div><div class="line">sed <span class="string">"s/localhost:1234/localhost:25000/"</span> &lt; .gdbinit.tmpl &gt; .gdbinit</div><div class="line">*** Now run <span class="string">'gdb'</span>.</div><div class="line">qemu-system-i386 -nographic -drive file=fs.img,index=1,media=disk,format=raw -drive file=xv6.img,index=0,media=disk,format=raw -smp 2 -m 512  -S -gdb tcp::25000</div></pre></td></tr></table></figure></p>
 <p><strong>gdb-client</strong><br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cd /opt/xv6-public</div><div class="line">root@7c8d7a387d68:/opt/xv6-public# gdb</div><div class="line">GNU gdb (Ubuntu 7.7.1-0ubuntu5~14.04.2) 7.7.1</div><div class="line">Copyright (C) 2014 Free Software Foundation, Inc.</div><div class="line">License GPLv3+: GNU GPL version 3 or later &lt;http://gnu.org/licenses/gpl.html&gt;</div><div class="line">This is free software: you are free to change and redistribute it.</div><div class="line">There is NO WARRANTY, to the extent permitted by law.  Type &quot;show copying&quot;</div><div class="line">and &quot;show warranty&quot; for details.</div><div class="line">This GDB was configured as &quot;x86_64-linux-gnu&quot;.</div><div class="line">Type &quot;show configuration&quot; for configuration details.</div><div class="line">For bug reporting instructions, please see:</div><div class="line">&lt;http://www.gnu.org/software/gdb/bugs/&gt;.</div><div class="line">Find the GDB manual and other documentation resources online at:</div><div class="line">&lt;http://www.gnu.org/software/gdb/documentation/&gt;.</div><div class="line">For help, type &quot;help&quot;.</div><div class="line">Type &quot;apropos word&quot; to search for commands related to &quot;word&quot;.</div><div class="line">warning: File &quot;/opt/xv6-public/.gdbinit&quot; auto-loading has been declined by your `auto-load safe-path&apos; set to &quot;$debugdir:$datadir/auto-load&quot;.</div><div class="line">To enable execution of this file add</div><div class="line">	add-auto-load-safe-path /opt/xv6-public/.gdbinit</div><div class="line">line to your configuration file &quot;/home/youji/.gdbinit&quot;.</div><div class="line">To completely disable this security protection add</div><div class="line">	set auto-load safe-path /</div><div class="line">line to your configuration file &quot;/home/youji/.gdbinit&quot;.</div><div class="line">For more information about this security protection see the</div><div class="line">&quot;Auto-loading safe path&quot; section in the GDB manual.  E.g., run from the shell:</div><div class="line">	info &quot;(gdb)Auto-loading safe path&quot;</div><div class="line">(gdb)</div></pre></td></tr></table></figure></p>
 <p>这里gdb有很长的一段输出，这里要特别注意，这里提示说需要添加一行内容到<code>.gdbinit</code>文件中去。</p>
-<p><img src="../../../../img/gdb-settings.jpeg" alt=""></p>
+<p><img src="gdb-settings.jpeg" alt=""></p>
 <p>因此，这里需要参考红色框中的指令完成相应的设置：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">mkdir -p /home/youji/</div><div class="line"><span class="built_in">echo</span> <span class="string">"add-auto-load-safe-path /opt/xv6-public/.gdbinit"</span> &gt;&gt; /home/youji/.gdbinit</div></pre></td></tr></table></figure>
 <p><strong>注意</strong></p>
@@ -305,7 +305,7 @@ Boot xv6这里只介绍第一次作业的情况，后面章节再介绍第一课
 <li>运行gdb的时候，一定要在<code>/opt/xv6-public</code>目录下。</li>
 </ul>
 <p>运行成功之后，可以得到如下输出：</p>
-<p><img src="../../../../img/gdb-setting-ok.jpeg" alt=""></p>
+<p><img src="gdb-setting-ok.jpeg" alt=""></p>
 <p>注意汇编指令。</p>
 <h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>到这里开始，就已经可以调试了。先进行简单的调试。</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">(gdb) br * 0x7c00    &lt;-- 在0x7c00处设置一个断点。</div><div class="line">Breakpoint 1 at 0x7c00</div><div class="line">(gdb) c              &lt;-- 让程序开始运行</div><div class="line">Continuing.</div><div class="line">[   0:7c00] =&gt; 0x7c00:	cli</div></pre></td></tr></table></figure>
