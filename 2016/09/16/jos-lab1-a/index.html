@@ -21,9 +21,9 @@ cd /opt/xv6-publicnm kernel | grep _start
 可以得到如下输出：
 jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/gdb-start.jpeg">
-<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg">
-<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/lab.1.a.call.main.001.jpeg">
-<meta property="og:updated_time" content="2016-09-16T02:17:00.000Z">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg.001.jpeg">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg.002.jpeg">
+<meta property="og:updated_time" content="2016-09-16T02:20:31.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MIT 6.828 JOS课程1：HW Boot xv6">
 <meta name="twitter:description" content="Homework: boot xv6作业链接：https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html
@@ -294,7 +294,7 @@ jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
 <h3 id="Q-2-1-刚启动的情况"><a href="#Q-2-1-刚启动的情况" class="headerlink" title="Q.2.1 刚启动的情况"></a>Q.2.1 刚启动的情况</h3><p>利用<code>gdb</code>进行调试：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">(gdb) br * 0x7c00    <span class="comment"># &lt;-- 设置断点</span></div><div class="line">Breakpoint 1 at 0x7c00</div><div class="line">(gdb) c              <span class="comment"># &lt;-- 让程序开始执行到断点处，停下来。</span></div><div class="line">Continuing.</div><div class="line">[   0:7c00] =&gt; 0x7c00:	cli</div><div class="line"></div><div class="line">Breakpoint 1, 0x00007c00 <span class="keyword">in</span> ?? ()</div><div class="line">(gdb) si</div><div class="line">[   0:7c01] =&gt; 0x7c01:	xor    %ax,%ax</div><div class="line">0x00007c01 <span class="keyword">in</span> ?? ()</div><div class="line">(gdb) info reg</div><div class="line">eax            0xaa55	43605</div><div class="line">ecx            0x0	0</div><div class="line">edx            0x80	128</div><div class="line">ebx            0x0	0</div><div class="line">esp            0x6f2c	0x6f2c  <span class="comment"># &lt;-- 注意esp的值。</span></div><div class="line">ebp            0x0	0x0</div><div class="line">esi            0x0	0</div><div class="line">edi            0x0	0</div><div class="line">eip            0x7c01	0x7c01</div><div class="line">eflags         0x2	[ ]</div><div class="line">cs             0x0	0</div><div class="line">ss             0x0	0          <span class="comment"># &lt;-- 注意ss的值。</span></div><div class="line">ds             0x0	0</div><div class="line">es             0x0	0</div><div class="line">fs             0x0	0</div><div class="line">gs             0x0	0</div><div class="line">(gdb)</div></pre></td></tr></table></figure>
 <p>当前还在实模式下。<code>0x6f2c</code>处在<code>0x7c00</code>之下，因此，形成的结构如下：</p>
-<p><img src="/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg" alt=""></p>
+<p><img src="/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg.001.jpeg" alt=""></p>
 <h3 id="Q-2-2-设置ss栈段寄存器"><a href="#Q-2-2-设置ss栈段寄存器" class="headerlink" title="Q.2.2 设置ss栈段寄存器"></a>Q.2.2 设置ss栈段寄存器</h3> <figure class="highlight c"><table><tr><td class="code"><pre><div class="line">mov %ax, %ss</div></pre></td></tr></table></figure>
 <p> 得到的结果如下：</p>
  <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"> (gdb) si</div><div class="line">=&gt; 0x7c3b:	mov    <span class="variable">$0x0</span>,%ax</div><div class="line">0x00007c3b <span class="keyword">in</span> ?? ()</div><div class="line">(gdb) info reg</div><div class="line">eax            0x10	16</div><div class="line">ecx            0x0	0</div><div class="line">edx            0x80	128</div><div class="line">ebx            0x0	0</div><div class="line">esp            0x6f2c	0x6f2c</div><div class="line">ebp            0x0	0x0</div><div class="line">esi            0x0	0</div><div class="line">edi            0x0	0</div><div class="line">eip            0x7c3b	0x7c3b</div><div class="line">eflags         0x6	[ PF ]</div><div class="line">cs             0x8	8</div><div class="line">ss             0x10	16   &lt;-- 此时已经进入保护模式，这里选中第二个段描述符。</div><div class="line">ds             0x10	16</div><div class="line">es             0x10	16</div><div class="line">fs             0x0	0</div><div class="line">gs             0x0	0</div><div class="line">(gdb)</div></pre></td></tr></table></figure>
@@ -305,7 +305,7 @@ jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
 <p>如果不能<code>debug</code>，其实直接阅读<code>bootblock.asm</code>也可以看出如下代码：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="comment"># Set up the stack pointer and call into C.</span></div><div class="line">movl    <span class="variable">$start</span>, %esp</div><div class="line">  7c43:   bc 00 7c 00 00          mov    <span class="variable">$0x7c00</span>,%esp</div></pre></td></tr></table></figure>
 <h3 id="Q-2-3-call-bootmain"><a href="#Q-2-3-call-bootmain" class="headerlink" title="Q.2.3 call bootmain"></a>Q.2.3 call bootmain</h3><p>接下来开始准备<code>call bootmain</code>。形成的结构如下所示：</p>
-<p><img src="/blog/img/lab1.a/lab.1.a.call.main.001.jpeg" alt=""></p>
+<p><img src="/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg.002.jpeg" alt=""></p>
 
       
     </div>
