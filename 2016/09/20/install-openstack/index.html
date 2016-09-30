@@ -4,17 +4,17 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>install.openstack | 缘生故如幻</title>
+  <title>install openstack | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="安装OpenStack包apt-get -y updateapt-get install -y software-properties-commonadd-apt-repository -y cloud-archive:mitakaapt-get -y update &amp;amp;&amp;amp; apt-get -y dist-upgradeapt-get install -y python-openst">
 <meta property="og:type" content="article">
-<meta property="og:title" content="install.openstack">
+<meta property="og:title" content="install openstack">
 <meta property="og:url" content="https://jiyou.github.io/blog/2016/09/20/install-openstack/index.html">
 <meta property="og:site_name" content="缘生故如幻">
 <meta property="og:description" content="安装OpenStack包apt-get -y updateapt-get install -y software-properties-commonadd-apt-repository -y cloud-archive:mitakaapt-get -y update &amp;amp;&amp;amp; apt-get -y dist-upgradeapt-get install -y python-openst">
-<meta property="og:updated_time" content="2016-09-30T15:13:18.000Z">
+<meta property="og:updated_time" content="2016-09-30T15:39:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="install.openstack">
+<meta name="twitter:title" content="install openstack">
 <meta name="twitter:description" content="安装OpenStack包apt-get -y updateapt-get install -y software-properties-commonadd-apt-repository -y cloud-archive:mitakaapt-get -y update &amp;amp;&amp;amp; apt-get -y dist-upgradeapt-get install -y python-openst">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
@@ -78,7 +78,7 @@
 						<li>Links</li>
 						
 						
-						<li>Über</li>
+						<li>About</li>
 						
 					</ul>
 				</div>
@@ -123,7 +123,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 15px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
 					</div>
 				</section>
 				
@@ -230,7 +230,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      install.openstack
+      install openstack
     </h1>
   
 
@@ -238,7 +238,15 @@
       
       <div class="article-info article-info-post">
         
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
+	</div>
+
         
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
+	</div>
+
 
         <div class="clearfix"></div>
       </div>
@@ -352,6 +360,7 @@
 <h2 id="加入key"><a href="#加入key" class="headerlink" title="加入key"></a>加入key</h2><p>先切到openstack用户</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">ssh-keygen</div><div class="line"></div><div class="line"></div><div class="line">openstack keypair create --public-key ~/.ssh/id_rsa.pub openstack</div><div class="line"></div><div class="line">. /demorc</div><div class="line">openstack keypair create --public-key ~/.ssh/id_rsa.pub openstack</div><div class="line"></div><div class="line">openstack security group rule create --proto icmp default</div><div class="line">openstack security group rule create --proto tcp --dst-port 22 default</div></pre></td></tr></table></figure>
 <h1 id="开始启动虚拟机"><a href="#开始启动虚拟机" class="headerlink" title="开始启动虚拟机"></a>开始启动虚拟机</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">. /demorc</div><div class="line">openstack flavor list</div><div class="line">openstack flavor list</div></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -360,11 +369,11 @@
     
 <nav id="article-nav">
   
-    <a href="/blog/2016/09/23/getport/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/blog/2016/09/29/ceph-debug/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          (no title)
+          Qemu RBD调试Ceph
         
       </div>
     </a>
@@ -407,7 +416,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-install-openstack" data-title="install.openstack" data-url="https://jiyou.github.io/blog/blog/2016/09/20/install-openstack/"></div>
+    <div class="ds-thread" data-thread-key="post-install-openstack" data-title="install openstack" data-url="https://jiyou.github.io/blog/blog/2016/09/20/install-openstack/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
