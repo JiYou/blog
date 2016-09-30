@@ -8,31 +8,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="Homework: boot xv6作业链接：https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html
 查看地址这里是为了查看进入内核的入口函数，运行命令如下：
-cd /opt/xv6-publicnm kernel | grep _start
-可以得到如下输出：
-jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
+cd /opt/xv6-publicnm kernel | grep _start">
 <meta property="og:type" content="article">
 <meta property="og:title" content="MIT 6.828 JOS课程1：HW Boot xv6">
 <meta property="og:url" content="https://jiyou.github.io/blog/2016/09/16/jos-lab1-a/index.html">
 <meta property="og:site_name" content="缘生故如幻">
 <meta property="og:description" content="Homework: boot xv6作业链接：https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html
 查看地址这里是为了查看进入内核的入口函数，运行命令如下：
-cd /opt/xv6-publicnm kernel | grep _start
-可以得到如下输出：
-jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
+cd /opt/xv6-publicnm kernel | grep _start">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/gdb-start.jpeg">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg.001.jpeg">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/lab1.a.boot-up.mem.jpeg.001.jpeg.001.jpeg.002.jpeg">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/call.stack.jpeg">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/lab1.a/caller.start.address.jpeg">
-<meta property="og:updated_time" content="2016-09-17T14:11:58.000Z">
+<meta property="og:updated_time" content="2016-09-30T15:13:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MIT 6.828 JOS课程1：HW Boot xv6">
 <meta name="twitter:description" content="Homework: boot xv6作业链接：https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html
 查看地址这里是为了查看进入内核的入口函数，运行命令如下：
-cd /opt/xv6-publicnm kernel | grep _start
-可以得到如下输出：
-jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
+cd /opt/xv6-publicnm kernel | grep _start">
 <meta name="twitter:image" content="https://jiyou.github.io/blog/blog/img/gdb-start.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
@@ -137,7 +131,7 @@ jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 20px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 20px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 20px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 20px;">Qemu</a> <a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/woboq/" style="font-size: 10px;">woboq</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
 					</div>
 				</section>
 				
@@ -267,6 +261,7 @@ jiyou-qt@jiyou-qt:~/writeos/xv6-pub">
         <h1 id="Homework-boot-xv6"><a href="#Homework-boot-xv6" class="headerlink" title="Homework: boot xv6"></a>Homework: boot xv6</h1><p>作业链接：<a href="https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html" target="_blank" rel="external">https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html</a></p>
 <h1 id="查看地址"><a href="#查看地址" class="headerlink" title="查看地址"></a>查看地址</h1><p>这里是为了查看进入内核的入口函数，运行命令如下：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /opt/xv6-public</div><div class="line">nm kernel | grep _start</div></pre></td></tr></table></figure>
+<a id="more"></a>
 <p>可以得到如下输出：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">jiyou-qt@jiyou-qt:~/writeos/xv6-public$ nm kernel | grep _start</div><div class="line">8010a48c D _binary_entryother_start</div><div class="line">8010a460 D _binary_initcode_start</div><div class="line">0010000c T _start</div></pre></td></tr></table></figure>
 <p>可以看到，最后一行的起始地址为<code>kernel</code>的入口函数地址。</p>

@@ -7,21 +7,18 @@
   <title>Ceph通过WoboQ阅读源码 | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="缘起主要原因还是因为看了这篇文章：https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。
-界面太爽，功能强大 强烈推荐。比Source Insight好用多了。
-安装WoboQapt-get">
+界面太爽，功能强大 强烈推荐。比Source Insight好用多了。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Ceph通过WoboQ阅读源码">
 <meta property="og:url" content="https://jiyou.github.io/blog/2016/09/18/ceph-woboq/index.html">
 <meta property="og:site_name" content="缘生故如幻">
 <meta property="og:description" content="缘起主要原因还是因为看了这篇文章：https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。
-界面太爽，功能强大 强烈推荐。比Source Insight好用多了。
-安装WoboQapt-get">
-<meta property="og:updated_time" content="2016-09-26T02:51:57.000Z">
+界面太爽，功能强大 强烈推荐。比Source Insight好用多了。">
+<meta property="og:updated_time" content="2016-09-30T15:13:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ceph通过WoboQ阅读源码">
 <meta name="twitter:description" content="缘起主要原因还是因为看了这篇文章：https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。
-界面太爽，功能强大 强烈推荐。比Source Insight好用多了。
-安装WoboQapt-get">
+界面太爽，功能强大 强烈推荐。比Source Insight好用多了。">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
   
@@ -125,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 20px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 20px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 20px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 20px;">Qemu</a> <a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/woboq/" style="font-size: 10px;">woboq</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
 					</div>
 				</section>
 				
@@ -237,12 +234,12 @@
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/woboq/">woboq</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Woboq/">Woboq</a></li></ul>
 	</div>
 
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
 	</div>
 
 
@@ -254,6 +251,7 @@
       
         <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>主要原因还是因为看了这篇文章：<a href="https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。</a></p>
 <p><strong>界面太爽，功能强大</strong> 强烈推荐。比<code>Source Insight</code>好用多了。</p>
+<a id="more"></a>
 <h1 id="安装WoboQ"><a href="#安装WoboQ" class="headerlink" title="安装WoboQ"></a>安装WoboQ</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install clang-3.8 llvm-3.8 libclang-3.8-dev</div><div class="line"><span class="built_in">cd</span> /var/www/html</div><div class="line">git <span class="built_in">clone</span> https://github.com/woboq/woboq_codebrowser</div><div class="line"><span class="built_in">cd</span> woboq_codebrowser</div><div class="line">cmake . -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config-3.8 -DCMAKE_BUILD_TYPE=Release</div><div class="line">make -j24</div></pre></td></tr></table></figure>
 <p>看到如下输出：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">[100%] Built target codebrowser_generator</div></pre></td></tr></table></figure>

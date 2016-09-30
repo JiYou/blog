@@ -30,7 +30,7 @@ Assignment: Lab 1: C, Assembly, Tools, and Bootstrapping
 Boot xv6这里只介绍第一次作业的情况，后面章节再介绍第一课">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/gdb-settings.jpeg">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/gdb-setting-ok.jpeg">
-<meta property="og:updated_time" content="2016-09-15T23:23:41.000Z">
+<meta property="og:updated_time" content="2016-09-30T15:13:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="MIT 6.828 JOS课程1：搭建实验环境">
 <meta name="twitter:description" content="课程进度
@@ -146,7 +146,7 @@ Boot xv6这里只介绍第一次作业的情况，后面章节再介绍第一课
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 20px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 20px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 20px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 20px;">Qemu</a> <a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/woboq/" style="font-size: 10px;">woboq</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
 					</div>
 				</section>
 				
@@ -286,6 +286,7 @@ Boot xv6这里只介绍第一次作业的情况，后面章节再介绍第一课
 <li>实验环境<code>Ubuntu:14.04</code></li>
 <li>xv6 &amp; qemu</li>
 </ul>
+<a id="more"></a>
 <h2 id="准备环境"><a href="#准备环境" class="headerlink" title="准备环境"></a>准备环境</h2><p>首先运行<code>apt-get update</code>升级系统包，然后再安装必须的一些包。比如：</p>
 <p><strong>注意</strong>:<br>这里为了省事，都是使用的是<code>root</code>用户在操作。普通用户可以通过<code>sudo -s</code>切换到<code>root</code>用户。</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="comment"># 安装git</span></div><div class="line">apt-get install -y git</div><div class="line"></div><div class="line"><span class="comment"># 安装qemu</span></div><div class="line">apt-get install -y qemu-kvm</div><div class="line"></div><div class="line"><span class="comment"># 安装gdb</span></div><div class="line">apt-get install -y gdb</div><div class="line"></div><div class="line"><span class="comment"># 安装编译工具链</span></div><div class="line">apt-get install -y build-essential</div><div class="line"></div><div class="line"><span class="comment"># 下载xv6的代码</span></div><div class="line"><span class="built_in">cd</span> /opt/</div><div class="line">git <span class="built_in">clone</span> git://github.com/mit-pdos/xv6-public.git</div></pre></td></tr></table></figure>

@@ -15,9 +15,7 @@ docker
 
 虚拟机里面安装docker。
 ceph安装在一个docker中。
-虚拟机在编译安装qemu/ceph。
-
-设置源deb http://us.archive.ubuntu.com/">
+虚拟机在编译安装qemu/ceph。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Qemu RBD调试Ceph">
 <meta property="og:url" content="https://jiyou.github.io/blog/2016/09/29/ceph-debug/index.html">
@@ -31,10 +29,8 @@ docker
 
 虚拟机里面安装docker。
 ceph安装在一个docker中。
-虚拟机在编译安装qemu/ceph。
-
-设置源deb http://us.archive.ubuntu.com/">
-<meta property="og:updated_time" content="2016-09-30T15:06:45.000Z">
+虚拟机在编译安装qemu/ceph。">
+<meta property="og:updated_time" content="2016-09-30T15:11:54.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qemu RBD调试Ceph">
 <meta name="twitter:description" content="这里主要是介绍如何使用qemu/rbd调试ceph关于rbd模块的代码。调试过程如下：
@@ -46,9 +42,7 @@ docker
 
 虚拟机里面安装docker。
 ceph安装在一个docker中。
-虚拟机在编译安装qemu/ceph。
-
-设置源deb http://us.archive.ubuntu.com/">
+虚拟机在编译安装qemu/ceph。">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
   
@@ -152,7 +146,7 @@ ceph安装在一个docker中。
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 20px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 20px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 20px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 20px;">Qemu</a> <a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/woboq/" style="font-size: 10px;">woboq</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
 					</div>
 				</section>
 				
@@ -290,6 +284,7 @@ ceph安装在一个docker中。
 <li>ceph安装在一个docker中。</li>
 <li>虚拟机在编译安装qemu/ceph。</li>
 </ul>
+<a id="more"></a>
 <h1 id="设置源"><a href="#设置源" class="headerlink" title="设置源"></a>设置源</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">deb http://us.archive.ubuntu.com/ubuntu/ trusty main restricted</div><div class="line">deb-src http://us.archive.ubuntu.com/ubuntu/ trusty main restricted</div><div class="line">deb http://us.archive.ubuntu.com/ubuntu/ trusty-updates main restricted</div><div class="line">deb-src http://us.archive.ubuntu.com/ubuntu/ trusty-updates main restricted</div><div class="line">deb http://us.archive.ubuntu.com/ubuntu/ trusty universe</div><div class="line">deb-src http://us.archive.ubuntu.com/ubuntu/ trusty universe</div><div class="line">deb http://us.archive.ubuntu.com/ubuntu/ trusty-updates universe</div><div class="line">deb-src http://us.archive.ubuntu.com/ubuntu/ trusty-updates universe</div><div class="line">deb http://us.archive.ubuntu.com/ubuntu/ trusty multiverse</div><div class="line">deb-src http://us.archive.ubuntu.com/ubuntu/ trusty multiverse</div><div class="line">deb http://us.archive.ubuntu.com/ubuntu/ trusty-updates multiverse</div><div class="line">deb-src http://us.archive.ubuntu.com/ubuntu/ trusty-updates multiverse</div><div class="line">deb http://us.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse</div><div class="line">deb-src http://us.archive.ubuntu.com/ubuntu/ trusty-backports main restricted universe multiverse</div><div class="line">deb http://security.ubuntu.com/ubuntu trusty-security main restricted</div><div class="line">deb-src http://security.ubuntu.com/ubuntu trusty-security main restricted</div><div class="line">deb http://security.ubuntu.com/ubuntu trusty-security universe</div><div class="line">deb-src http://security.ubuntu.com/ubuntu trusty-security universe</div><div class="line">deb http://security.ubuntu.com/ubuntu trusty-security multiverse</div><div class="line">deb-src http://security.ubuntu.com/ubuntu trusty-security multiverse</div></pre></td></tr></table></figure>
 <p>然后运行<code>apt-get update</code>。</p>
 <h1 id="准备磁盘空间"><a href="#准备磁盘空间" class="headerlink" title="准备磁盘空间"></a>准备磁盘空间</h1><p>先准备足够的磁盘空间：<code>如果没有/dev/vdd</code>，则跳过此步骤。</p>
