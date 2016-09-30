@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>ceph.rbd.process | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="GDB当按照文章建立好debug的环境后，就可以开始进行debug工作了。
+gdb --dir=/opt/ceph -tui --args /usr/bin/qemu-system-x86_64 -name h1 -m 126 -drive file=/cloud/h1/ubuntu-h1.qcow2,if=none,id=drive-virtio-disk0,format=qcow2 -vnc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph.rbd.process">
+<meta property="og:url" content="https://jiyou.github.io/blog/2016/09/30/ceph-rbd-process/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="GDB当按照文章建立好debug的环境后，就可以开始进行debug工作了。
+gdb --dir=/opt/ceph -tui --args /usr/bin/qemu-system-x86_64 -name h1 -m 126 -drive file=/cloud/h1/ubuntu-h1.qcow2,if=none,id=drive-virtio-disk0,format=qcow2 -vnc">
+<meta property="og:updated_time" content="2016-09-30T08:39:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceph.rbd.process">
+<meta name="twitter:description" content="GDB当按照文章建立好debug的环境后，就可以开始进行debug工作了。
+gdb --dir=/opt/ceph -tui --args /usr/bin/qemu-system-x86_64 -name h1 -m 126 -drive file=/cloud/h1/ubuntu-h1.qcow2,if=none,id=drive-virtio-disk0,format=qcow2 -vnc">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/categories/随笔">随笔</a></li>
+				        
+							<li><a href="/blog/categories/xv6">xv6</a></li>
+				        
+							<li><a href="/blog/categories/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/categories/openstack">openstack</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 10px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 20px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 20px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 10px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 10px;">Qemu</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/gdb/" style="font-size: 10px;">gdb</a> <a href="/blog/tags/qemu/" style="font-size: 10px;">qemu</a> <a href="/blog/tags/woboq/" style="font-size: 10px;">woboq</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/categories/随笔">随笔</a></li>
+		        
+					<li><a href="/blog/categories/xv6">xv6</a></li>
+		        
+					<li><a href="/blog/categories/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/categories/openstack">openstack</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-ceph-rbd-process" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/30/ceph-rbd-process/" class="article-date">
+  	<time datetime="2016-09-30T07:02:55.000Z" itemprop="datePublished">2016-09-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ceph.rbd.process
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h1><p>当按照文章建立好debug的环境后，就可以开始进行debug工作了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">gdb --dir=/opt/ceph -tui --args /usr/bin/qemu-system-x86_64 -name h1 -m 126 -drive file=/cloud/h1/ubuntu-h1.qcow2,<span class="keyword">if</span>=none,id=drive-virtio-disk0,format=qcow2 -vnc 0.0.0.0:0 -device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x6,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1 -drive <span class="string">"file=rbd:rbd/new-libvirt-image:id=admin:key=AQCe3eFXc5sPIRAAAkQ2jgKKefBZQFE5X2FxCg==:auth_supported=cephx\;none:mon_host=10.64.218.106\:6789,if=none,id=drive-virtio-disk1"</span> -device <span class="string">"virtio-blk-pci,scsi=off,bus=pci.0,addr=0x7,drive=drive-virtio-disk1,id=virtio-disk1"</span></div></pre></td></tr></table></figure>
+<p>启动之后，击回车，然后设置两个断点。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">break</span> main</div><div class="line"><span class="built_in">break</span> rbd.c:621</div></pre></td></tr></table></figure>
+<h1 id="启动Debug"><a href="#启动Debug" class="headerlink" title="启动Debug"></a>启动Debug</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">start <span class="comment"># 开始执行程序</span></div><div class="line">c  <span class="comment"># &lt;- 第一次会停在main函数这里。</span></div><div class="line"></div><div class="line">Breakpoint 2, rbd_start_aio (bs=0x5555564c44a0, sector_num=0, qiov=0x7fffffffcf40, nb_sectors=4,</div><div class="line">    cb=0x55555560bcb1 &lt;bdrv_co_io_em_complete&gt;, opaque=0x7fffd4099d60, cmd=RBD_AIO_READ) at block/rbd.c:625   <span class="comment">#&lt;-- 已经进入到rbd代码部分。</span></div></pre></td></tr></table></figure>
+<h1 id="Qemu-rbd-c-rbd-start-aio"><a href="#Qemu-rbd-c-rbd-start-aio" class="headerlink" title="Qemu:rbd.c:rbd_start_aio()"></a>Qemu:rbd.c:rbd_start_aio()</h1><p>由于<code>debug</code>是设置在<code>rbd.c:621</code>。所以首先会进入到<code>rbd_start_aio</code>函数中。这个函数主要是负责<code>rbd</code>的读写操作。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">static BlockAIOCB *rbd_start_aio(BlockDriverState *bs,</div><div class="line">                                 int64_t sector_num,</div><div class="line">                                 QEMUIOVector *qiov,</div><div class="line">                                 int nb_sectors,</div><div class="line">                                 BlockCompletionFunc *cb,</div><div class="line">                                 void *opaque,</div><div class="line">                                 RBDAIOCmd cmd)</div><div class="line">&#123;</div><div class="line">	....</div><div class="line">    switch (cmd) &#123;</div><div class="line">    <span class="keyword">case</span> RBD_AIO_WRITE:</div><div class="line">        r = rbd_aio_write(s-&gt;image, off, size, buf, c);</div><div class="line">        <span class="built_in">break</span>;</div><div class="line">    <span class="keyword">case</span> RBD_AIO_READ:  // &lt;-- 刚启动的时候会到<span class="built_in">read</span>这里来。</div><div class="line">        r = rbd_aio_read(s-&gt;image, off, size, buf, c);</div><div class="line">        <span class="built_in">break</span>;</div><div class="line">    <span class="keyword">case</span> RBD_AIO_DISCARD:</div><div class="line">        r = rbd_aio_discard_wrapper(s-&gt;image, off, size, c);</div><div class="line">        <span class="built_in">break</span>;</div><div class="line">    <span class="keyword">case</span> RBD_AIO_FLUSH:</div><div class="line">        r = rbd_aio_flush_wrapper(s-&gt;image, c);</div><div class="line">        <span class="built_in">break</span>;</div><div class="line">    default:</div><div class="line">        r = -EINVAL;</div><div class="line">    &#125;</div><div class="line">    ....</div></pre></td></tr></table></figure>
+<h1 id="librbd-librbd-cc-2632-rbd-aio-read"><a href="#librbd-librbd-cc-2632-rbd-aio-read" class="headerlink" title="librbd/librbd.cc:2632:rbd_aio_read()"></a>librbd/librbd.cc:2632:rbd_aio_read()</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"> |2628    extern <span class="string">"C"</span> int rbd_aio_read(rbd_image_t image, uint64_t off, size_t len,                                                   |</div><div class="line"> |2629                                char *buf, rbd_completion_t c)                                                                 |</div><div class="line"> |2630    &#123;                                                                                                                          |</div><div class="line"> |2631      librbd::ImageCtx *ictx = (librbd::ImageCtx *)image;                                                                      |</div><div class="line">&gt;|2632      librbd::RBD::AioCompletion *comp = (librbd::RBD::AioCompletion *)c;                                                      |</div><div class="line"> |2633      tracepoint(librbd, aio_read_enter, ictx, ictx-&gt;name.c_str(), ictx-&gt;snap_name.c_str(), ictx-&gt;read_only, off, len, buf, com|</div><div class="line"> |2634      ictx-&gt;aio_work_queue-&gt;aio_read(get_aio_completion(comp), off, len, buf, NULL,                                            |</div><div class="line"> |2635                                     0);                                                                                       |</div><div class="line"> |2636      tracepoint(librbd, aio_read_exit, 0);                                                                                    |</div><div class="line"> |2637      <span class="built_in">return</span> 0;                                                                                                                |</div><div class="line"> |2638    &#125;</div></pre></td></tr></table></figure>
+<p>这里只是利用ictx的<code>aio_read</code>，所以直接进入到<code>aio_read</code>进行读取：</p>
+<h1 id="librbd-AioImageRequestWQ-cc-96-aio-read"><a href="#librbd-AioImageRequestWQ-cc-96-aio-read" class="headerlink" title="librbd/AioImageRequestWQ.cc:96:aio_read()"></a>librbd/AioImageRequestWQ.cc:96:aio_read()</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+<h1 id="common-WorkQueue-cc-133-ThreadPool-worker"><a href="#common-WorkQueue-cc-133-ThreadPool-worker" class="headerlink" title="common/WorkQueue.cc:133:ThreadPool::worker()"></a>common/WorkQueue.cc:133:ThreadPool::worker()</h1><p>前面的操作，都是把<code>Request</code>放到一个<code>Queue</code>里面。然后利用线程来进行处理。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">void</span> ThreadPool::worker(WorkThread *wt)</div><div class="line">&#123;</div><div class="line">  <span class="number">_l</span>ock.Lock();</div><div class="line">  ldout(cct,<span class="number">10</span>) &lt;&lt; <span class="string">"worker start"</span> &lt;&lt; dendl;</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">stringstream</span> ss;</div><div class="line">  <span class="keyword">char</span> name[<span class="number">16</span>] = &#123;<span class="number">0</span>&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> !defined(__FreeBSD__)</span></div><div class="line">  pthread_getname_np(pthread_self(), name, <span class="keyword">sizeof</span>(name));</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">  ss &lt;&lt; name &lt;&lt; <span class="string">" thread "</span> &lt;&lt; name;</div><div class="line">  heartbeat_handle_d *hb = cct-&gt;get_heartbeat_map()-&gt;add_worker(ss.str(), pthread_self());</div><div class="line"></div><div class="line">  <span class="keyword">while</span> (!<span class="number">_</span>stop) &#123;</div><div class="line"></div><div class="line">    <span class="comment">// manage dynamic thread pool</span></div><div class="line">    join_old_threads();</div><div class="line">    <span class="keyword">if</span> (<span class="number">_</span>threads.size() &gt; <span class="number">_</span>num_threads) &#123;</div><div class="line">      ldout(cct,<span class="number">1</span>) &lt;&lt; <span class="string">" worker shutting down; too many threads ("</span> &lt;&lt; <span class="number">_</span>threads.size() &lt;&lt; <span class="string">" &gt; "</span> &lt;&lt; <span class="number">_</span>num_threads &lt;&lt; <span class="string">")"</span> &lt;&lt; dendl;</div><div class="line">      <span class="number">_</span>threads.erase(wt);</div><div class="line">      <span class="number">_</span>old_threads.push_back(wt);</div><div class="line">      <span class="keyword">break</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!<span class="number">_</span>pause &amp;&amp; !work_queues.empty()) &#123;</div><div class="line">      WorkQueue_* wq;</div><div class="line">      <span class="keyword">int</span> tries = work_queues.size();</div><div class="line">      <span class="keyword">bool</span> did = <span class="literal">false</span>;</div><div class="line">      <span class="keyword">while</span> (tries--) &#123;</div><div class="line">	last_work_queue++;</div><div class="line">	last_work_queue %= work_queues.size();</div><div class="line">	wq = work_queues[last_work_queue];</div><div class="line"></div><div class="line">	<span class="keyword">void</span> *item = wq-&gt;<span class="number">_</span>void_dequeue();</div><div class="line">	<span class="keyword">if</span> (item) &#123;</div><div class="line">	  processing++;</div><div class="line">	  ldout(cct,<span class="number">12</span>) &lt;&lt; <span class="string">"worker wq "</span> &lt;&lt; wq-&gt;name &lt;&lt; <span class="string">" start processing "</span> &lt;&lt; item</div><div class="line">			&lt;&lt; <span class="string">" ("</span> &lt;&lt; processing &lt;&lt; <span class="string">" active)"</span> &lt;&lt; dendl;</div><div class="line">	  <span class="function">TPHandle <span class="title">tp_handle</span><span class="params">(cct, hb, wq-&gt;timeout_interval, wq-&gt;suicide_interval)</span></span>;</div><div class="line">	  tp_handle.reset_tp_timeout();</div><div class="line">	  <span class="number">_l</span>ock.Unlock();</div><div class="line">	  wq-&gt;<span class="number">_</span>void_process(item, tp_handle);  <span class="comment">// &lt;-- 这里对请求进行处理。</span></div><div class="line">	  <span class="number">_l</span>ock.Lock();</div><div class="line">	  wq-&gt;<span class="number">_</span>void_process_finish(item);</div><div class="line">	  processing--;</div><div class="line">	  ldout(cct,<span class="number">15</span>) &lt;&lt; <span class="string">"worker wq "</span> &lt;&lt; wq-&gt;name &lt;&lt; <span class="string">" done processing "</span> &lt;&lt; item</div><div class="line">			&lt;&lt; <span class="string">" ("</span> &lt;&lt; processing &lt;&lt; <span class="string">" active)"</span> &lt;&lt; dendl;</div><div class="line">	  <span class="keyword">if</span> (<span class="number">_</span>pause || <span class="number">_</span>draining)</div><div class="line">	    <span class="number">_</span>wait_cond.Signal();</div><div class="line">	  did = <span class="literal">true</span>;</div><div class="line">	  <span class="keyword">break</span>;</div><div class="line">	&#125;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">if</span> (did)</div><div class="line">	<span class="keyword">continue</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    ldout(cct,<span class="number">20</span>) &lt;&lt; <span class="string">"worker waiting"</span> &lt;&lt; dendl;</div><div class="line">    cct-&gt;get_heartbeat_map()-&gt;reset_timeout(</div><div class="line">      hb,</div><div class="line">      cct-&gt;<span class="number">_</span>conf-&gt;threadpool_default_timeout,</div><div class="line">      <span class="number">0</span>);</div><div class="line">    <span class="number">_</span>cond.WaitInterval(cct, <span class="number">_l</span>ock,</div><div class="line">      <span class="keyword">utime_t</span>(</div><div class="line">	cct-&gt;<span class="number">_</span>conf-&gt;threadpool_empty_queue_max_wait, <span class="number">0</span>));</div><div class="line">  &#125;</div><div class="line">  ldout(cct,<span class="number">1</span>) &lt;&lt; <span class="string">"worker finish"</span> &lt;&lt; dendl;</div><div class="line"></div><div class="line">  cct-&gt;get_heartbeat_map()-&gt;remove_worker(hb);</div><div class="line"></div><div class="line">  <span class="number">_l</span>ock.Unlock();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="librbd-AioImageRequest-cc-131-send"><a href="#librbd-AioImageRequest-cc-131-send" class="headerlink" title="librbd/AioImageRequest.cc:131:send()"></a>librbd/AioImageRequest.cc:131:send()</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"> |<span class="number">130</span>     <span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;                                                                                                      |</div><div class="line">&gt;|<span class="number">131</span>     <span class="keyword">void</span> AioImageRequest&lt;I&gt;::send() &#123;                                                                                          |</div><div class="line"> |<span class="number">132</span>       assert(m_image_ctx.owner_lock.is_locked());                                                                              |</div><div class="line"> |<span class="number">133</span>                                                                                                                                |</div><div class="line"> |<span class="number">134</span>       CephContext *cct = m_image_ctx.cct;                                                                                      |</div><div class="line"> |<span class="number">135</span>       ldout(cct, <span class="number">20</span>) &lt;&lt; get_request_type() &lt;&lt; <span class="string">": ictx="</span> &lt;&lt; &amp;m_image_ctx &lt;&lt; <span class="string">", "</span>                                                |</div><div class="line"> |<span class="number">136</span>                      &lt;&lt; <span class="string">"completion="</span> &lt;&lt; m_aio_comp &lt;&lt;  dendl;                                                                 |</div><div class="line"> |<span class="number">137</span>                                                                                                                                |</div><div class="line"> |<span class="number">138</span>       m_aio_comp-&gt;get();                                                                                                       |</div><div class="line"> |<span class="number">139</span>       send_request();                                                                                                          |</div><div class="line"> |<span class="number">140</span>     &#125;</div></pre></td></tr></table></figure>
+<h1 id="librbd-AioImageRequest-cc-148-send-request"><a href="#librbd-AioImageRequest-cc-148-send-request" class="headerlink" title="librbd/AioImageRequest.cc:148:send_request()"></a>librbd/AioImageRequest.cc:148:send_request()</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">void</span> AioImageRead::send_request() &#123;</div><div class="line">  CephContext *cct = m_image_ctx.cct;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (m_image_ctx.object_cacher &amp;&amp; m_image_ctx.readahead_max_bytes &gt; <span class="number">0</span> &amp;&amp;</div><div class="line">      !(m_op_flags &amp; LIBRADOS_OP_FLAG_FADVISE_RANDOM)) &#123;</div><div class="line">    readahead(&amp;m_image_ctx, m_image_extents);  <span class="comment">// interal.cc:3578:readahead()</span></div><div class="line">  &#125;</div><div class="line"></div><div class="line">  librados::<span class="keyword">snap_t</span> snap_id;</div><div class="line">  <span class="built_in">map</span>&lt;<span class="keyword">object_t</span>,<span class="built_in">vector</span>&lt;ObjectExtent&gt; &gt; object_extents;</div><div class="line">  <span class="keyword">uint64_t</span> buffer_ofs = <span class="number">0</span>;</div><div class="line">  &#123;</div><div class="line">    <span class="comment">// prevent image size from changing between computing clip and recording</span></div><div class="line">    <span class="comment">// pending async operation</span></div><div class="line">    RWLock::<span class="function">RLocker <span class="title">snap_locker</span><span class="params">(m_image_ctx.snap_lock)</span></span>;</div><div class="line">    snap_id = m_image_ctx.snap_id;</div><div class="line"></div><div class="line">    <span class="comment">// map</span></div><div class="line">    <span class="keyword">for</span> (<span class="built_in">vector</span>&lt;pair&lt;<span class="keyword">uint64_t</span>,<span class="keyword">uint64_t</span>&gt; &gt;::const_iterator p =</div><div class="line">           m_image_extents.begin();</div><div class="line">         p != m_image_extents.end(); ++p) &#123;</div><div class="line">      <span class="keyword">uint64_t</span> len = p-&gt;second;</div><div class="line">      <span class="keyword">int</span> r = clip_io(&amp;m_image_ctx, p-&gt;first, &amp;len);</div><div class="line">      <span class="keyword">if</span> (r &lt; <span class="number">0</span>) &#123;</div><div class="line">        m_aio_comp-&gt;fail(r);</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">      &#125;</div><div class="line">      <span class="keyword">if</span> (len == <span class="number">0</span>) &#123;</div><div class="line">        <span class="keyword">continue</span>;</div><div class="line">      &#125;</div><div class="line"></div><div class="line">      Striper::file_to_extents(cct, m_image_ctx.format_string,</div><div class="line">                               &amp;m_image_ctx.layout, p-&gt;first, len, <span class="number">0</span>,</div><div class="line">                               object_extents, buffer_ofs);</div><div class="line">      buffer_ofs += len;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  m_aio_comp-&gt;read_buf = m_buf;</div><div class="line">  m_aio_comp-&gt;read_buf_len = buffer_ofs;</div><div class="line">  m_aio_comp-&gt;read_bl = m_pbl;</div><div class="line"></div><div class="line">  <span class="comment">// pre-calculate the expected number of read requests</span></div><div class="line">  <span class="keyword">uint32_t</span> request_count = <span class="number">0</span>;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;object_extent : object_extents) &#123;</div><div class="line">    request_count += object_extent.second.size();</div><div class="line">  &#125;</div><div class="line">  m_aio_comp-&gt;set_request_count(request_count);</div><div class="line"></div><div class="line">  <span class="comment">// issue the requests</span></div><div class="line">  <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;object_extent : object_extents) &#123;</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> &amp;extent : object_extent.second) &#123;</div><div class="line">      ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" oid "</span> &lt;&lt; extent.oid &lt;&lt; <span class="string">" "</span> &lt;&lt; extent.offset &lt;&lt; <span class="string">"~"</span></div><div class="line">                     &lt;&lt; extent.length &lt;&lt; <span class="string">" from "</span> &lt;&lt; extent.buffer_extents</div><div class="line">                     &lt;&lt; dendl;</div><div class="line"></div><div class="line">      C_AioRead *req_comp = <span class="keyword">new</span> C_AioRead(m_aio_comp);</div><div class="line">      AioObjectRead *req = <span class="keyword">new</span> AioObjectRead(&amp;m_image_ctx, extent.oid.name,</div><div class="line">                                             extent.objectno, extent.offset,</div><div class="line">                                             extent.length,</div><div class="line">                                             extent.buffer_extents, snap_id,</div><div class="line">                                             <span class="literal">true</span>, req_comp, m_op_flags);</div><div class="line">      req_comp-&gt;set_req(req);</div><div class="line"></div><div class="line">      <span class="keyword">if</span> (m_image_ctx.object_cacher) &#123;</div><div class="line">        C_CacheRead *cache_comp = <span class="keyword">new</span> C_CacheRead(&amp;m_image_ctx, req);</div><div class="line">        m_image_ctx.aio_read_from_cache(extent.oid, extent.objectno,</div><div class="line">                                        &amp;req-&gt;data(), extent.length,</div><div class="line">                                        extent.offset, cache_comp, m_op_flags);</div><div class="line">      &#125; <span class="keyword">else</span> &#123;</div><div class="line">        req-&gt;send();</div><div class="line">      &#125;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  m_aio_comp-&gt;put();</div><div class="line"></div><div class="line">  m_image_ctx.perfcounter-&gt;inc(l_librbd_rd);</div><div class="line">  m_image_ctx.perfcounter-&gt;inc(l_librbd_rd_bytes, buffer_ofs);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>关于<code>readahead</code>算法，以及思路可以查看：<a href="http://os.51cto.com/art/200910/159067_all.htm。" target="_blank" rel="external">http://os.51cto.com/art/200910/159067_all.htm。</a><br>并且在这里有关于<code>librbd/readahead</code>的一个说明：<a href="http://docs.ceph.com/docs/jewel/rbd/rbd-config-ref/" target="_blank" rel="external">http://docs.ceph.com/docs/jewel/rbd/rbd-config-ref/</a></p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2016/09/29/ceph-debug/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Qemu RBD调试Ceph</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="https://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph-rbd-process" data-title="ceph.rbd.process" data-url="https://jiyou.github.io/blog/blog/2016/09/30/ceph-rbd-process/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script>
+	var yiliaConfig = {
+		fancybox: false,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
