@@ -77,7 +77,7 @@
 						<li>Links</li>
 						
 						
-						<li>Über</li>
+						<li>About</li>
 						
 					</ul>
 				</div>
@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 20px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 20px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 15px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 14px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 14px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 12px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 16px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a>
 					</div>
 				</section>
 				
@@ -215,6 +215,282 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-ceph-debug" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/29/ceph-debug/" class="article-date">
+  	<time datetime="2016-09-29T12:39:31.000Z" itemprop="datePublished">2016-09-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/09/29/ceph-debug/">Qemu RBD调试Ceph</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里主要是介绍如何使用<code>qemu/rbd</code>调试ceph关于rbd模块的代码。调试过程如下：</p>
+<ul>
+<li>vm:ubuntu 14.04</li>
+<li>docker</li>
+</ul>
+<h1 id="安装计划"><a href="#安装计划" class="headerlink" title="安装计划"></a>安装计划</h1><p>这里说一下安装计划，由于考虑到只是开发环境，为了简单，只使用一台虚拟机。</p>
+<ul>
+<li>虚拟机里面安装<code>docker</code>。</li>
+<li>ceph安装在一个docker中。</li>
+<li>虚拟机在编译安装qemu/ceph。</li>
+</ul>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/blog/2016/09/29/ceph-debug/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph-debug" data-title="Qemu RBD调试Ceph" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-install-openstack" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/20/install-openstack/" class="article-date">
+  	<time datetime="2016-09-20T14:03:45.000Z" itemprop="datePublished">2016-09-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/09/20/install-openstack/">install openstack</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="安装OpenStack包"><a href="#安装OpenStack包" class="headerlink" title="安装OpenStack包"></a>安装OpenStack包</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">apt-get -y update</div><div class="line">apt-get install -y software-properties-common</div><div class="line">add-apt-repository -y cloud-archive:mitaka</div><div class="line">apt-get -y update &amp;&amp; apt-get -y dist-upgrade</div><div class="line">apt-get install -y python-openstackclient crudini</div><div class="line"></div><div class="line">sed -i <span class="string">"/sleep/d"</span> /etc/init/failsafe.conf</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/blog/2016/09/20/install-openstack/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-install-openstack" data-title="install openstack" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-docker-openstack" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/19/docker-openstack/" class="article-date">
+  	<time datetime="2016-09-19T12:04:13.000Z" itemprop="datePublished">2016-09-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/09/19/docker-openstack/">Docker安装OpenStack</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>在安装的时候，尽管写脚本是一种比较好的安装方式。</p>
+<ul>
+<li>但是脚本并不能实时的进行测试。</li>
+<li>每个人的安装环境各不相同。</li>
+<li>脚本有可能不能满足所有人的安装需求。</li>
+</ul>
+<p>那么采用<code>Docker</code>来进行安装，则是一种比较有意思并且可移植的方法。下面介绍基于<code>Docker</code>安装<code>OpenStack</code>的方法，注意这里的目标是：</p>
+<ul>
+<li>尽量把能安装的组件都安装到Docker里面。</li>
+<li>希望提供微服务功能，也就是说，把OpenStack的组件分开安装到各个<code>Docker</code>的<code>Container</code>里面。</li>
+<li><code>nova-compute</code>也希望能够放进去。</li>
+</ul>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/blog/2016/09/19/docker-openstack/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-docker-openstack" data-title="Docker安装OpenStack" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-ceph-woboq" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -389,197 +665,9 @@
 
 
   
-    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/09/16/hello-world/" class="article-date">
-  	<time datetime="2016-09-15T23:25:09.000Z" itemprop="datePublished">2016-09-16</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/16/hello-world/">Mac上搭建Hexo+Github博客</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这篇博客主要是介绍如何在Mac上搭建<code>Hexo+Github</code>博客。</p>
-<p><strong>其实最重要的还是认真读文档</strong></p>
-<ul>
-<li><a href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></li>
-</ul>
-<p>使用Hexo的好处。</p>
-<ul>
-<li>可以使用Markdown来写作。</li>
-<li>格式非常好看。</li>
-<li>支持博客的分类以及评论。</li>
-</ul>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/随笔/">随笔</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/16/hello-world/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-hello-world" data-title="Mac上搭建Hexo+Github博客" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-jos-lab1" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/09/15/jos-lab1/" class="article-date">
-  	<time datetime="2016-09-15T14:48:53.000Z" itemprop="datePublished">2016-09-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/15/jos-lab1/">MIT 6.828 JOS课程1：搭建实验环境</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="课程进度"><a href="#课程进度" class="headerlink" title="课程进度"></a>课程进度</h1><ul>
-<li><a href="https://pdos.csail.mit.edu/6.828/2016/schedule.html">https://pdos.csail.mit.edu/6.828/2016/schedule.html</a></li>
-</ul>
-<h1 id="三次作业"><a href="#三次作业" class="headerlink" title="三次作业"></a>三次作业</h1><ul>
-<li>Assignment: HW: Boot xv6</li>
-<li>Assignment: HW: shell</li>
-<li>Assignment: Lab 1: C, Assembly, Tools, and Bootstrapping</li>
-</ul>
-<h1 id="Boot-xv6"><a href="#Boot-xv6" class="headerlink" title="Boot xv6"></a>Boot xv6</h1><p>这里只介绍第一次作业的情况，后面章节再介绍第一课的后面的作业。</p>
-<ul>
-<li>实验环境<code>Ubuntu:14.04</code></li>
-<li>xv6 &amp; qemu</li>
-</ul>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/xv6/">xv6</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/15/jos-lab1/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-jos-lab1" data-title="MIT 6.828 JOS课程1：搭建实验环境" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/blog/">&laquo; Prev</a><a class="page-number" href="/blog/">1</a><span class="page-number current">2</span>
+      <a class="extend prev" rel="prev" href="/blog/">&laquo; Prev</a><a class="page-number" href="/blog/">1</a><span class="page-number current">2</span><a class="page-number" href="/blog/page/3/">3</a><a class="extend next" rel="next" href="/blog/page/3/">Next &raquo;</a>
     </nav>
   
 </div>

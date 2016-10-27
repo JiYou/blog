@@ -4,17 +4,36 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Archives: 2016 | 缘生故如幻</title>
+  <title>Ceph Bluestore Cmake以及调试 | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录一些有意思的事。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="缘生故如幻">
-<meta property="og:url" content="https://jiyou.github.io/blog/archives/2016/page/2/index.html">
+  <meta name="description" content="缘起为了看bluestore的代码，这里尝试拉取了最新的Ceph代码，然后利用Cmake进行了编译和调试。需要注意的是，这里并且没有编译之后，安装一个完整的Ceph系统，而只是为了读BlueStore以及BlueFS部分的代码。
+编译的时候，需要注意：
+
+打开静态编译
+打开gdb选项
+
+编译Ceph利用git clone下载好源码之后，需要利用cmake来进行编译。在编译之前，最好是清理以前的依赖">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph Bluestore Cmake以及调试">
+<meta property="og:url" content="https://jiyou.github.io/blog/2016/10/24/ceph-cmake-debug/index.html">
 <meta property="og:site_name" content="缘生故如幻">
-<meta property="og:description" content="记录一些有意思的事。">
+<meta property="og:description" content="缘起为了看bluestore的代码，这里尝试拉取了最新的Ceph代码，然后利用Cmake进行了编译和调试。需要注意的是，这里并且没有编译之后，安装一个完整的Ceph系统，而只是为了读BlueStore以及BlueFS部分的代码。
+编译的时候，需要注意：
+
+打开静态编译
+打开gdb选项
+
+编译Ceph利用git clone下载好源码之后，需要利用cmake来进行编译。在编译之前，最好是清理以前的依赖">
+<meta property="og:updated_time" content="2016-10-24T13:55:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="缘生故如幻">
-<meta name="twitter:description" content="记录一些有意思的事。">
+<meta name="twitter:title" content="Ceph Bluestore Cmake以及调试">
+<meta name="twitter:description" content="缘起为了看bluestore的代码，这里尝试拉取了最新的Ceph代码，然后利用Cmake进行了编译和调试。需要注意的是，这里并且没有编译之后，安装一个完整的Ceph系统，而只是为了读BlueStore以及BlueFS部分的代码。
+编译的时候，需要注意：
+
+打开静态编译
+打开gdb选项
+
+编译Ceph利用git clone下载好源码之后，需要利用cmake来进行编译。在编译之前，最好是清理以前的依赖">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
   
@@ -214,201 +233,134 @@
 	</div>
 </nav>
 
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-ceph-cmake-debug" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/blog/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2016/09/29/ceph-debug/" class="archive-article-date">
-  	<time datetime="2016-09-29T12:39:31.000Z" itemprop="datePublished">Sep 29</time>
+    <div class="article-meta">
+      <a href="/blog/2016/10/24/ceph-cmake-debug/" class="article-date">
+  	<time datetime="2016-10-24T13:38:02.000Z" itemprop="datePublished">2016-10-24</time>
 </a>
-        </div>
-    	 
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2016/09/29/ceph-debug/">Qemu RBD调试Ceph</a>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ceph Bluestore Cmake以及调试
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+      </header>
+      
+      <div class="article-info article-info-post">
+        
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/bluestore/">bluestore</a></li></ul>
 	</div>
 
-          
+        
 	<div class="article-category tagcloud">
 	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
 	</div>
 
 
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>为了看<code>bluestore</code>的代码，这里尝试拉取了最新的<code>Ceph</code>代码，然后利用<code>Cmake</code>进行了编译和调试。需要注意的是，这里并且没有编译之后，安装一个完整的<code>Ceph</code>系统，而只是为了读<code>BlueStore</code>以及<code>BlueFS</code>部分的代码。</p>
+<p>编译的时候，需要注意：</p>
+<ul>
+<li>打开静态编译</li>
+<li>打开gdb选项</li>
+</ul>
+<h1 id="编译Ceph"><a href="#编译Ceph" class="headerlink" title="编译Ceph"></a>编译Ceph</h1><p>利用<code>git clone</code>下载好源码之后，需要利用<code>cmake</code>来进行编译。在编译之前，最好是清理以前的依赖，否则很容易出错：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git submodule deinit --forcegit clean -xfdgit checkout .git submodule init</div></pre></td></tr></table></figure>
+<p>清理成功之后，再编译如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">./install-deps.sh</div><div class="line">./do_cmake.sh -DCMAKE_EXPORT_COMPILE_COMMANDS=ON CMAKE_BUILD_TYPE=<span class="string">"Debug"</span> CMAKE_CXX_FLAGS_DEBUG=<span class="string">"-g2 -ggdb"</span> -DBUILD_SHARED_LIBS=OFF</div><div class="line"><span class="built_in">cd</span> build</div><div class="line">make -j24</div></pre></td></tr></table></figure>
+<p>在这里<code>24</code>表示，主机有24核，可以开<code>24</code>个线程一起编。编译成功之后，调试方法如下：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> ceph/build/bin/</div><div class="line">gdb -tui --dir=/var/lib/docker/ceph --args ./unittest_bluestore_types</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
   </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2016/10/27/ceph-rbd-read/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Ceph 调试 RBD读写流程-2
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2016/10/16/bluestore-intro/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Ceph Bluestore简介</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2016/09/20/install-openstack/" class="archive-article-date">
-  	<time datetime="2016-09-20T14:03:45.000Z" itemprop="datePublished">Sep 20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2016/09/20/install-openstack/">install openstack</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
-	</div>
+	<script type="text/javascript" src="https://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2016/09/19/docker-openstack/" class="archive-article-date">
-  	<time datetime="2016-09-19T12:04:13.000Z" itemprop="datePublished">Sep 19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2016/09/19/docker-openstack/">Docker安装OpenStack</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
-	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2016/09/18/ceph-woboq/" class="archive-article-date">
-  	<time datetime="2016-09-18T06:20:29.000Z" itemprop="datePublished">Sep 18</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2016/09/18/ceph-woboq/">Ceph通过WoboQ阅读源码</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Woboq/">Woboq</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2016/09/16/jos-lab1-a/" class="archive-article-date">
-  	<time datetime="2016-09-15T23:28:32.000Z" itemprop="datePublished">Sep 16</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2016/09/16/jos-lab1-a/">MIT 6.828 JOS课程1：HW Boot xv6</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/xv6/">xv6</a>
-	</div>
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph-cmake-debug" data-title="Ceph Bluestore Cmake以及调试" data-url="https://jiyou.github.io/blog/blog/2016/10/24/ceph-cmake-debug/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
-    <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/blog/archives/2016/">&laquo; Prev</a><a class="page-number" href="/blog/archives/2016/">1</a><span class="page-number current">2</span><a class="page-number" href="/blog/archives/2016/page/3/">3</a><a class="extend next" rel="next" href="/blog/archives/2016/page/3/">Next &raquo;</a>
-    </nav>
-  
+
+
 
 </div>
       <footer id="footer">
@@ -432,8 +384,8 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,

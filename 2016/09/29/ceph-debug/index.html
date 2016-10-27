@@ -30,7 +30,7 @@ docker
 虚拟机里面安装docker。
 ceph安装在一个docker中。
 虚拟机在编译安装qemu/ceph。">
-<meta property="og:updated_time" content="2016-09-30T15:11:54.000Z">
+<meta property="og:updated_time" content="2016-10-25T12:39:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qemu RBD调试Ceph">
 <meta name="twitter:description" content="这里主要是介绍如何使用qemu/rbd调试ceph关于rbd模块的代码。调试过程如下：
@@ -105,7 +105,7 @@ ceph安装在一个docker中。
 						<li>Links</li>
 						
 						
-						<li>Über</li>
+						<li>About</li>
 						
 					</ul>
 				</div>
@@ -150,7 +150,7 @@ ceph安装在一个docker中。
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 15px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 20px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 20px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 15px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 15px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 14px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 14px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 12px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 16px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a>
 					</div>
 				</section>
 				
@@ -360,8 +360,10 @@ ceph安装在一个docker中。
 <p>设置密码命令如下：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">virsh secret-set-value --secret 5a3d9df2-3d31-4fca-bd9b-8451843a9c0e --base64 <span class="string">"AQC0AO5XWb3VIRAAruUnyz0D8vxrMCnU/zERRQ=="</span></div></pre></td></tr></table></figure>
 <p>注意：<code>uuid</code>与<code>key</code>的对应。</p>
-<h2 id="创建rbd-image"><a href="#创建rbd-image" class="headerlink" title="创建rbd image"></a>创建rbd image</h2><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">rbd create rbd/new-libvirt-image --size 100</div></pre></td></tr></table></figure>
-<p>这里申请<code>1G</code>的空间。然后在<code>/cloud/h1/h1</code>文件里面添加对于这个<code>rbd image</code>的引用。</p>
+<h2 id="创建rbd-image"><a href="#创建rbd-image" class="headerlink" title="创建rbd image"></a>创建rbd image</h2><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">rbd create rbd/new-libvirt-image --size 100</div><div class="line"><span class="comment"># 添加完成之后，可以用如下命令查看</span></div><div class="line">qemu-img info rbd:rbd/new-libvirt-image:id=admin:conf=/etc/ceph/ceph.conf</div></pre></td></tr></table></figure>
+<p>可以得到如下输出：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">image: rbd:rbd/new-libvirt-image:id=admin:conf=/etc/ceph/ceph.conf</div><div class="line">file format: raw</div><div class="line">virtual size: 100M (104857600 bytes)</div><div class="line">disk size: unavailable</div><div class="line">cluster_size: 4194304</div></pre></td></tr></table></figure>
+<p>这里申请<code>100M</code>的空间。然后在<code>/cloud/h1/h1</code>文件里面添加对于这个<code>rbd image</code>的引用。</p>
 <figure class="highlight xml"><table><tr><td class="code"><pre><div class="line"> <span class="tag">&lt;<span class="name">devices</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">emulator</span>&gt;</span>/usr/bin/qemu-system-x86_64<span class="tag">&lt;/<span class="name">emulator</span>&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">disk</span> <span class="attr">type</span>=<span class="string">'file'</span> <span class="attr">device</span>=<span class="string">'disk'</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">driver</span> <span class="attr">name</span>=<span class="string">'qemu'</span> <span class="attr">type</span>=<span class="string">'qcow2'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">source</span> <span class="attr">file</span>=<span class="string">'/cloud/h1/ubuntu-h1.qcow2'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">target</span> <span class="attr">dev</span>=<span class="string">'vda'</span> <span class="attr">bus</span>=<span class="string">'virtio'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">alias</span> <span class="attr">name</span>=<span class="string">'virtio-disk0'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">address</span> <span class="attr">type</span>=<span class="string">'pci'</span> <span class="attr">domain</span>=<span class="string">'0x0000'</span> <span class="attr">bus</span>=<span class="string">'0x00'</span> <span class="attr">slot</span>=<span class="string">'0x06'</span> <span class="attr">function</span>=<span class="string">'0x0'</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">disk</span>&gt;</span></div><div class="line"></div><div class="line"><span class="comment">&lt;!-- 下面是我新加的 --&gt;</span></div><div class="line">   <span class="tag">&lt;<span class="name">disk</span> <span class="attr">type</span>=<span class="string">'network'</span> <span class="attr">device</span>=<span class="string">'disk'</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">driver</span> <span class="attr">name</span>=<span class="string">'qemu'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">auth</span> <span class="attr">username</span>=<span class="string">'admin'</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">secret</span> <span class="attr">type</span>=<span class="string">'ceph'</span> <span class="attr">uuid</span>=<span class="string">'5a3d9df2-3d31-4fca-bd9b-8451843a9c0e'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">auth</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">source</span> <span class="attr">protocol</span>=<span class="string">'rbd'</span> <span class="attr">name</span>=<span class="string">'rbd/new-libvirt-image'</span>&gt;</span></div><div class="line">       <span class="tag">&lt;<span class="name">host</span> <span class="attr">name</span>=<span class="string">'172.17.0.2'</span> <span class="attr">port</span>=<span class="string">'6789'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;/<span class="name">source</span>&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">target</span> <span class="attr">dev</span>=<span class="string">'vdb'</span> <span class="attr">bus</span>=<span class="string">'virtio'</span>/&gt;</span></div><div class="line">     <span class="tag">&lt;<span class="name">address</span> <span class="attr">type</span>=<span class="string">'pci'</span> <span class="attr">domain</span>=<span class="string">'0x0000'</span> <span class="attr">bus</span>=<span class="string">'0x00'</span> <span class="attr">slot</span>=<span class="string">'0x03'</span> <span class="attr">function</span>=<span class="string">'0x0'</span>/&gt;</span></div><div class="line">   <span class="tag">&lt;/<span class="name">disk</span>&gt;</span></div></pre></td></tr></table></figure>
 <h2 id="重新定义虚拟机"><a href="#重新定义虚拟机" class="headerlink" title="重新定义虚拟机"></a>重新定义虚拟机</h2><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">virsh destroy h1</div><div class="line">virsh define /cloud/h1/h1</div><div class="line">virsh start h1</div></pre></td></tr></table></figure>
 <p>然后再尝试使用<code>vncviewer</code>查看虚拟机。</p>
@@ -381,7 +383,7 @@ ceph安装在一个docker中。
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          ceph.rbd.process
+          Ceph 调试 RBD读写流程-1
         
       </div>
     </a>
