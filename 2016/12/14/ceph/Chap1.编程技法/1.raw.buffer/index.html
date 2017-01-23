@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>ceph.buffer.raw的引用计数 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="buffer::raw这个数据结构描述了一段缓冲区。数据结构定义于。
+// src/common/buffer.c:162namespace ceph &amp;#123;  class buffer::raw &amp;#123;  public:    char *data;    unsigned len;    atomic_t nref; // &amp;lt;-- 引用计数    ...  &amp;#125;;&amp;#">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph.buffer.raw的引用计数">
+<meta property="og:url" content="https://jiyou.github.io/blog/2016/12/14/ceph/Chap1.编程技法/1.raw.buffer/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="buffer::raw这个数据结构描述了一段缓冲区。数据结构定义于。
+// src/common/buffer.c:162namespace ceph &amp;#123;  class buffer::raw &amp;#123;  public:    char *data;    unsigned len;    atomic_t nref; // &amp;lt;-- 引用计数    ...  &amp;#125;;&amp;#">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/classceph_1_1buffer_1_1raw__inherit__graph.png">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/classceph_1_1buffer_1_1raw__coll__graph.png">
+<meta property="og:updated_time" content="2017-01-23T08:00:37.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceph.buffer.raw的引用计数">
+<meta name="twitter:description" content="buffer::raw这个数据结构描述了一段缓冲区。数据结构定义于。
+// src/common/buffer.c:162namespace ceph &amp;#123;  class buffer::raw &amp;#123;  public:    char *data;    unsigned len;    atomic_t nref; // &amp;lt;-- 引用计数    ...  &amp;#125;;&amp;#">
+<meta name="twitter:image" content="https://jiyou.github.io/blog/blog/img/classceph_1_1buffer_1_1raw__inherit__graph.png">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">最近文章</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/categories/随笔">随笔</a></li>
+				        
+							<li><a href="/blog/categories/xv6">xv6</a></li>
+				        
+							<li><a href="/blog/categories/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/categories/openstack">openstack</a></li>
+				        
+							<li><a href="/blog/categories/OS">WriteOS</a></li>
+				        
+							<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
+				        
+							<li><a href="/blog/categories/libevent">libevent</a></li>
+				        
+							<li><a href="/blog/categories/PDP11">PDP11</a></li>
+				        
+							<li><a href="/blog/categories/Linux">Linux</a></li>
+				        
+							<li><a href="/blog/categories/Kernel">Kernel</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.33px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 11.67px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 16.67px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 13.33px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 11.67px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">最近文章</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/categories/随笔">随笔</a></li>
+		        
+					<li><a href="/blog/categories/xv6">xv6</a></li>
+		        
+					<li><a href="/blog/categories/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/categories/openstack">openstack</a></li>
+		        
+					<li><a href="/blog/categories/OS">WriteOS</a></li>
+		        
+					<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
+		        
+					<li><a href="/blog/categories/libevent">libevent</a></li>
+		        
+					<li><a href="/blog/categories/PDP11">PDP11</a></li>
+		        
+					<li><a href="/blog/categories/Linux">Linux</a></li>
+		        
+					<li><a href="/blog/categories/Kernel">Kernel</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-ceph/Chap1.编程技法/1.raw.buffer" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/14/ceph/Chap1.编程技法/1.raw.buffer/" class="article-date">
+  	<time datetime="2016-12-14T15:50:47.000Z" itemprop="datePublished">2016-12-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      ceph.buffer.raw的引用计数
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="buffer-raw"><a href="#buffer-raw" class="headerlink" title="buffer::raw"></a>buffer::raw</h1><p>这个数据结构描述了一段缓冲区。数据结构定义于。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// src/common/buffer.c:162</span></div><div class="line"><span class="keyword">namespace</span> ceph &#123;</div><div class="line">  <span class="keyword">class</span> buffer::raw &#123;</div><div class="line">  <span class="keyword">public</span>:</div><div class="line">    <span class="keyword">char</span> *data;</div><div class="line">    <span class="keyword">unsigned</span> len;</div><div class="line">    <span class="keyword">atomic_t</span> nref; <span class="comment">// &lt;-- 引用计数</span></div><div class="line">    ...</div><div class="line">  &#125;;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>首先从高一点的层面看这个类，这个类声明的是一系列内存buffer缓冲区对象。由于内存buffer缓冲区可能有很多种。比如有对齐的，有没对齐的。有使用<code>C</code>接口<code>malloc</code>创建出来的，有使用<code>C++</code>接口<code>new</code>出来的。为了针对这种更加细类别的内存对象的划分，这里把buffer上升到了我们通常意义理解的一段内存区域。</p>
+<h1 id="raw子类"><a href="#raw子类" class="headerlink" title="raw子类"></a>raw子类</h1><p>buffer缓冲区的子类有如下这些：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> raw_malloc;</div><div class="line"><span class="keyword">class</span> raw_static;</div><div class="line"><span class="keyword">class</span> raw_mmap_pages;</div><div class="line"><span class="keyword">class</span> raw_posix_aligned;</div><div class="line"><span class="keyword">class</span> raw_hack_aligned;</div><div class="line"><span class="keyword">class</span> raw_char;</div><div class="line"><span class="keyword">class</span> raw_pipe;</div><div class="line"><span class="keyword">class</span> raw_unshareable; <span class="comment">// diagnostic, unshareable char buffer</span></div><div class="line"><span class="keyword">class</span> raw_combined;</div></pre></td></tr></table></figure>
+<p>形成如下结构：</p>
+<p><img src="/blog/img/classceph_1_1buffer_1_1raw__inherit__graph.png" alt=""></p>
+<p>而在基类里面放着公共类需要的数据与变量：</p>
+<p><img src="/blog/img/classceph_1_1buffer_1_1raw__coll__graph.png" alt=""></p>
+<p>类的详细关系可以查看<a href="https://fossies.org/dox/ceph-10.2.5/classceph_1_1buffer_1_1raw.html" target="_blank" rel="external">Ceph Doxgen文档</a>。</p>
+<p>主要是有：</p>
+<ul>
+<li>引用计数</li>
+<li>crc_map</li>
+</ul>
+<h2 id="引用计数"><a href="#引用计数" class="headerlink" title="引用计数"></a>引用计数</h2><p><code>raw</code>只是一个原始的基类，其他内存buffer都是从这里继承。所以<code>raw</code>类里面有些函数只是声明成接口，留做子类来实现。公共的部分，则放在<code>raw</code>基类里面。比如引用计数。如果大家都只是需要读取一段内存的值，而不是频繁地修改这段内存。那么使用引用计数就可以缩小内存的使用，因为都相同的嘛。</p>
+<h3 id="atomic-t"><a href="#atomic-t" class="headerlink" title="atomic_t"></a>atomic_t</h3><p>在<code>Ceph</code>里面原子性操作，用的是<code>atomic_t</code>变量。这个实现依赖于三点：</p>
+<ul>
+<li>操作系统的支持</li>
+<li>语言的支持</li>
+<li>库的支持</li>
+</ul>
+<p>操作系统的支持，主要是由<a href="http://blog.csdn.net/qb_2008/article/details/6840808" target="_blank" rel="external">CSDN Linux Kernel Atomic</a>来支持。语言上的支持主要是需要<code>C++11</code>或者<code>C++14</code>。如果系统与<code>C++</code>都不支持，那需要引入<code>libatomic_ops</code>这个库来支持。这也就是为什么在<code>Ceph</code>中查看源码的时候，可以看到<code>atomic_t</code>的实现会跳到<code>ceph::atomic_t</code>里面的原因。</p>
+<h2 id="crc-map"><a href="#crc-map" class="headerlink" title="crc_map"></a>crc_map</h2><p><code>crc_map</code>的定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="built_in">map</span>&lt;pair&lt;<span class="keyword">size_t</span>, <span class="keyword">size_t</span>&gt;, pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">uint32_t</span>&gt; &gt; crc_map;</div></pre></td></tr></table></figure>
+<p>这里解释一下前后两个<code>pair</code>的含义：</p>
+<ul>
+<li>数据段的起始位置，结束位置。也就是表示<code>from, to</code>。</li>
+<li>basement的校验值，以及加上数据段之后的校验值。</li>
+</ul>
+<p>这里可以查看一下这个校验值是如何计算的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">__u</span>32 buffer::<span class="built_in">list</span>::crc32c(<span class="number">__u</span>32 crc) <span class="keyword">const</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// 这里遍历_buffers里面的每一个raw变量</span></div><div class="line">    <span class="keyword">for</span> (<span class="built_in">std</span>::<span class="built_in">list</span>&lt;ptr&gt;::const_iterator it = <span class="number">_b</span>uffers.begin(); it != <span class="number">_b</span>uffers.end(); ++it) &#123;</div><div class="line">        <span class="keyword">if</span> (it-&gt;length()) &#123;</div><div class="line">            <span class="comment">// 获得raw变量。</span></div><div class="line">            raw *r = it-&gt;get_raw();</div><div class="line">            <span class="comment">// 这里拿到偏移from, to.</span></div><div class="line">            pair&lt;<span class="keyword">size_t</span>, <span class="keyword">size_t</span>&gt; ofs(it-&gt;offset(), it-&gt;offset() + it-&gt;length());</div><div class="line">            <span class="comment">// 生成crc变量。</span></div><div class="line">            pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">uint32_t</span>&gt; ccrc;</div><div class="line">            <span class="comment">// get_crc是从raw变量中拿到from to的crc pair.</span></div><div class="line">            <span class="comment">// 如果找到，返回值为true。找到的校验值放在ccrc里面。</span></div><div class="line">            <span class="keyword">if</span> (r-&gt;get_crc(ofs, &amp;ccrc)) &#123;</div><div class="line">                <span class="comment">// 如果拿到了crc校验值。</span></div><div class="line">                <span class="comment">// 之前的base crc与这个相等。</span></div><div class="line">                <span class="comment">// 说明之前已经计算过了。那么这里直接把当前的crc更新为ccrc.second就可以了。</span></div><div class="line">                <span class="comment">// 这样crc又指向下一个basement的crc值了，用来做下一次的计算。</span></div><div class="line">                <span class="comment">// 有点类似于组数的累加。</span></div><div class="line">                <span class="comment">// 比如我有一个数组a[n]。然后用s[n]来记录累加和。</span></div><div class="line">                <span class="comment">// s[i] = a[0] + ... + a[i];</span></div><div class="line">                <span class="comment">// 如果发现s[i]已经计算出来了。那么直接取出来，用来准备下一次的累加。</span></div><div class="line">                <span class="keyword">if</span> (ccrc.first == crc) &#123;</div><div class="line">                    <span class="comment">// got it already</span></div><div class="line">                    crc = ccrc.second;</div><div class="line">                    <span class="comment">// 这里只是内存引用计数。</span></div><div class="line">                    <span class="keyword">if</span> (buffer_track_crc)</div><div class="line">                        buffer_cached_crc.inc();</div><div class="line">                &#125; <span class="keyword">else</span> &#123;</div><div class="line">                    <span class="comment">// 这里是指当basement的crc校验值有变化的时候。采用一个修正算法来进行处理。</span></div><div class="line">                    <span class="comment">/* If we have cached crc32c(buf, v) for initial value v,</span></div><div class="line">                     * we can convert this to a different initial value v' by:</div><div class="line">                     * crc32c(buf, v') = crc32c(buf, v) ^ adjustment</div><div class="line">                     * where adjustment = crc32c(0*len(buf), v ^ v')</div><div class="line">                     *</div><div class="line">                     * http://crcutil.googlecode.com/files/crc-doc.1.0.pdf</div><div class="line">                     * note, u for our crc32c implementation is 0</div><div class="line">                     */</div><div class="line">                    crc = ccrc.second ^ ceph_crc32c(ccrc.first ^ crc, <span class="literal">NULL</span>, it-&gt;length());</div><div class="line">                    <span class="keyword">if</span> (buffer_track_crc)</div><div class="line">                        buffer_cached_crc_adjusted.inc();</div><div class="line">                &#125;</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="comment">// 如果没有找到之前的basement crc。</span></div><div class="line">                <span class="comment">// 这里就是直接采用crc做为basement crc。</span></div><div class="line">                <span class="keyword">uint32_t</span> base = crc;</div><div class="line">                <span class="comment">// 这里加上当前的raw buffer字段，一起计算crc校验值。然后更新到crc变量里面。</span></div><div class="line">                crc = ceph_crc32c(crc, (<span class="keyword">unsigned</span> <span class="keyword">char</span>*)it-&gt;c_str(), it-&gt;length());</div><div class="line">                <span class="comment">// 调用set_crc</span></div><div class="line">                r-&gt;set_crc(ofs, make_pair(base, crc));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> crc;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个函数的时候，需要用到如下这个函数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">get_crc</span><span class="params">(<span class="keyword">const</span> pair&lt;<span class="keyword">size_t</span>, <span class="keyword">size_t</span>&gt; &amp;fromto, pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">uint32_t</span>&gt; *crc)</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">  simple_spin_lock(&amp;crc_spinlock);</div><div class="line">  <span class="built_in">map</span>&lt;pair&lt;<span class="keyword">size_t</span>, <span class="keyword">size_t</span>&gt;, pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">uint32_t</span>&gt; &gt;::const_iterator i =</div><div class="line">  crc_map.find(fromto);</div><div class="line">  <span class="keyword">if</span> (i == crc_map.end()) &#123;</div><div class="line">      simple_spin_unlock(&amp;crc_spinlock);</div><div class="line">      <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">  &#125;</div><div class="line">  *crc = i-&gt;second;</div><div class="line">  simple_spin_unlock(&amp;crc_spinlock);</div><div class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，<code>get_crc</code>函数，工作原理比较简单。就是当找到的时候，把值放到<code>crc</code>里面， 并且返回<code>true</code>。否则就是直接返回<code>false</code>。</p>
+<p>与此对应的<code>set_crc</code>函数实现，也就比较简单了。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">set_crc</span><span class="params">(<span class="keyword">const</span> pair&lt;<span class="keyword">size_t</span>, <span class="keyword">size_t</span>&gt; &amp;fromto, <span class="keyword">const</span> pair&lt;<span class="keyword">uint32_t</span>, <span class="keyword">uint32_t</span>&gt; &amp;crc)</span> </span>&#123;</div><div class="line">  simple_spin_lock(&amp;crc_spinlock); <span class="comment">// 这个主要是用来给crc_map上锁。</span></div><div class="line">  crc_map[fromto] = crc;  <span class="comment">// 关键的也就是这一句话。</span></div><div class="line">  simple_spin_unlock(&amp;crc_spinlock);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>此时，应该就可以明白<code>buffer::list::crc32c(__u32 crc) const</code>这个函数的主要作是重新计算整个bufferlist的<code>crc</code>校验值。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">invalidate_crc</span><span class="params">()</span> </span>&#123;</div><div class="line">  simple_spin_lock(&amp;crc_spinlock);</div><div class="line">  <span class="keyword">if</span> (crc_map.size() != <span class="number">0</span>) &#123;</div><div class="line">    crc_map.clear();</div><div class="line">  &#125;</div><div class="line">  simple_spin_unlock(&amp;crc_spinlock);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这个函数就更加简单了，直接清空<code>crc</code>记录的map。</p>
+<h1 id="构造-析构函数"><a href="#构造-析构函数" class="headerlink" title="构造/析构函数"></a>构造/析构函数</h1><p>那么接下来看一下raw类的成员函数。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">explicit raw(unsigned l)</div><div class="line">  : data(NULL), len(l), nref(0),</div><div class="line">crc_spinlock(SIMPLE_SPINLOCK_INITIALIZER)</div><div class="line">&#123;&#125;</div><div class="line">// 这里data为空，设置l还有啥意义？后面用不会出错？</div><div class="line"></div><div class="line">raw(char *c, unsigned l)</div><div class="line">  : data(c), len(l), nref(0),</div><div class="line">crc_spinlock(SIMPLE_SPINLOCK_INITIALIZER)</div><div class="line">&#123; &#125;</div><div class="line">// 这里好理解。就是缓冲区域指向c, 内存长度为l。</div><div class="line"></div><div class="line">virtual ~raw() &#123;&#125;</div><div class="line">// 虚析构函数，注意这里的实现。这里并没有去释放内存。这是因为，在raw里面，并没有申请过内存。内存区域应该是谁创建，谁负责销毁。</div></pre></td></tr></table></figure>
+<h1 id="复制构造函数"><a href="#复制构造函数" class="headerlink" title="复制构造函数"></a>复制构造函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// no copying.</span></div><div class="line"><span class="comment">// Cppcheck-suppress noExplicitConstructor</span></div><div class="line">raw(<span class="keyword">const</span> raw &amp;other);</div><div class="line"><span class="keyword">const</span> raw&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> raw &amp;other);</div></pre></td></tr></table></figure>
+<p>复制构造函数在这个接口类里面并没有实现。主要是为了：</p>
+<ul>
+<li>防止使用这两个函数。因为如果不声明，那么就会使用默认的。</li>
+<li>这是一个接口类，如何使用，应该是子类来考虑。如果子类也不实现这两个函数，那么子类的实例也是不能通过这种方式来生成类的实例。</li>
+</ul>
+<h1 id="获取缓冲区"><a href="#获取缓冲区" class="headerlink" title="获取缓冲区"></a>获取缓冲区</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">char</span> *<span class="title">get_data</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> data;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里很简单，就是直接返回数据区域。需要注意的是，这里是一个虚函数。</p>
+<h1 id="clone"><a href="#clone" class="headerlink" title="clone"></a>clone</h1><p>接下来需要看一下<code>zero copy</code>的实现。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">virtual</span> raw* <span class="title">clone_empty</span><span class="params">()</span> </span>= <span class="number">0</span>;</div><div class="line"><span class="function">raw *<span class="title">clone</span><span class="params">()</span> </span>&#123;</div><div class="line">  raw *c = clone_empty();</div><div class="line">  <span class="built_in">memcpy</span>(c-&gt;data, data, len);</div><div class="line">  <span class="keyword">return</span> c;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>clone_empty</code>这里只是生成一个实例。紧接着clone内存区域。但是需要注意的是，<code>raw</code>类的析构函数里面是不释放内存的。所以，后面需要注意一下这个clone出来的内存，最后是在哪里释放的。</p>
+<p>需要注意的是，<code>clone_empty</code>是只负责内存的生成。而<code>clone</code>函数会调用这个<code>clone_empty</code>，然后把内容复制过去。</p>
+<h1 id="zero-copy"><a href="#zero-copy" class="headerlink" title="zero copy"></a>zero copy</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">can_zero_copy</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">zero_copy_to_fd</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">loff_t</span> *offset)</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> -ENOTSUP;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意：这里接口是声明成不支持zero copy的。所以后面在调用zero copy的时候，就会返回<code>ENOTSUP</code>。</p>
+<p><a href="http://blog.csdn.net/kinector/article/details/12044067" target="_blank" rel="external">Zero Copy的实现</a></p>
+<h1 id="页面对齐"><a href="#页面对齐" class="headerlink" title="页面对齐"></a>页面对齐</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">is_page_aligned</span><span class="params">()</span> </span>&#123; <span class="comment">// 这里查看地址是不是PAGE_SIZE的整数倍</span></div><div class="line">  <span class="keyword">return</span> ((<span class="keyword">long</span>)data &amp; ~CEPH_PAGE_MASK) == <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">is_n_page_sized</span><span class="params">()</span> </span>&#123; <span class="comment">// 这里查看内存缓冲区长度是不是4096的整数倍。</span></div><div class="line">  <span class="keyword">return</span> (len &amp; ~CEPH_PAGE_MASK) == <span class="number">0</span>;</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">is_shareable</span><span class="params">()</span> </span>&#123; <span class="comment">// 缓冲区是否可以共享?</span></div><div class="line">  <span class="comment">// true if safe to reference/share the existing buffer copy</span></div><div class="line">  <span class="comment">// false if it is not safe to share the buffer, e.g., due to special</span></div><div class="line">  <span class="comment">// and/or registered memory that is scarce</span></div><div class="line">  <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p><code>buffer::raw</code>类的实现里面，引用了很多<code>spin lock</code>。中文称之为自旋锁。为了在看代码的时候，不那么困惑，下文将去看一下。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2016/12/15/ceph/Chap1.编程技法/2.spinlock的实现/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          spinlock实现分析
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2016/12/08/paxos/libevent-begin-1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">libevent初步使用</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="https://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/1.raw.buffer" data-title="ceph.buffer.raw的引用计数" data-url="https://jiyou.github.io/blog/blog/2016/12/14/ceph/Chap1.编程技法/1.raw.buffer/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script>
+	var yiliaConfig = {
+		fancybox: false,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>

@@ -102,6 +102,18 @@
 				        
 							<li><a href="/blog/categories/openstack">openstack</a></li>
 				        
+							<li><a href="/blog/categories/OS">WriteOS</a></li>
+				        
+							<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
+				        
+							<li><a href="/blog/categories/libevent">libevent</a></li>
+				        
+							<li><a href="/blog/categories/PDP11">PDP11</a></li>
+				        
+							<li><a href="/blog/categories/Linux">Linux</a></li>
+				        
+							<li><a href="/blog/categories/Kernel">Kernel</a></li>
+				        
 						</ul>
 					</nav>
 					<nav class="header-nav">
@@ -122,7 +134,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 14px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 14px;">MIT 6.828</a> <a href="/blog/tags/OpenStack/" style="font-size: 12px;">OpenStack</a> <a href="/blog/tags/Qemu/" style="font-size: 16px;">Qemu</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.33px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 11.67px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 16.67px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 13.33px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 11.67px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -194,6 +206,18 @@
 		        
 					<li><a href="/blog/categories/openstack">openstack</a></li>
 		        
+					<li><a href="/blog/categories/OS">WriteOS</a></li>
+		        
+					<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
+		        
+					<li><a href="/blog/categories/libevent">libevent</a></li>
+		        
+					<li><a href="/blog/categories/PDP11">PDP11</a></li>
+		        
+					<li><a href="/blog/categories/Linux">Linux</a></li>
+		        
+					<li><a href="/blog/categories/Kernel">Kernel</a></li>
+		        
 		        <div class="clearfix"></div>
 				</ul>
 			</nav>
@@ -216,11 +240,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-ceph-debug" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2016/09/29/ceph-debug/" class="article-date">
-  	<time datetime="2016-09-29T12:39:31.000Z" itemprop="datePublished">2016-09-29</time>
+      <a href="/blog/2016/12/20/ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned/" class="article-date">
+  	<time datetime="2016-12-19T16:06:43.000Z" itemprop="datePublished">2016-12-20</time>
 </a>
     </div>
   
@@ -231,7 +255,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/29/ceph-debug/">Qemu RBD调试Ceph</a>
+      <a class="article-title" href="/blog/2016/12/20/ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned/">ceph:buffer:raw_posix_aligned实现分析</a>
     </h1>
   
 
@@ -240,17 +264,8 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>这里主要是介绍如何使用<code>qemu/rbd</code>调试ceph关于rbd模块的代码。调试过程如下：</p>
-<ul>
-<li>vm:ubuntu 14.04</li>
-<li>docker</li>
-</ul>
-<h1 id="安装计划"><a href="#安装计划" class="headerlink" title="安装计划"></a>安装计划</h1><p>这里说一下安装计划，由于考虑到只是开发环境，为了简单，只使用一台虚拟机。</p>
-<ul>
-<li>虚拟机里面安装<code>docker</code>。</li>
-<li>ceph安装在一个docker中。</li>
-<li>虚拟机在编译安装qemu/ceph。</li>
-</ul>
+        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> buffer::raw_posix_aligned : <span class="keyword">public</span> buffer::raw &#123;</div><div class="line">  <span class="keyword">unsigned</span> align;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  raw_posix_aligned(<span class="keyword">unsigned</span> l, <span class="keyword">unsigned</span> <span class="number">_</span>align) : raw(l) &#123;</div><div class="line">    align = <span class="number">_</span>align;</div><div class="line">    assert((align &gt;= <span class="keyword">sizeof</span>(<span class="keyword">void</span> *)) &amp;&amp; (align &amp; (align - <span class="number">1</span>)) == <span class="number">0</span>);</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> DARWIN</span></div><div class="line">    data = (<span class="keyword">char</span> *) valloc (len);</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line">    data = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> r = ::posix_memalign((<span class="keyword">void</span>**)(<span class="keyword">void</span>*)&amp;data, align, len);</div><div class="line">    <span class="keyword">if</span> (r)</div><div class="line"><span class="keyword">throw</span> bad_alloc();</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* DARWIN */</span></span></div><div class="line">    <span class="keyword">if</span> (!data)</div><div class="line"><span class="keyword">throw</span> bad_alloc();</div><div class="line">    inc_total_alloc(len);</div><div class="line">    inc_history_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_posix_aligned "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" alloc "</span> &lt;&lt; (<span class="keyword">void</span> *)data &lt;&lt; <span class="string">" l="</span> &lt;&lt; l &lt;&lt; <span class="string">", align="</span> &lt;&lt; align &lt;&lt; <span class="string">" total_alloc="</span> &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">  &#125;</div><div class="line">  ~raw_posix_aligned() &#123;</div><div class="line">    ::<span class="built_in">free</span>((<span class="keyword">void</span>*)data);</div><div class="line">    dec_total_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_posix_aligned "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" free "</span> &lt;&lt; (<span class="keyword">void</span> *)data &lt;&lt; <span class="string">" "</span> &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">  &#125;</div><div class="line">  <span class="function">raw* <span class="title">clone_empty</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> raw_posix_aligned(len, align);</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+
       
     </div>
     
@@ -268,10 +283,6 @@
 
 
       
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/29/ceph-debug/#more">more >></a>
-        </p>
-      
       <div class="clearfix"></div>
     </div>
     
@@ -287,7 +298,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph-debug" data-title="Qemu RBD调试Ceph" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned" data-title="ceph:buffer:raw_posix_aligned实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -311,11 +322,11 @@
 
 
   
-    <article id="post-install-openstack" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2016/09/20/install-openstack/" class="article-date">
-  	<time datetime="2016-09-20T14:03:45.000Z" itemprop="datePublished">2016-09-20</time>
+      <a href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/" class="article-date">
+  	<time datetime="2016-12-18T16:06:43.000Z" itemprop="datePublished">2016-12-19</time>
 </a>
     </div>
   
@@ -326,7 +337,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/20/install-openstack/">install openstack</a>
+      <a class="article-title" href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/">ceph:buffer:raw_mmap_pages实现分析</a>
     </h1>
   
 
@@ -335,7 +346,16 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="安装OpenStack包"><a href="#安装OpenStack包" class="headerlink" title="安装OpenStack包"></a>安装OpenStack包</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">apt-get -y update</div><div class="line">apt-get install -y software-properties-common</div><div class="line">add-apt-repository -y cloud-archive:mitaka</div><div class="line">apt-get -y update &amp;&amp; apt-get -y dist-upgrade</div><div class="line">apt-get install -y python-openstackclient crudini</div><div class="line"></div><div class="line">sed -i <span class="string">"/sleep/d"</span> /etc/init/failsafe.conf</div></pre></td></tr></table></figure>
+        <p>#mmap</p>
+<p>这里首先需要介绍一下<code>mmap</code>: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享。如下图所示：</p>
+<p><img src="/blog/img/ceph.buffer.raw.mmap.png" alt=""></p>
+<p>由上图可以看出，进程的虚拟地址空间，由多个虚拟内存区域构成。虚拟内存区域是进程的虚拟地址空间中的一个同质区间，即具有同样特性的连续地址范围。上图中所示的text数据段（代码段）、初始数据段、BSS数据段、堆、栈和内存映射，都是一个独立的虚拟内存区域。而为内存映射服务的地址空间处在堆栈之间的空余部分。</p>
+<p><strong>概述</strong><br>实际上就是开辟一个内存区域，把这个内存区域与磁盘上的一个文件映射。进而可以以操作内存的方式来操作这个文件。并且可以在多个进程之间共享这个文件。</p>
+<p>详细信息，可以参考<a href="http://www.cnblogs.com/huxiao-tee/p/4660352.html" target="_blank" rel="external">此文</a>。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>由于代码比较短小，这里直接分析源代码：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_mmap_pages : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_mmap_pages(unsigned l) : raw(l) &#123;</div><div class="line">        // MAP_PRIVATE //建立一个写入时拷贝的私有映射。</div><div class="line">        // 内存区域的写入不会影响到原文件。</div><div class="line">        // 这个标志和以上标志是互斥的，只能使用其中一个。</div><div class="line">        data = (char*)::mmap(NULL, len, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);</div><div class="line">        if (!data)</div><div class="line">            throw bad_alloc();</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    ~raw_mmap_pages() &#123;</div><div class="line">        ::munmap(data, len);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_mmap_pages(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>与前面的函数相比，这里就是直接是利用<code>mmap</code>生成一段内存区域。释放内存的时候，采用<code>munmap</code>函数。</p>
+
       
     </div>
     
@@ -343,189 +363,7 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/20/install-openstack/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-install-openstack" data-title="install openstack" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-docker-openstack" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/09/19/docker-openstack/" class="article-date">
-  	<time datetime="2016-09-19T12:04:13.000Z" itemprop="datePublished">2016-09-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/19/docker-openstack/">Docker安装OpenStack</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>在安装的时候，尽管写脚本是一种比较好的安装方式。</p>
-<ul>
-<li>但是脚本并不能实时的进行测试。</li>
-<li>每个人的安装环境各不相同。</li>
-<li>脚本有可能不能满足所有人的安装需求。</li>
-</ul>
-<p>那么采用<code>Docker</code>来进行安装，则是一种比较有意思并且可移植的方法。下面介绍基于<code>Docker</code>安装<code>OpenStack</code>的方法，注意这里的目标是：</p>
-<ul>
-<li>尽量把能安装的组件都安装到Docker里面。</li>
-<li>希望提供微服务功能，也就是说，把OpenStack的组件分开安装到各个<code>Docker</code>的<code>Container</code>里面。</li>
-<li><code>nova-compute</code>也希望能够放进去。</li>
-</ul>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/19/docker-openstack/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-docker-openstack" data-title="Docker安装OpenStack" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph-woboq" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/09/18/ceph-woboq/" class="article-date">
-  	<time datetime="2016-09-18T06:20:29.000Z" itemprop="datePublished">2016-09-18</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/18/ceph-woboq/">Ceph通过WoboQ阅读源码</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>主要原因还是因为看了这篇文章：<a href="https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。">https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。</a></p>
-<p><strong>界面太爽，功能强大</strong> 强烈推荐。比<code>Source Insight</code>好用多了。</p>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Woboq/">Woboq</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
 	</div>
 
       
@@ -535,10 +373,6 @@
 
 
       
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/18/ceph-woboq/#more">more >></a>
-        </p>
-      
       <div class="clearfix"></div>
     </div>
     
@@ -554,7 +388,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph-woboq" data-title="Ceph通过WoboQ阅读源码" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages" data-title="ceph:buffer:raw_mmap_pages实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -578,11 +412,11 @@
 
 
   
-    <article id="post-jos-lab1-a" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-ceph/Chap1.编程技法/5.track.buffer" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2016/09/16/jos-lab1-a/" class="article-date">
-  	<time datetime="2016-09-15T23:28:32.000Z" itemprop="datePublished">2016-09-16</time>
+      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" class="article-date">
+  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
 </a>
     </div>
   
@@ -593,7 +427,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/16/jos-lab1-a/">MIT 6.828 JOS课程1：HW Boot xv6</a>
+      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/">ceph内存使用计数</a>
     </h1>
   
 
@@ -602,9 +436,10 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Homework-boot-xv6"><a href="#Homework-boot-xv6" class="headerlink" title="Homework: boot xv6"></a>Homework: boot xv6</h1><p>作业链接：<a href="https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html">https://pdos.csail.mit.edu/6.828/2016/homework/xv6-boot.html</a></p>
-<h1 id="查看地址"><a href="#查看地址" class="headerlink" title="查看地址"></a>查看地址</h1><p>这里是为了查看进入内核的入口函数，运行命令如下：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /opt/xv6-public</div><div class="line">nm kernel | grep _start</div></pre></td></tr></table></figure>
+        <h1 id="内存使用跟踪"><a href="#内存使用跟踪" class="headerlink" title="内存使用跟踪"></a>内存使用跟踪</h1><p>在<code>Ceph</code>里面对使用内存的地方，进行了计数，也就是统计了整个进程所使用的内存数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// src/common/buffer.c:54</span></div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic_t</span> buffer_total_alloc;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_bytes;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_num;</div><div class="line">  <span class="keyword">const</span> <span class="keyword">bool</span> buffer_track_alloc = get_env_bool(<span class="string">"CEPH_BUFFER_TRACK"</span>);</div><div class="line"></div><div class="line">  <span class="keyword">namespace</span> &#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.add(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">dec_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.sub(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 记录历史使用内存，所以这个函数是没有dec_xxx函数。</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_history_alloc</span><span class="params">(<span class="keyword">uint64_t</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc) &#123;</div><div class="line">      buffer_history_alloc_bytes.add(len);</div><div class="line">      buffer_history_alloc_num.inc();</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>有意思的是，需要注意一下<code>atomic64_t</code>这种变量的使用。这个变量，一般而言，<code>Linux</code>操作系统都是支持的。如果不支持，那么就需要引入一个叫<code>libatomic_ops</code>的库，使和其中的<code>AIO_T</code>类型。</p>
+
       
     </div>
     
@@ -612,19 +447,15 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/xv6/">xv6</a>
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/16/jos-lab1-a/#more">more >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -641,7 +472,196 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-jos-lab1-a" data-title="MIT 6.828 JOS课程1：HW Boot xv6" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/5.track.buffer" data-title="ceph内存使用计数" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/" class="article-date">
+  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/">ceph:buffer:raw_malloc实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>代码比较简单，直接分析代码即可。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_malloc : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_malloc(unsigned l) : raw(l) &#123;</div><div class="line">        // 如果data内存区域长度大于0.</div><div class="line">        // 那么在这里申请好内存。</div><div class="line">        if (len) &#123;</div><div class="line">            data = (char *)malloc(len);</div><div class="line">            if (!data)</div><div class="line">                throw bad_alloc();</div><div class="line">        &#125; else &#123;</div><div class="line">        // 如果内存长度为0.</div><div class="line">        // 那么这里直接把data指针设置为0。</div><div class="line">            data = 0;</div><div class="line">        &#125;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw_malloc(unsigned l, char *b) : raw(b, l) &#123;</div><div class="line">        inc_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    ~raw_malloc() &#123;</div><div class="line">        // 释放内存</div><div class="line">        free(data);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    // 这里是只是生成相同大小的新内存区域。</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_malloc(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>需要注意的是，所有关于内存的记录都是在构造函数和析构函数里面完成。从总体上来说，这个类没有什么特别的地方，就是内存生成的时候，指定用的是<code>malloc</code>罢了。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" data-title="ceph:buffer:raw_malloc实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/4.ceph.buffer.raw_combined" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/17/ceph/Chap1.编程技法/4.ceph.buffer.raw_combined/" class="article-date">
+  	<time datetime="2016-12-17T15:50:47.000Z" itemprop="datePublished">2016-12-17</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/17/ceph/Chap1.编程技法/4.ceph.buffer.raw_combined/">ceph:buffer:raw_combined实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="raw-combined"><a href="#raw-combined" class="headerlink" title="raw_combined"></a>raw_combined</h1><p>首先是一段英文注释：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * raw_combined is always placed within a single allocation along</div><div class="line"> * with the data buffer.  the data goes at the beginning, and</div><div class="line"> * raw_combined at the end.</div><div class="line"> */</div></pre></td></tr></table></figure>
+<p>这段话是说。<code>raw_combined</code>一直是和<code>data buffer</code>放在一起的<code>single allocation</code>。<code>data buffer</code>在开头，<code>raw_combined</code>则在后面。</p>
+<h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">raw_combined(<span class="keyword">char</span> *dataptr, <span class="keyword">unsigned</span> l, <span class="keyword">unsigned</span> align=<span class="number">0</span>)</div><div class="line">  : raw(dataptr, l),</div><div class="line">alignment(align) &#123;</div><div class="line">  inc_total_alloc(len);</div><div class="line">  inc_history_alloc(len);</div><div class="line">&#125;</div><div class="line">~raw_combined() &#123;</div><div class="line">  dec_total_alloc(len);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>构造函数很简单，需要注意的是，这里是直接传入内存区域。所以这里是没有多的内存被生成。在构造函数和析构函数里面。也只是记录了内存使用的记录。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">inc_total_alloc(len);</div><div class="line">inc_history_alloc(len);</div></pre></td></tr></table></figure>
+<p>不过有意思的是，在构造函数里面没有生成新的内存。但是记录内存的<code>total</code>以及<code>history</code>都是增加的。在析构函数里面，总的内存的使用是降低了。但是历史内存使用是没有降低。</p>
+<h1 id="创建与销毁函数"><a href="#创建与销毁函数" class="headerlink" title="创建与销毁函数"></a>创建与销毁函数</h1><p>由于<code>raw_combined</code>的特殊性，也就是构造函数和析构函数都是没有内存的生成和释放。那么如果想从头制造一个带内存的类，应该如何处理？这个时候就是需要用到<code>create/delete</code>函数。</p>
+<h2 id="create函数"><a href="#create函数" class="headerlink" title="create函数"></a>create函数</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> raw_combined *<span class="title">create</span><span class="params">(<span class="keyword">unsigned</span> len, <span class="keyword">unsigned</span> align=<span class="number">0</span>)</span> </span>&#123;</div><div class="line">    <span class="comment">// 如果没有指定内存的对齐单位，那么使用size_t的大小为单位。一般来说，</span></div><div class="line">    <span class="comment">// 这个就是CPU的默认对齐单位。比如32位的CPU一般是按4个char来对齐。</span></div><div class="line">    <span class="keyword">if</span> (!align)</div><div class="line">        align = <span class="keyword">sizeof</span>(<span class="keyword">size_t</span>);</div><div class="line">    <span class="comment">// raw_combined主要是包含两部分内存区域，一部分是数据区域本身。</span></div><div class="line">    <span class="comment">// 也就是这里的datalen;一部分是raw_combined类所占的内存区域。</span></div><div class="line">    <span class="comment">// 这里是利用ROUND_UP_TO来计算应该申请的内存区域的长度。</span></div><div class="line">    <span class="keyword">size_t</span> rawlen = ROUND_UP_TO(<span class="keyword">sizeof</span>(buffer::raw_combined),</div><div class="line">                                <span class="keyword">alignof</span>(buffer::raw_combined));</div><div class="line">    <span class="keyword">size_t</span> datalen = ROUND_UP_TO(len, <span class="keyword">alignof</span>(buffer::raw_combined));</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> DARWIN</span></div><div class="line">    <span class="keyword">char</span> *ptr = (<span class="keyword">char</span> *) valloc(rawlen + datalen);</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line">    <span class="keyword">char</span> *ptr = <span class="number">0</span>;</div><div class="line">    <span class="comment">// posix_memalign这个是在申请内存的时候，按照align指定的长度来申请。</span></div><div class="line">    <span class="comment">// 有意思的是，需要注意这里申请的长度是rawlen + datalen。</span></div><div class="line">    <span class="comment">// 其中rawlen就是raw_combined的长度。</span></div><div class="line">    <span class="keyword">int</span> r = ::posix_memalign((<span class="keyword">void</span>**)(<span class="keyword">void</span>*)&amp;ptr, align, rawlen + datalen);</div><div class="line">    <span class="keyword">if</span> (r)</div><div class="line">        <span class="keyword">throw</span> bad_alloc();</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* DARWIN */</span></span></div><div class="line">    <span class="keyword">if</span> (!ptr)</div><div class="line">        <span class="keyword">throw</span> bad_alloc();</div><div class="line"></div><div class="line">    <span class="comment">// actual data first, since it has presumably larger alignment restriction</span></div><div class="line">    <span class="comment">// then put the raw_combined at the end</span></div><div class="line">    <span class="comment">// 这里属于c++的placement new的用法。</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> (ptr + datalen) raw_combined(ptr, len, align);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>create</code>函数是相当于重新构造一个带内存的<code>raw_combined</code>类。所以在这个函数内存是需要处理内存的申请和释放的。</p>
+<p>通过这段函数可以看明白raw_combined类的内存分布。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">|---data-----| raw_combined <span class="keyword">class</span>|</div><div class="line">|<span class="number">________________________________</span>|</div><div class="line">              |</div><div class="line">    refered by raw_combined</div></pre></td></tr></table></figure>
+<p>也就是说，<code>raw_combined</code>并不会占用整个内存区域。只是在需要使用的内存区域后面，紧接着占用一块区域用来记录信息。</p>
+<p>备注：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> ROUND_UP_TO</span></div><div class="line"><span class="meta"># <span class="meta-keyword">define</span> ROUND_UP_TO(n, d) ((n)%(d) ? ((n)+(d)-(n)%(d)) : (n))</span></div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>这个宏的作用与<code>(n + d - 1) / d * d</code>效果一样。也就是往上取d的整数倍。比如。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">n = <span class="number">4</span>, d = <span class="number">3</span>;</div><div class="line">ROUND_UP_TO(<span class="number">4</span>, <span class="number">3</span>) = <span class="number">6</span>;</div></pre></td></tr></table></figure>
+<h2 id="delete函数"><a href="#delete函数" class="headerlink" title="delete函数"></a>delete函数</h2><p>在这里，<code>create</code>函数不是重载的。但是<code>delete</code>函数却是重载的<code>c++</code>的函数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *ptr)</span> </span>&#123;</div><div class="line">  raw_combined *raw = (raw_combined *)ptr;</div><div class="line">  ::<span class="built_in">free</span>((<span class="keyword">void</span> *)raw-&gt;data);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>写了个模拟<code>raw_combined</code>类的代码如下，可以看出内存的申请和释放。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">class</span> A &#123;</div><div class="line">    <span class="keyword">char</span> *data;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    A(<span class="keyword">char</span> *d) &#123;</div><div class="line">        data = d;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Constructor"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    ~A() &#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"Destructor"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">static</span> A *<span class="title">create</span><span class="params">(<span class="keyword">int</span> len)</span> </span>&#123;</div><div class="line">        <span class="keyword">char</span> *p = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (len + <span class="keyword">sizeof</span>(A)));</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> (p + len) A(p);</div><div class="line">    &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">(<span class="keyword">void</span> *p)</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"operator delete"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">        A *a = (A*)p;</div><div class="line">        <span class="built_in">free</span>(a-&gt;data);</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"over delete"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">    A *temp = A::create(<span class="number">10</span>);</div><div class="line">    <span class="keyword">delete</span> temp;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>有意思的是<code>raw_combined</code>实现了基类的<code>clone_empty</code>函数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function">raw* <span class="title">clone_empty</span><span class="params">()</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> create(len, alignment);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这个函数里面分生成新的内存。这里是重载了基类的<code>clone_empty</code>函数。但是对于<code>raw_combined</code>而言，就是只是调用<code>create</code>函数。至于data里面的内容是啥，这里没有管。需要注意的是，raw_combined里面记录的<code>len</code>是针对前面的数据区域内存长度而言。并不包含<code>raw_combined</code>所占的内存区域。所又，调用基类的<code>clone</code>函数的时候，也只是会复制前面的数据区域。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/4.ceph.buffer.raw_combined" data-title="ceph:buffer:raw_combined实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -667,7 +687,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/blog/">&laquo; Prev</a><a class="page-number" href="/blog/">1</a><span class="page-number current">2</span><a class="page-number" href="/blog/page/3/">3</a><a class="extend next" rel="next" href="/blog/page/3/">Next &raquo;</a>
+      <a class="extend prev" rel="prev" href="/blog/">&laquo; Prev</a><a class="page-number" href="/blog/">1</a><span class="page-number current">2</span><a class="page-number" href="/blog/page/3/">3</a><a class="page-number" href="/blog/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/7/">7</a><a class="extend next" rel="next" href="/blog/page/3/">Next &raquo;</a>
     </nav>
   
 </div>
@@ -675,7 +695,7 @@
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2016 You Ji
+    		&copy; 2017 You Ji
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten

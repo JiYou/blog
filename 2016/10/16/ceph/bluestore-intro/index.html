@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Ceph Bluestore简介 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="参考链接
+ceph存储引擎bluestore解析 来源独家号 System Notes 作者 @dong_wu
+http://www.voidcn.com/blog/changtao381/article/p-4987037.html
+http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-cep">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ceph Bluestore简介">
+<meta property="og:url" content="https://jiyou.github.io/blog/2016/10/16/ceph/bluestore-intro/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="参考链接
+ceph存储引擎bluestore解析 来源独家号 System Notes 作者 @dong_wu
+http://www.voidcn.com/blog/changtao381/article/p-4987037.html
+http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-cep">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/bluestore-arch-wei.jpeg">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/bluestore-metadata.png">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/bluestore-onode-extent.jpeg">
+<meta property="og:updated_time" content="2016-10-18T05:48:11.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Ceph Bluestore简介">
+<meta name="twitter:description" content="参考链接
+ceph存储引擎bluestore解析 来源独家号 System Notes 作者 @dong_wu
+http://www.voidcn.com/blog/changtao381/article/p-4987037.html
+http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-cep">
+<meta name="twitter:image" content="https://jiyou.github.io/blog/blog/img/bluestore-arch-wei.jpeg">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">最近文章</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/categories/随笔">随笔</a></li>
+				        
+							<li><a href="/blog/categories/xv6">xv6</a></li>
+				        
+							<li><a href="/blog/categories/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/categories/openstack">openstack</a></li>
+				        
+							<li><a href="/blog/categories/OS">WriteOS</a></li>
+				        
+							<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
+				        
+							<li><a href="/blog/categories/libevent">libevent</a></li>
+				        
+							<li><a href="/blog/categories/PDP11">PDP11</a></li>
+				        
+							<li><a href="/blog/categories/Linux">Linux</a></li>
+				        
+							<li><a href="/blog/categories/Kernel">Kernel</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.33px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 11.67px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 16.67px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 13.33px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 11.67px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">最近文章</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/categories/随笔">随笔</a></li>
+		        
+					<li><a href="/blog/categories/xv6">xv6</a></li>
+		        
+					<li><a href="/blog/categories/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/categories/openstack">openstack</a></li>
+		        
+					<li><a href="/blog/categories/OS">WriteOS</a></li>
+		        
+					<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
+		        
+					<li><a href="/blog/categories/libevent">libevent</a></li>
+		        
+					<li><a href="/blog/categories/PDP11">PDP11</a></li>
+		        
+					<li><a href="/blog/categories/Linux">Linux</a></li>
+		        
+					<li><a href="/blog/categories/Kernel">Kernel</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-ceph/bluestore-intro" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/10/16/ceph/bluestore-intro/" class="article-date">
+  	<time datetime="2016-10-16T12:45:45.000Z" itemprop="datePublished">2016-10-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Ceph Bluestore简介
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="参考链接"><a href="#参考链接" class="headerlink" title="参考链接"></a>参考链接</h1><ul>
+<li><a href="http://www.sysnote.org/2016/08/19/ceph-bluestore/" target="_blank" rel="external">ceph存储引擎bluestore解析</a> 来源独家号 System Notes 作者 @dong_wu</li>
+<li><a href="http://www.voidcn.com/blog/changtao381/article/p-4987037.html" target="_blank" rel="external">http://www.voidcn.com/blog/changtao381/article/p-4987037.html</a></li>
+<li><a href="http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-ceph" target="_blank" rel="external">http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-ceph</a></li>
+<li><a href="https://drive.google.com/file/d/0B2gTBZrkrnpZOTVQNkV0M2tIWkk/view" target="_blank" rel="external">https://drive.google.com/file/d/0B2gTBZrkrnpZOTVQNkV0M2tIWkk/view</a></li>
+<li><a href="http://events.linuxfoundation.org/sites/events/files/slides/LinuxCon%20NA%20BlueStore.pdf" target="_blank" rel="external">http://events.linuxfoundation.org/sites/events/files/slides/LinuxCon%20NA%20BlueStore.pdf</a></li>
+</ul>
+<h1 id="关键字"><a href="#关键字" class="headerlink" title="关键字"></a>关键字</h1><h2 id="WAL"><a href="#WAL" class="headerlink" title="WAL"></a>WAL</h2><p>在计算机科学中，预写式日志（Write-ahead logging，縮寫 WAL）是关系数据库系统中用于提供原子性和持久性（ACID属性中的两个）的一系列技术。在使用WAL的系统中，所有的修改在提交之前都要先写入log文件中。<br>log文件中通常包括redo和undo信息。这样做的目的可以通过一个例子来说明。假设一个程序在执行某些操作的过程中机器掉电了。在重新启动时，程序可能需要知道当时执行的操作是成功了还是部分成功或者是失败了。如果使用了WAL，程序就可以检查log文件，并对突然掉电时计划执行的操作内容跟实际上执行的操作内容进行比较。在这个比较的基础上，程序就可以决定是撤销已做的操作还是继续完成已做的操作，或者是保持原样。<br>WAL允许用in-place方式更新数据库。另一种用来实现原子更新的方法是shadow paging，它并不是in-place方式。用in-place方式做更新的主要优点是减少索引和块列表的修改。ARIES是WAL系列技术常用的算法。在文件系统中，WAL通常称为journaling。PostgreSQL也是用WAL来提供point-in-time恢复和数据库复制特性。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">extent 范围：范围记录的主要方式是offet &amp; length。</div></pre></td></tr></table></figure>
+<h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>ceph后端(<code>objectstore</code>)使用的支持多种存储引擎，以插件式的方式来进行管理使用。<br>目前支持的有：</p>
+<ul>
+<li>filestore</li>
+<li>kvstore</li>
+<li>memstore</li>
+<li>bluestore</li>
+</ul>
+<p>目前默认使用的<code>filestore</code>。之所以会开发一个新的<code>bluestore</code>，这是因为<code>filestore</code>有以下问题：</p>
+<ul>
+<li>只对<code>HDD</code>进行了设计，没有针对<code>SSD</code>做设计。</li>
+<li><code>filestore</code>有<code>journal</code>，会带来二次写。导致写放大的问题。</li>
+<li><code>filestore</code>是一个依赖底层现有文件系统，无论是<code>xfs</code>，还是<code>btrfs</code>，还是<code>ext4</code>都是比较<code>重</code>的文件系统，但是可能对于<code>filestore</code>而言，不需要用到这么<code>重</code>的文件系统。</li>
+</ul>
+<p>那么目前为止，<code>bluestore</code>的现状是：</p>
+<ul>
+<li>bluestore还处于开发优化阶段</li>
+<li>在jewel版本还是试用版本</li>
+<li>并且最新的master相比jewel已经做了大的重构，预期会在后续的大版本中稳定下来成为默认的存储引擎。</li>
+</ul>
+<p>本文基于当前的<code>master</code>分支对<code>bluestore</code>存储引擎进行分析。</p>
+<h1 id="Bluestore的结构"><a href="#Bluestore的结构" class="headerlink" title="Bluestore的结构"></a>Bluestore的结构</h1><p><img src="/blog/img/bluestore-arch-wei.jpeg" alt="bluestore的结构"></p>
+<p>这个图需要从下往上看：</p>
+<p><strong>BlockDevice</strong></p>
+<p><code>BlockDevice</code>实现在用户态下使用<code>linux aio</code>直接对裸设备进行I/O操作。既然是直接管理裸设备就必然需要进行裸设备的空间管理。因此，就需要一个分配器的概念。</p>
+<p><strong>Allocator</strong></p>
+<p><code>Allocator</code>负责分配磁盘上的空间。对应的就是<code>Allocator</code>，目前支持<code>StupidAllocator</code>和<code>BitmapAllocator</code>两种分配器。</p>
+<p><strong>BlueFS</strong></p>
+<p><code>BlueFS</code>是实现的一个小型的文件系统。这个文件系统负现存放写入数据的元数据。</p>
+<p><strong>BlueRocksEnv</strong></p>
+<p>这个是实现了<code>BlueFS</code>对接<code>RocksDB</code>的一个接口。起因是因为，当建立好<code>BlueFS</code>之后，元数据的管理就是一个问题。为了简单起见，这里采用了<code>RocksDB</code>，但是要明白：<code>RocksDB</code>本身并不支持<code>BlueFS</code>。好在<code>RocksDB</code>采用了驱动的操作方式，只要是实现了<code>RocksEnvWrapper</code>接口，就可把自己写的文件系统交给<code>RocksDB</code>使用。</p>
+<p>在系统启动mount这个文件系统的时候将所有的元数据都加载到内存中，BluesFS的数据和日志文件都通过BlockDevice保存到裸设备上，BlueFS和BlueStore可以共享裸设备，也可以分别指定不同的设备。</p>
+<p><strong>BlueFS/BlueStore的区别</strong></p>
+<p>从概念上讲，<code>Bluestore</code>包含了<code>BlueFS</code>。<code>BlueFS</code>只是<code>Bluestore</code>的一部分。但是有时候，也会遇到这种情况，就是指<code>bluestore</code>负责用户过来的数据的存放。而<code>BlueFS</code>只负现元数据的处理。所以这两者在物理上可以放在一起，也可以放在不同的地方。</p>
+<h1 id="Bluestore的元数据"><a href="#Bluestore的元数据" class="headerlink" title="Bluestore的元数据"></a>Bluestore的元数据</h1><p>在<code>bluestore</code>里面存放着很多元数据。在开始之前需要搞明白这些元数据的含义。</p>
+<p><img src="/blog/img/bluestore-metadata.png" alt="Bluestore内部的元数据"></p>
+<p>元数据的起因。在以前的<code>filestore</code>里面，由于数据是存放在现有的文件系统里面的。底层文件系统直接接了<code>管理元数据</code>的工作。那么现在好了，底层文件系统也要自己写了，<code>bluestore</code>也需要自己管理元数据了。</p>
+<p>#Onode</p>
+<p><code>Onode</code>是对应的数据块对应的元数据，一般而言，当进程运行的时候<code>Onode</code>是在内存里面的。为了避免丢失，也会保存到<code>rocksdb</code>里面。</p>
+<p><strong>注意</strong>在代码里面<code>Onode</code>本身也是有元数据信息：<code>bluestore_onode_t</code>这个就是用来记录<code>Onoe</code>的元数据信息。并且会作为值放到<code>RocksDB</code>里面。<code>bluestore_onode_t onode;  ///&lt; metadata stored as value in kv store</code>。<code>key</code>就有可能使用的是：<code>string key;     ///&lt; key under PREFIX_OBJ where we are stored</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// an in-memory object</span></div><div class="line"><span class="keyword">struct</span> Onode &#123;</div><div class="line">  ExtentMap extent_map;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">typedef</span> boost::intrusive_ptr&lt;Onode&gt; OnodeRef;</div></pre></td></tr></table></figure>
+<p>可以看出，<code>Onode</code>这个结构里面包含着<code>extent_map</code>。这个<code>map</code>结构里面记录着两个元数据信息：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">extent_map_t</span> extent_map;        <span class="comment">///&lt; map of Extents to Blobs</span></div><div class="line"><span class="keyword">blob_map_t</span> spanning_blob_map;   <span class="comment">///&lt; blobs that span shards</span></div><div class="line"></div><div class="line"><span class="keyword">struct</span> Shard &#123;</div><div class="line">  <span class="built_in">string</span> key;            <span class="comment">///&lt; kv key</span></div><div class="line">  <span class="keyword">uint32_t</span> offset;       <span class="comment">///&lt; starting logical offset</span></div><div class="line">  <span class="keyword">bluestore_onode_t</span>::shard_info *shard_info;</div><div class="line">  <span class="keyword">bool</span> loaded = <span class="literal">false</span>;   <span class="comment">///&lt; true if shard is loaded</span></div><div class="line">  <span class="keyword">bool</span> dirty = <span class="literal">false</span>;    <span class="comment">///&lt; true if shard is dirty and needs reencoding</span></div><div class="line">&#125;;</div><div class="line"><span class="built_in">vector</span>&lt;Shard&gt; shards;    <span class="comment">///&lt; shards</span></div></pre></td></tr></table></figure>
+<h2 id="extent"><a href="#extent" class="headerlink" title="extent"></a>extent</h2><p><code>extent_map_t extent_map;</code>的类型为一个<code>set</code>，实际上就是保存了一系列的<code>Extent</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> boost::intrusive::<span class="built_in">set</span>&lt;Extent&gt; <span class="keyword">extent_map_t</span>;</div></pre></td></tr></table></figure>
+<p>而<code>Extent</code>则是：<code>范围/长度</code></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// a logical extent, pointing to (some portion of) a blob</span></div><div class="line"><span class="comment">// 一个罗辑的长度。指向一个或者一个blob的某个位置。</span></div></pre></td></tr></table></figure>
+<p>因此，代码</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// an in-memory object</span></div><div class="line"><span class="keyword">struct</span> Onode &#123;</div><div class="line">  ExtentMap extent_map;</div></pre></td></tr></table></figure>
+<p>也就可以达到如下的效果：</p>
+<p><img src="/blog/img/bluestore-onode-extent.jpeg" alt="Onode与extent的映射"></p>
+<p>Extent的代码定义如下：实际上也是指向一个<code>Blob</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">  <span class="comment">/// a logical extent, pointing to (some portion of) a blob</span></div><div class="line">  <span class="keyword">struct</span> Extent : <span class="keyword">public</span> boost::intrusive::set_base_hook&lt;boost::intrusive::optimize_size&lt;<span class="literal">true</span>&gt;&gt; &#123;</div><div class="line">    <span class="keyword">uint32_t</span> logical_offset = <span class="number">0</span>;      <span class="comment">///&lt; logical offset</span></div><div class="line">    <span class="keyword">uint32_t</span> blob_offset = <span class="number">0</span>;         <span class="comment">///&lt; blob offset</span></div><div class="line">    <span class="keyword">uint32_t</span> length = <span class="number">0</span>;              <span class="comment">///&lt; length</span></div><div class="line">    <span class="keyword">uint8_t</span>  blob_depth = <span class="number">0</span>;          <span class="comment">///&lt; blob overlapping count</span></div><div class="line">    BlobRef blob;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里主要是通过<code>BlobRef</code>记录了</p>
+<h2 id="blob"><a href="#blob" class="headerlink" title="blob"></a>blob</h2><h3 id="引用方"><a href="#引用方" class="headerlink" title="引用方"></a>引用方</h3><p>在<code>ExtentMap</code>中，也记录了一系列<code>Blob</code>。而在每个<code>Extent</code>中，也会有一个<code>BlobRef</code>的指针，指向自己所属的<code>Blob</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">blob_map_t</span> spanning_blob_map;   <span class="comment">///&lt; blobs that span shards</span></div></pre></td></tr></table></figure>
+<p>这个是一个<code>map</code>类型：<code>typedef std::map&lt;int,BlobRef&gt; blob_map_t;</code>。</p>
+<h3 id="Blob的定义"><a href="#Blob的定义" class="headerlink" title="Blob的定义"></a>Blob的定义</h3><p><code>Blob</code>的定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// in-memory blob metadata and associated cached buffers (if any)</span></div><div class="line"><span class="comment">// 需要注意的是，这个也只是一个常驻内存的blob的元数据。并且与缓存中的buffers产生联系。</span></div><div class="line"></div><div class="line">  <span class="keyword">struct</span> Blob &#123;</div><div class="line">    <span class="built_in">std</span>::<span class="keyword">atomic_int</span> nref = &#123;<span class="number">0</span>&#125;;     <span class="comment">///&lt; reference count</span></div><div class="line">    <span class="keyword">int16_t</span> id = <span class="number">-1</span>;                <span class="comment">///&lt; id, for spanning blobs only, &gt;= 0</span></div><div class="line">    <span class="keyword">int16_t</span> last_encoded_id = <span class="number">-1</span>;   <span class="comment">///&lt; (ephemeral) used during encoding only</span></div><div class="line">    SharedBlobRef shared_blob;      <span class="comment">///&lt; shared blob state (if any)</span></div><div class="line"></div><div class="line">    <span class="comment">/// refs from this shard.  ephemeral if id&lt;0, persisted if spanning.</span></div><div class="line">    <span class="keyword">bluestore_extent_ref_map_t</span> ref_map;  <span class="comment">// 这里就是一个长度/refs记录。</span></div><div class="line"></div><div class="line">  <span class="keyword">private</span>:</div><div class="line">    <span class="keyword">mutable</span> <span class="keyword">bluestore_blob_t</span> blob;  <span class="comment">///&lt; decoded blob metadata</span></div><div class="line">    <span class="keyword">mutable</span> <span class="keyword">bool</span> dirty = <span class="literal">true</span>;      <span class="comment">///&lt; true if blob is newer than blob_bl</span></div><div class="line">    <span class="keyword">mutable</span> bufferlist blob_bl;     <span class="comment">///&lt; cached encoded blob</span></div></pre></td></tr></table></figure>
+<p>需要注意的是，这个也只是一个元数据类。<code>blog</code>真实的定义是放在：<code>bluestore_types.h</code>这个文件里面：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// blob: a piece of data on disk</span></div><div class="line"><span class="keyword">struct</span> <span class="keyword">bluestore_blob_t</span> &#123;</div><div class="line">  <span class="function"><span class="keyword">static</span> <span class="built_in">string</span> <span class="title">get_flags_string</span><span class="params">(<span class="keyword">unsigned</span> flags)</span></span>;</div><div class="line">  <span class="built_in">vector</span>&lt;<span class="keyword">bluestore_pextent_t</span>&gt; extents;<span class="comment">///&lt; raw data position on device</span></div><div class="line">  <span class="keyword">bluestore_blob_t</span>(<span class="keyword">uint32_t</span> f = <span class="number">0</span>) : flags(f) &#123;&#125;</div></pre></td></tr></table></figure>
+<p>这里的<code>bluestore_blob_t</code>会引用一系列：<code>vector&lt;bluestore_pextent_t&gt; extents;///&lt; raw data position on device</code>。</p>
+<p>也就是记录了多个<code>pextent</code>。blob里通过pextent对应到实际物理盘上的区域（pextent里就是offset和length来定位物理盘的位置区域）。一个onode里的多个lextent可能在同一个blob里，而一个blob也可能对应到多个pextent。</p>
+<h2 id="pexent"><a href="#pexent" class="headerlink" title="pexent"></a>pexent</h2><p>那么再查看一下<code>pextent</code>的定义是怎么样的：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// pextent: physical extent</span></div><div class="line"><span class="keyword">struct</span> <span class="keyword">bluestore_pextent_t</span> : <span class="keyword">public</span> AllocExtent&#123;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>继承了<code>AllocExtent</code>这个类。而这个类的定义极其简单，也就是里面写明了：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// offset, length.</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> AllocExtent &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="keyword">uint64_t</span> offset;</div><div class="line">  <span class="keyword">uint32_t</span> length;</div><div class="line"></div><div class="line">  AllocExtent() &#123; </div><div class="line">    offset = <span class="number">0</span>;</div><div class="line">    length = <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  AllocExtent(<span class="keyword">int64_t</span> off, <span class="keyword">int32_t</span> len) : offset(off), length(len) &#123; &#125;</div><div class="line">  <span class="keyword">uint64_t</span> end() <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> offset + length;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2016/10/24/ceph/ceph-cmake-debug/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          Ceph Bluestore Cmake以及调试
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2016/10/05/mit.6.828/MIT-6-828-JOS课程1：HW-Shell/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">MIT 6.828 JOS课程1：HW Shell</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="https://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/bluestore-intro" data-title="Ceph Bluestore简介" data-url="https://jiyou.github.io/blog/blog/2016/10/16/ceph/bluestore-intro/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+
+<script>
+	var yiliaConfig = {
+		fancybox: false,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
