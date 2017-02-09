@@ -346,8 +346,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>#mmap</p>
-<p>这里首先需要介绍一下<code>mmap</code>: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享。如下图所示：</p>
+        <h1 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h1><p>这里首先需要介绍一下<code>mmap</code>: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享。如下图所示：</p>
 <p><img src="/blog/img/ceph.buffer.raw.mmap.png" alt=""></p>
 <p>由上图可以看出，进程的虚拟地址空间，由多个虚拟内存区域构成。虚拟内存区域是进程的虚拟地址空间中的一个同质区间，即具有同样特性的连续地址范围。上图中所示的text数据段（代码段）、初始数据段、BSS数据段、堆、栈和内存映射，都是一个独立的虚拟内存区域。而为内存映射服务的地址空间处在堆栈之间的空余部分。</p>
 <p><strong>概述</strong><br>实际上就是开辟一个内存区域，把这个内存区域与磁盘上的一个文件映射。进而可以以操作内存的方式来操作这个文件。并且可以在多个进程之间共享这个文件。</p>
@@ -389,6 +388,91 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages" data-title="ceph:buffer:raw_mmap_pages实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/" class="article-date">
+  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/">ceph::buffer::raw_malloc实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>代码比较简单，直接分析代码即可。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_malloc : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_malloc(unsigned l) : raw(l) &#123;</div><div class="line">        // 如果data内存区域长度大于0.</div><div class="line">        // 那么在这里申请好内存。</div><div class="line">        if (len) &#123;</div><div class="line">            data = (char *)malloc(len);</div><div class="line">            if (!data)</div><div class="line">                throw bad_alloc();</div><div class="line">        &#125; else &#123;</div><div class="line">            // 如果内存长度为0.</div><div class="line">            // 那么这里直接把data指针设置为0。</div><div class="line">            data = 0;</div><div class="line">        &#125;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw_malloc(unsigned l, char *b) : raw(b, l) &#123;</div><div class="line">        inc_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    ~raw_malloc() &#123;</div><div class="line">        // 释放内存</div><div class="line">        free(data);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    // 这里是只是生成相同大小的新内存区域。</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_malloc(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>需要注意的是，所有关于内存的记录都是在构造函数和析构函数里面完成。从总体上来说，这个类没有什么特别的地方，就是内存生成的时候，指定用的是<code>malloc</code>罢了。</p>
+<p><strong>注意</strong><br><code>explicit</code>放在代码里，会导致代码无法高亮。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" data-title="ceph::buffer::raw_malloc实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -473,90 +557,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/5.track.buffer" data-title="ceph内存使用计数" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/" class="article-date">
-  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/">ceph:buffer:raw_malloc实现分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>代码比较简单，直接分析代码即可。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_malloc : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_malloc(unsigned l) : raw(l) &#123;</div><div class="line">        // 如果data内存区域长度大于0.</div><div class="line">        // 那么在这里申请好内存。</div><div class="line">        if (len) &#123;</div><div class="line">            data = (char *)malloc(len);</div><div class="line">            if (!data)</div><div class="line">                throw bad_alloc();</div><div class="line">        &#125; else &#123;</div><div class="line">        // 如果内存长度为0.</div><div class="line">        // 那么这里直接把data指针设置为0。</div><div class="line">            data = 0;</div><div class="line">        &#125;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw_malloc(unsigned l, char *b) : raw(b, l) &#123;</div><div class="line">        inc_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    ~raw_malloc() &#123;</div><div class="line">        // 释放内存</div><div class="line">        free(data);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    // 这里是只是生成相同大小的新内存区域。</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_malloc(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>需要注意的是，所有关于内存的记录都是在构造函数和析构函数里面完成。从总体上来说，这个类没有什么特别的地方，就是内存生成的时候，指定用的是<code>malloc</code>罢了。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" data-title="ceph:buffer:raw_malloc实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

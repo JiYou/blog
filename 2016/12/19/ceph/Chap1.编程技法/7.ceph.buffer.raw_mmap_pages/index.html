@@ -6,20 +6,17 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <title>ceph:buffer:raw_mmap_pages实现分析 | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="#mmap
-这里首先需要介绍一下mmap: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接">
+  <meta name="description" content="mmap这里首先需要介绍一下mmap: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ceph:buffer:raw_mmap_pages实现分析">
 <meta property="og:url" content="https://jiyou.github.io/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/index.html">
 <meta property="og:site_name" content="缘生故如幻">
-<meta property="og:description" content="#mmap
-这里首先需要介绍一下mmap: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接">
+<meta property="og:description" content="mmap这里首先需要介绍一下mmap: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/ceph.buffer.raw.mmap.png">
-<meta property="og:updated_time" content="2017-01-23T08:00:54.000Z">
+<meta property="og:updated_time" content="2017-01-23T08:08:18.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph:buffer:raw_mmap_pages实现分析">
-<meta name="twitter:description" content="#mmap
-这里首先需要介绍一下mmap: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接">
+<meta name="twitter:description" content="mmap这里首先需要介绍一下mmap: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映">
 <meta name="twitter:image" content="https://jiyou.github.io/blog/blog/img/ceph.buffer.raw.mmap.png">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
@@ -283,8 +280,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>#mmap</p>
-<p>这里首先需要介绍一下<code>mmap</code>: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享。如下图所示：</p>
+        <h1 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h1><p>这里首先需要介绍一下<code>mmap</code>: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享。如下图所示：</p>
 <p><img src="/blog/img/ceph.buffer.raw.mmap.png" alt=""></p>
 <p>由上图可以看出，进程的虚拟地址空间，由多个虚拟内存区域构成。虚拟内存区域是进程的虚拟地址空间中的一个同质区间，即具有同样特性的连续地址范围。上图中所示的text数据段（代码段）、初始数据段、BSS数据段、堆、栈和内存映射，都是一个独立的虚拟内存区域。而为内存映射服务的地址空间处在堆栈之间的空余部分。</p>
 <p><strong>概述</strong><br>实际上就是开辟一个内存区域，把这个内存区域与磁盘上的一个文件映射。进而可以以操作内存的方式来操作这个文件。并且可以在多个进程之间共享这个文件。</p>
@@ -311,8 +307,8 @@
     </a>
   
   
-    <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ceph内存使用计数</div>
+    <a href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph::buffer::raw_malloc实现分析</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -336,7 +332,7 @@
 		<a class="jiathis_button_tumblr"></a>
     <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
 	</div>
-	<script type="text/javascript" src="https://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
 	<!-- JiaThis Button END -->
 </div>
 
