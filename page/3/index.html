@@ -98,7 +98,7 @@
 				        
 							<li><a href="/blog/categories/xv6">xv6</a></li>
 				        
-							<li><a href="/blog/categories/Ceph">Ceph</a></li>
+							<li><a href="/blog/categories/ceph">ceph</a></li>
 				        
 							<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
 				        
@@ -204,7 +204,7 @@
 		        
 					<li><a href="/blog/categories/xv6">xv6</a></li>
 		        
-					<li><a href="/blog/categories/Ceph">Ceph</a></li>
+					<li><a href="/blog/categories/ceph">ceph</a></li>
 		        
 					<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
 		        
@@ -243,90 +243,6 @@
 </nav>
 
       <div class="body-wrap">
-  
-    <article id="post-ceph/Chap1.编程技法/5.track.buffer" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" class="article-date">
-  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/">ceph内存使用计数</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="内存使用跟踪"><a href="#内存使用跟踪" class="headerlink" title="内存使用跟踪"></a>内存使用跟踪</h1><p>在<code>Ceph</code>里面对使用内存的地方，进行了计数，也就是统计了整个进程所使用的内存数。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// src/common/buffer.c:54</span></div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic_t</span> buffer_total_alloc;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_bytes;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_num;</div><div class="line">  <span class="keyword">const</span> <span class="keyword">bool</span> buffer_track_alloc = get_env_bool(<span class="string">"CEPH_BUFFER_TRACK"</span>);</div><div class="line"></div><div class="line">  <span class="keyword">namespace</span> &#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.add(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">dec_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.sub(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 记录历史使用内存，所以这个函数是没有dec_xxx函数。</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_history_alloc</span><span class="params">(<span class="keyword">uint64_t</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc) &#123;</div><div class="line">      buffer_history_alloc_bytes.add(len);</div><div class="line">      buffer_history_alloc_num.inc();</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<p>有意思的是，需要注意一下<code>atomic64_t</code>这种变量的使用。这个变量，一般而言，<code>Linux</code>操作系统都是支持的。如果不支持，那么就需要引入一个叫<code>libatomic_ops</code>的库，使和其中的<code>AIO_T</code>类型。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/5.track.buffer" data-title="ceph内存使用计数" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
   
     <article id="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -390,6 +306,90 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" data-title="ceph::buffer::raw_malloc实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/5.track.buffer" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" class="article-date">
+  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/">ceph内存使用计数</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="内存使用跟踪"><a href="#内存使用跟踪" class="headerlink" title="内存使用跟踪"></a>内存使用跟踪</h1><p>在<code>Ceph</code>里面对使用内存的地方，进行了计数，也就是统计了整个进程所使用的内存数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// src/common/buffer.c:54</span></div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic_t</span> buffer_total_alloc;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_bytes;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_num;</div><div class="line">  <span class="keyword">const</span> <span class="keyword">bool</span> buffer_track_alloc = get_env_bool(<span class="string">"CEPH_BUFFER_TRACK"</span>);</div><div class="line"></div><div class="line">  <span class="keyword">namespace</span> &#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.add(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">dec_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.sub(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 记录历史使用内存，所以这个函数是没有dec_xxx函数。</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_history_alloc</span><span class="params">(<span class="keyword">uint64_t</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc) &#123;</div><div class="line">      buffer_history_alloc_bytes.add(len);</div><div class="line">      buffer_history_alloc_num.inc();</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>有意思的是，需要注意一下<code>atomic64_t</code>这种变量的使用。这个变量，一般而言，<code>Linux</code>操作系统都是支持的。如果不支持，那么就需要引入一个叫<code>libatomic_ops</code>的库，使和其中的<code>AIO_T</code>类型。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/5.track.buffer" data-title="ceph内存使用计数" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
