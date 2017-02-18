@@ -16,7 +16,7 @@
 // src/common/buffer.c:162namespace ceph &amp;#123;  class buffer::raw &amp;#123;  public:    char *data;    unsigned len;    atomic_t nref; // &amp;lt;-- 引用计数    ...  &amp;#125;;&amp;#">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/classceph_1_1buffer_1_1raw__inherit__graph.png">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/classceph_1_1buffer_1_1raw__coll__graph.png">
-<meta property="og:updated_time" content="2017-01-23T08:00:37.000Z">
+<meta property="og:updated_time" content="2017-01-26T02:53:37.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph.buffer.raw的引用计数">
 <meta name="twitter:description" content="buffer::raw这个数据结构描述了一段缓冲区。数据结构定义于。
@@ -84,7 +84,7 @@
 						<li>Links</li>
 						
 						
-						<li>About</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -105,11 +105,11 @@
 				        
 							<li><a href="/blog/categories/xv6">xv6</a></li>
 				        
-							<li><a href="/blog/categories/ceph">ceph</a></li>
+							<li><a href="/blog/categories/Ceph">Ceph</a></li>
 				        
-							<li><a href="/blog/categories/openstack">openstack</a></li>
+							<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
 				        
-							<li><a href="/blog/categories/OS">WriteOS</a></li>
+							<li><a href="/blog/categories/OS">OS</a></li>
 				        
 							<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
 				        
@@ -120,6 +120,8 @@
 							<li><a href="/blog/categories/Linux">Linux</a></li>
 				        
 							<li><a href="/blog/categories/Kernel">Kernel</a></li>
+				        
+							<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 				        
 						</ul>
 					</nav>
@@ -209,11 +211,11 @@
 		        
 					<li><a href="/blog/categories/xv6">xv6</a></li>
 		        
-					<li><a href="/blog/categories/ceph">ceph</a></li>
+					<li><a href="/blog/categories/Ceph">Ceph</a></li>
 		        
-					<li><a href="/blog/categories/openstack">openstack</a></li>
+					<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
 		        
-					<li><a href="/blog/categories/OS">WriteOS</a></li>
+					<li><a href="/blog/categories/OS">OS</a></li>
 		        
 					<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
 		        
@@ -224,6 +226,8 @@
 					<li><a href="/blog/categories/Linux">Linux</a></li>
 		        
 					<li><a href="/blog/categories/Kernel">Kernel</a></li>
+		        
+					<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 		        
 		        <div class="clearfix"></div>
 				</ul>
@@ -293,7 +297,7 @@
 <p><img src="/blog/img/classceph_1_1buffer_1_1raw__inherit__graph.png" alt=""></p>
 <p>而在基类里面放着公共类需要的数据与变量：</p>
 <p><img src="/blog/img/classceph_1_1buffer_1_1raw__coll__graph.png" alt=""></p>
-<p>类的详细关系可以查看<a href="https://fossies.org/dox/ceph-10.2.5/classceph_1_1buffer_1_1raw.html" target="_blank" rel="external">Ceph Doxgen文档</a>。</p>
+<p>类的详细关系可以查看<a href="https://fossies.org/dox/ceph-11.2.0/" target="_blank" rel="external">Ceph Doxgen文档</a>。</p>
 <p>主要是有：</p>
 <ul>
 <li>引用计数</li>
@@ -326,6 +330,7 @@
 <p>这个函数就更加简单了，直接清空<code>crc</code>记录的map。</p>
 <h1 id="构造-析构函数"><a href="#构造-析构函数" class="headerlink" title="构造/析构函数"></a>构造/析构函数</h1><p>那么接下来看一下raw类的成员函数。</p>
 <figure class="highlight"><table><tr><td class="code"><pre><div class="line">explicit raw(unsigned l)</div><div class="line">  : data(NULL), len(l), nref(0),</div><div class="line">crc_spinlock(SIMPLE_SPINLOCK_INITIALIZER)</div><div class="line">&#123;&#125;</div><div class="line">// 这里data为空，设置l还有啥意义？后面用不会出错？</div><div class="line"></div><div class="line">raw(char *c, unsigned l)</div><div class="line">  : data(c), len(l), nref(0),</div><div class="line">crc_spinlock(SIMPLE_SPINLOCK_INITIALIZER)</div><div class="line">&#123; &#125;</div><div class="line">// 这里好理解。就是缓冲区域指向c, 内存长度为l。</div><div class="line"></div><div class="line">virtual ~raw() &#123;&#125;</div><div class="line">// 虚析构函数，注意这里的实现。这里并没有去释放内存。这是因为，在raw里面，并没有申请过内存。内存区域应该是谁创建，谁负责销毁。</div></pre></td></tr></table></figure>
+<p>这里需要注意的是，当传入的构造函数的参数只有<code>len</code>的时候，这个时候是不会申请内存的。</p>
 <h1 id="复制构造函数"><a href="#复制构造函数" class="headerlink" title="复制构造函数"></a>复制构造函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// no copying.</span></div><div class="line"><span class="comment">// Cppcheck-suppress noExplicitConstructor</span></div><div class="line">raw(<span class="keyword">const</span> raw &amp;other);</div><div class="line"><span class="keyword">const</span> raw&amp; <span class="keyword">operator</span>=(<span class="keyword">const</span> raw &amp;other);</div></pre></td></tr></table></figure>
 <p>复制构造函数在这个接口类里面并没有实现。主要是为了：</p>
 <ul>

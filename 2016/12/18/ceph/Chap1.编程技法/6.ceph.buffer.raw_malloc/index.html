@@ -14,7 +14,7 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 <meta property="og:site_name" content="缘生故如幻">
 <meta property="og:description" content="代码代码比较简单，直接分析代码即可。
 class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_malloc(unsigned l) : raw(l) &amp;#123;        // 如果data内存区域长度大于0.        // 那么在这里申请好内存。        if (len) &amp;#123">
-<meta property="og:updated_time" content="2017-01-23T09:10:51.000Z">
+<meta property="og:updated_time" content="2017-01-25T04:04:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph::buffer::raw_malloc实现分析">
 <meta name="twitter:description" content="代码代码比较简单，直接分析代码即可。
@@ -81,7 +81,7 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 						<li>Links</li>
 						
 						
-						<li>About</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -102,11 +102,11 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 				        
 							<li><a href="/blog/categories/xv6">xv6</a></li>
 				        
-							<li><a href="/blog/categories/ceph">ceph</a></li>
+							<li><a href="/blog/categories/Ceph">Ceph</a></li>
 				        
-							<li><a href="/blog/categories/openstack">openstack</a></li>
+							<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
 				        
-							<li><a href="/blog/categories/OS">WriteOS</a></li>
+							<li><a href="/blog/categories/OS">OS</a></li>
 				        
 							<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
 				        
@@ -117,6 +117,8 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 							<li><a href="/blog/categories/Linux">Linux</a></li>
 				        
 							<li><a href="/blog/categories/Kernel">Kernel</a></li>
+				        
+							<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 				        
 						</ul>
 					</nav>
@@ -206,11 +208,11 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 		        
 					<li><a href="/blog/categories/xv6">xv6</a></li>
 		        
-					<li><a href="/blog/categories/ceph">ceph</a></li>
+					<li><a href="/blog/categories/Ceph">Ceph</a></li>
 		        
-					<li><a href="/blog/categories/openstack">openstack</a></li>
+					<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
 		        
-					<li><a href="/blog/categories/OS">WriteOS</a></li>
+					<li><a href="/blog/categories/OS">OS</a></li>
 		        
 					<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
 		        
@@ -221,6 +223,8 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 					<li><a href="/blog/categories/Linux">Linux</a></li>
 		        
 					<li><a href="/blog/categories/Kernel">Kernel</a></li>
+		        
+					<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 		        
 		        <div class="clearfix"></div>
 				</ul>
@@ -282,7 +286,7 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>代码比较简单，直接分析代码即可。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_malloc : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_malloc(unsigned l) : raw(l) &#123;</div><div class="line">        // 如果data内存区域长度大于0.</div><div class="line">        // 那么在这里申请好内存。</div><div class="line">        if (len) &#123;</div><div class="line">            data = (char *)malloc(len);</div><div class="line">            if (!data)</div><div class="line">                throw bad_alloc();</div><div class="line">        &#125; else &#123;</div><div class="line">            // 如果内存长度为0.</div><div class="line">            // 那么这里直接把data指针设置为0。</div><div class="line">            data = 0;</div><div class="line">        &#125;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw_malloc(unsigned l, char *b) : raw(b, l) &#123;</div><div class="line">        inc_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    ~raw_malloc() &#123;</div><div class="line">        // 释放内存</div><div class="line">        free(data);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    // 这里是只是生成相同大小的新内存区域。</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_malloc(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_malloc : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_malloc(unsigned l) : raw(l) &#123;</div><div class="line">        // 如果data内存区域长度大于0.</div><div class="line">        // 那么在这里申请好内存。</div><div class="line">        if (len) &#123;</div><div class="line">            data = (char *)malloc(len);</div><div class="line">            if (!data)</div><div class="line">                throw bad_alloc();</div><div class="line">        &#125; else &#123;</div><div class="line">            // 如果内存长度为0.</div><div class="line">            // 那么这里直接把data指针设置为0。</div><div class="line">            data = 0;</div><div class="line">        &#125;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw_malloc(unsigned l, char *b) : raw(b, l) &#123;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        // 为什么这里不调用inc_history_alloc()?</div><div class="line">    &#125;</div><div class="line">    ~raw_malloc() &#123;</div><div class="line">        // 释放内存</div><div class="line">        free(data);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    // 这里是只是生成相同大小的新内存区域。</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_malloc(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <p>需要注意的是，所有关于内存的记录都是在构造函数和析构函数里面完成。从总体上来说，这个类没有什么特别的地方，就是内存生成的时候，指定用的是<code>malloc</code>罢了。</p>
 <p><strong>注意</strong><br><code>explicit</code>放在代码里，会导致代码无法高亮。</p>
 
@@ -294,18 +298,18 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
     
 <nav id="article-nav">
   
-    <a href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          ceph:buffer:raw_mmap_pages实现分析
+          ceph内存使用计数
         
       </div>
     </a>
   
   
-    <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ceph内存使用计数</div>
+    <a href="/blog/2016/12/17/ceph/Chap1.编程技法/4.ceph.buffer.raw_combined/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph:buffer:raw_combined实现分析</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
