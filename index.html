@@ -244,6 +244,433 @@
 
       <div class="body-wrap">
   
+    <article id="post-linux.kernel/2.8页面的定期换出" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2017/06/22/linux.kernel/2.8页面的定期换出/" class="article-date">
+  	<time datetime="2017-06-22T06:20:29.000Z" itemprop="datePublished">2017-06-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2017/06/22/linux.kernel/2.8页面的定期换出/">2.8 页面的定期换出</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="2-8-1-场景类比"><a href="#2-8-1-场景类比" class="headerlink" title="2.8.1 场景类比"></a>2.8.1 场景类比</h1><p>场景类比，<code>Linux</code>系统这里对页面的处理比较绕，可能采用场景类比的思想，可以更加方便。</p>
+<table>
+<thead>
+<tr>
+<th>计算机</th>
+<th>保险服务</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>柜员</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>柜台空间</td>
+</tr>
+<tr>
+<td>内存页内容</td>
+<td>一个一个的保险单</td>
+</tr>
+<tr>
+<td>进程</td>
+<td>客户</td>
+</tr>
+<tr>
+<td>进程请求的页面</td>
+<td>客户要的不同类型的证明等等</td>
+</tr>
+<tr>
+<td>多个进程同时运行</td>
+<td>柜员同时服务多个客户</td>
+</tr>
+</tbody>
+</table>
+<p><img src="https://ss1.baidu.com/-4o3dSag_xI4khGko9WTAnF6hhy/zhidao/wh%3D450%2C600/sign=82deeb43c61b9d168a929265c6ee98b9/bf096b63f6246b60f82bcbe8e3f81a4c510fa201.jpg" alt=""></p>
+<h1 id="2-8-2-换出页面场景"><a href="#2-8-2-换出页面场景" class="headerlink" title="2.8.2 换出页面场景"></a>2.8.2 换出页面场景</h1><p>对于计算机而言，换入换出的含义如下：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>页面换入</td>
+<td>从磁盘上读入内容，加载到内存中</td>
+</tr>
+<tr>
+<td>页面换出</td>
+<td>把页面上的内容同步到磁盘上</td>
+</tr>
+</tbody>
+</table>
+<p>那么对应到保险行业的场景可以描述如下：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>换入</td>
+<td>去仓库里面找到客户的资料，证明，保险单等材料</td>
+</tr>
+<tr>
+<td>换出</td>
+<td>把客户的各种资料，证明，保险单等材料放到仓库</td>
+</tr>
+</tbody>
+</table>
+<h1 id="2-8-3-为什么需要定期换出？"><a href="#2-8-3-为什么需要定期换出？" class="headerlink" title="2.8.3 为什么需要定期换出？"></a>2.8.3 为什么需要定期换出？</h1><p>为啥要换来换去的？</p>
+<p>是因为柜台空间有限。如果你一直把客户的资料放在那里。新来的客户时候容易发生：</p>
+<ul>
+<li>柜台空间不够了，档住了客户。不能提供保险服务了</li>
+<li>让客户等一会，把柜台上的资料放到仓库里面。再接客户的请求。</li>
+</ul>
+<p>这两种都是不太理想的。所以，定期换出，相当于定期清理柜台桌面。让客户来的时候，总是有空间提供服务。当然，也是有缺点的。比如刚把A客户的资料送到仓库里面去，结果A客户又回来继续办理业务了，这个时候还得去仓库里面把资料取回来。尽管有这样的缺点，但是这只是一个概率问题。就是假设当A客户离开一段时间之后，回来再办理相同业务的可能性比较小。</p>
+<p>定期换出<strong>目的</strong>，对于保险这个场景来说，很明确。就是想办法把柜员的桌面清理一下。不常用的资料放到仓库里面去，留出空间来接新的客户。</p>
+<h1 id="2-8-4-内核进程与客户进程"><a href="#2-8-4-内核进程与客户进程" class="headerlink" title="2.8.4 内核进程与客户进程"></a>2.8.4 内核进程与客户进程</h1><table>
+<thead>
+<tr>
+<th>分类</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内核进程</td>
+<td>柜员在盖章，搬资料，开证明，提供服务</td>
+</tr>
+<tr>
+<td>客户进程</td>
+<td>客户填写相应的表单，客户自己跑路去别的地方开证明</td>
+</tr>
+</tbody>
+</table>
+<p>专门负责定时换出的进程名为<code>kswapd</code>。与客户进程相同的地方：</p>
+<ul>
+<li>也是具有<code>task_struct</code>结构</li>
+<li>也接受内核的调度</li>
+</ul>
+<p>不一样的地方在于，<code>kswapd</code>是一个内核线程，里面对应的地址空间是内核。所以<code>kswapd</code>并不需要通过系统调用来使用内核的功能。</p>
+<h1 id="2-8-5-代码解析"><a href="#2-8-5-代码解析" class="headerlink" title="2.8.5 代码解析"></a>2.8.5 代码解析</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">static</span> <span class="keyword">int</span> <span class="number">__</span><span class="function">init <span class="title">kswapd_init</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    printk(<span class="string">"Starting kswapd v1.8\n"</span>);</div><div class="line">    swap_setup();</div><div class="line">    kernel_thread(kswapd, <span class="literal">NULL</span>, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);</div><div class="line">    kernel_thread(kreclaimd, <span class="literal">NULL</span>, CLONE_FS | CLONE_FILES | CLONE_SIGNAL);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从这里可以看出来，代码主要是分为三个部分：</p>
+<ul>
+<li><code>swap_setup</code></li>
+<li><code>kswapd</code></li>
+<li><code>kreclaimd</code></li>
+</ul>
+<h2 id="2-8-5-1-swap-setup"><a href="#2-8-5-1-swap-setup" class="headerlink" title="2.8.5.1 swap_setup"></a>2.8.5.1 swap_setup</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * Perform any setup for the swap system</div><div class="line"> */</div><div class="line"><span class="keyword">void</span> <span class="number">__</span><span class="function">init <span class="title">swap_setup</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">/* Use a smaller cluster for memory &lt;16MB or &lt;32MB */</span></div><div class="line">    <span class="keyword">if</span> (num_physpages &lt; ((<span class="number">16</span> * <span class="number">1024</span> * <span class="number">1024</span>) &gt;&gt; PAGE_SHIFT))</div><div class="line">        page_cluster = <span class="number">2</span>;</div><div class="line">    <span class="keyword">else</span> <span class="keyword">if</span> (num_physpages &lt; ((<span class="number">32</span> * <span class="number">1024</span> * <span class="number">1024</span>) &gt;&gt; PAGE_SHIFT))</div><div class="line">        page_cluster = <span class="number">3</span>;</div><div class="line">    <span class="keyword">else</span></div><div class="line">        page_cluster = <span class="number">4</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这段代码含义比较简单，就是当系统从磁盘读数据的时候，不是一个扇区一个扇区地读取。而是一读读一大块。这一块有多大呢？<br><code>page_cluster</code>这么大就可以了。</p>
+<h2 id="2-8-5-2-kswapd"><a href="#2-8-5-2-kswapd" class="headerlink" title="2.8.5.2 kswapd"></a>2.8.5.2 kswapd</h2><p>这段代码比较长，分片地介绍。</p>
+<h3 id="2-8-5-2-a-设置进程信息"><a href="#2-8-5-2-a-设置进程信息" class="headerlink" title="2.8.5.2.a 设置进程信息"></a>2.8.5.2.a 设置进程信息</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * The background pageout daemon, started as a kernel thread</div><div class="line"> * from the init process.</div><div class="line"> *</div><div class="line"> * This basically trickles out pages so that we have _some_</div><div class="line"> * free memory available even if there is no other activity</div><div class="line"> * that frees anything up. This is needed for things like routing</div><div class="line"> * etc, where we otherwise might have all activity going on in</div><div class="line"> * asynchronous contexts that cannot page things out.</div><div class="line"> *</div><div class="line"> * If there are applications that are active memory-allocators</div><div class="line"> * (most normal use), this basically shouldn't matter.</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">kswapd</span><span class="params">(<span class="keyword">void</span> *unused)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">struct</span> task_struct *tsk = current;</div><div class="line"></div><div class="line">    tsk-&gt;session = <span class="number">1</span>;</div><div class="line">    tsk-&gt;pgrp = <span class="number">1</span>;</div><div class="line">    <span class="built_in">strcpy</span>(tsk-&gt;comm, <span class="string">"kswapd"</span>);</div><div class="line">    sigfillset(&amp;tsk-&gt;blocked);</div><div class="line">    kswapd_task = tsk;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line">     * Tell the memory management that we're a "memory allocator",</div><div class="line">     * and that if we need more memory we should get access to it</div><div class="line">     * regardless (see "__alloc_pages()"). "kswapd" should</div><div class="line">     * never get caught in the normal page freeing logic.</div><div class="line">     *</div><div class="line">     * (Kswapd normally doesn't need memory anyway, but sometimes</div><div class="line">     * you need a small amount of memory in order to be able to</div><div class="line">     * page out something else, and this flag essentially protects</div><div class="line">     * us from recursively trying to free more memory as we're</div><div class="line">     * trying to free the first piece of memory in the first place).</div><div class="line">     */</div><div class="line">    tsk-&gt;flags |= PF_MEMALLOC;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * PF_MEMALLOC标志专门用于task_struct.flags。用于表示当前进程是一个内存</div><div class="line">     * 管理程序，如果在必要的时候，请给予一点内存，可以释放出更多的内存出来。</div><div class="line">     */</div><div class="line">    ...</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里一开始所做的所有事情，都是在设置<code>kswapd</code>这个进程相关的信息。<br>这里特别需要注意的是<code>PF_MEMALLOC</code>标志。</p>
+<h3 id="2-8-5-2-b-开启大循环"><a href="#2-8-5-2-b-开启大循环" class="headerlink" title="2.8.5.2.b 开启大循环"></a>2.8.5.2.b 开启大循环</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">kswapd</span><span class="params">(<span class="keyword">void</span> *unused)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// 设置进程信息</span></div><div class="line">    ...</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line">     * Kswapd main loop.</div><div class="line">     */</div><div class="line">    <span class="keyword">for</span> (;;) &#123;</div><div class="line">        <span class="comment">// 各种换出动作都在这里</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="2-8-5-2-c-释放内存页面"><a href="#2-8-5-2-c-释放内存页面" class="headerlink" title="2.8.5.2.c 释放内存页面"></a>2.8.5.2.c 释放内存页面</h3><p>如果有必要，那么这里开始释放内存页面。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">kswapd</span><span class="params">(<span class="keyword">void</span> *unused)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// 设置进程信息</span></div><div class="line">    ...</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line">     * Kswapd main loop.</div><div class="line">     */</div><div class="line">    <span class="keyword">for</span> (;;) &#123;</div><div class="line">        <span class="comment">/* If needed, try to free some memory. */</span></div><div class="line">        <span class="comment">/*</span></div><div class="line">         * 首先这里检查两种内存短缺的情况</div><div class="line">         * 需要注意的是：inactive_shortage()检测的范围实际上比</div><div class="line">         * free_shortage()要大。也就是说，当inactive_shortage()表示</div><div class="line">         * 不缺页的时候，应该加强检测条件free_shortage()。</div><div class="line">         * 总的思想就是：先检测宽松一点的条件，如果宽松一点的条件满</div><div class="line">         * 足，那么再检测严格一点的条件。</div><div class="line">         */</div><div class="line">        <span class="keyword">if</span> (inactive_shortage() || free_shortage()) &#123;</div><div class="line">            <span class="keyword">int</span> wait = <span class="number">0</span>;</div><div class="line">            <span class="comment">/* Do we need to do some synchronous flushing? */</span></div><div class="line">            <span class="keyword">if</span> (waitqueue_active(&amp;kswapd_done))</div><div class="line">                wait = <span class="number">1</span>;</div><div class="line">            do_try_to_free_pages(GFP_KSWAPD, wait);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">// 各种换出动作都在这里</span></div><div class="line">        ....</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="2-8-5-2-c-1-换出的条件"><a href="#2-8-5-2-c-1-换出的条件" class="headerlink" title="2.8.5.2.c.1 换出的条件"></a>2.8.5.2.c.1 换出的条件</h4><p>换出的条件主要是分为两个：<code>inactive_shortage()</code>和<code>free_shortage()</code>。</p>
+<p>第一个条件<code>inactive_shortage()</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * How many inactive pages are we short?</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">inactive_shortage</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">int</span> shortage = <span class="number">0</span>;</div><div class="line"></div><div class="line">    shortage += freepages.high;</div><div class="line">    shortage += inactive_target;</div><div class="line">    shortage -= nr_free_pages();</div><div class="line">    shortage -= nr_inactive_clean_pages();</div><div class="line">    shortage -= nr_inactive_dirty_pages;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (shortage &gt; <span class="number">0</span>)</div><div class="line">        <span class="keyword">return</span> shortage;</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里直接取了<code>freepages.high</code>。这里需要注意的是，<code>Linux</code>系统在设计的时候，有如下考虑：</p>
+<p>这里划定了三条线：</p>
+<ul>
+<li>min: 系统中空闲物理页数绝对不要少于freepages.min；</li>
+<li>low: 当系统中空闲物理页数少于freepages.low时，开始强化交换。</li>
+<li>high： 当空闲物理页数少于freepages.high时，启动后台交换；</li>
+</ul>
+<p>而当空闲物理页数大于freepages.high时，内核交换守护进程什么也不做。从上面的设计可以看出来，<br><code>high</code>表示内存虽然有所不足，实际上还是可以够用的。而到<code>low</code>的时候，已经快报警了。<br>当<code>min</code>发生的时候，实际上内存已经不够用了。</p>
+<p>所以，根据这里的含义可以知道,上面的函数就是在计算：</p>
+<p>高水位的时候的内存数量：<code>freepages.high + inactive_target</code>。<br>当前的可用内存数量：<code>nr_free_pages() + nr_inactive_clean_pages() + nr_inactive_dirty_pages</code>。</p>
+<p>如果高水位的内存数量比当前可用内存数量多，说明现在可用的已经低于<code>freepages.high</code>了。<br>应该是需要启动页面交换了。</p>
+<p>这里需要说明一下<code>inactive_target</code>的值：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">#define INACTIVE_SHIFT 6</div><div class="line">#define inactive_min(a,b) ((a) &lt; (b) ? (a) : (b))</div><div class="line">#define inactive_target inactive_min((memory_pressure &gt;&gt; INACTIVE_SHIFT), \</div><div class="line">		(num_physpages / 4))</div></pre></td></tr></table></figure>
+<p>展开之后，可以得到：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">min(memory_pressure/<span class="number">64</span>, num_physpages / <span class="number">4</span>)</div></pre></td></tr></table></figure>
+<p>而<code>memory_pressure</code>是一个内存分配置压力值，随系统状态变化而变化。<br>所以<code>inactive_target</code>可以看出，当系统内存压力比小的时候，比如为0时，<br>这个时候，<code>inactive_target</code>就是为0。</p>
+<p>第二个条件：<code>free_shortage()</code></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * Check if there are zones with a severe shortage of free pages,</div><div class="line"> * or if all zones have a minor shortage.</div><div class="line"> * 检查是否有zones存在缺少free pages的情况。</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">free_shortage</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     *指向memory node list.这里是指向list的表头。</div><div class="line">     */</div><div class="line">	<span class="keyword">pg_data_t</span> *pgdat = pgdat_list;</div><div class="line">	<span class="keyword">int</span> sum = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 * freeable指的是，直接就可以拿来使用的页面</div><div class="line">	 *      － a. 包含两种页面：free page</div><div class="line">	 *         b. inactive clean page</div><div class="line">	 */</div><div class="line">	 <span class="keyword">int</span> freeable = nr_free_pages() + nr_inactive_clean_pages();</div><div class="line"></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 * 注意，这里是inactive_target除了3.</div><div class="line">	 * 而在inactive_shortage里面并没有。</div><div class="line">	 * freetarget是指系统期望有多少直接就可用的内存。</div><div class="line">	 */</div><div class="line">	<span class="keyword">int</span> freetarget = freepages.high + inactive_target / <span class="number">3</span>;</div><div class="line"></div><div class="line">	<span class="comment">/* Are we low on free pages globally? */</span></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 * 如果系统当前free pages 小于系统free pages的期望值</div><div class="line">	 */</div><div class="line">	<span class="keyword">if</span> (freeable &lt; freetarget)</div><div class="line">		<span class="keyword">return</span> freetarget - freeable;</div><div class="line"></div><div class="line">	<span class="comment">/* If not, are we very low on any particular zone? */</span></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 * do &#123;&#125; while 是一个大循环，在循环里面要处理的是一个</div><div class="line">	 * memory node。</div><div class="line">	 *   - 每个for 循环要处理的是每个memory node里面的分区zone.</div><div class="line">	 */</div><div class="line">	<span class="keyword">do</span> &#123;</div><div class="line">		<span class="keyword">int</span> i;</div><div class="line">		<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; MAX_NR_ZONES; i++) &#123;</div><div class="line">			<span class="keyword">zone_t</span> *zone = pgdat-&gt;node_zones+ i;</div><div class="line">			<span class="comment">/*</span></div><div class="line">			 * 如果zone有内存页面   并且</div><div class="line">			 *      zone里面直接可用页面(zone-&gt;free_pages + zone-&gt;inactive_clean_pages)</div><div class="line">			 *      小于zone里面的最低水位。</div><div class="line">			 *      (这里实际上就是在看单个zone，看看可用页面是不是低于最低要求了。</div><div class="line">			 *       如果低于最低要求)</div><div class="line">			 *      那么</div><div class="line">			 *          计算比最低水位线差值是多少。</div><div class="line">			 */</div><div class="line">			<span class="keyword">if</span> (zone-&gt;size &amp;&amp; (zone-&gt;inactive_clean_pages +</div><div class="line">					zone-&gt;free_pages &lt; zone-&gt;pages_min+<span class="number">1</span>)) &#123;</div><div class="line">				<span class="comment">/* + 1 to have overlap with alloc_pages() !! */</span></div><div class="line">				sum += zone-&gt;pages_min + <span class="number">1</span>;</div><div class="line">				sum -= zone-&gt;free_pages;</div><div class="line">				sum -= zone-&gt;inactive_clean_pages;</div><div class="line">			&#125;</div><div class="line">		&#125;</div><div class="line">		pgdat = pgdat-&gt;node_next;</div><div class="line">	&#125; <span class="keyword">while</span> (pgdat);</div><div class="line"></div><div class="line">	<span class="keyword">return</span> sum;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>两个函数的对比如下：</p>
+<table>
+<thead>
+<tr>
+<th>函数名</th>
+<th>期望值</th>
+<th>当前值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>inactive_shortage()</td>
+<td>freepages.high + inactive_target</td>
+<td>nr_free_pages() + nr_inactive_dirty_pages() + nr_inactive_clean_pages()</td>
+</tr>
+<tr>
+<td>free_shortage()</td>
+<td>freepages.high + inactive_target / 3</td>
+<td>nr_free_pages() + nr_inactive_clean_pages()</td>
+</tr>
+<tr>
+<td>inactive_shortage() 差异</td>
+<td>inactive_target</td>
+<td>nr_inactive_dirty_pages()</td>
+</tr>
+<tr>
+<td>free_shortage() 差异</td>
+<td>inactive_target / 3</td>
+<td>没有nr_inactive_dirty_pages()</td>
+</tr>
+</tbody>
+</table>
+<p>可以优化的点：实际上，<code>kswapd()</code>内核线程只是想读一下是不是有内存缺少的情况发生。并不需要计算粗确的数据。<br>当某个<code>zone</code>发生紧缺的时候，其他<code>zone</code>的情况就可以不用看了。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (inactive_shortage() || free_shortage()) &#123;</div><div class="line">    ....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以代码可以精简一下。也就是<code>linux-2.4.9</code>里面的思路如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">free_shortage</span><span class="params">(<span class="keyword">void</span>)</span></span></div><div class="line">&#123;</div><div class="line">        <span class="keyword">pg_data_t</span> *pgdat;</div><div class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> global_free = <span class="number">0</span>;</div><div class="line">        <span class="keyword">unsigned</span> <span class="keyword">int</span> global_target = freepages.high;</div><div class="line"></div><div class="line">        <span class="comment">/* Are we low on free pages anywhere? */</span></div><div class="line">        pgdat = pgdat_list;</div><div class="line">        <span class="keyword">do</span> &#123;</div><div class="line">                <span class="keyword">int</span> i;</div><div class="line">                <span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; MAX_NR_ZONES; i++) &#123;</div><div class="line">                        <span class="keyword">zone_t</span> *zone = pgdat-&gt;node_zones+ i;</div><div class="line">                        <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="built_in">free</span>;</div><div class="line">                        <span class="comment">/*</span></div><div class="line">                         * 如果发现zone总内存页为0,直接继续</div><div class="line">                         */</div><div class="line">                        <span class="keyword">if</span> (!zone-&gt;size)</div><div class="line">                                <span class="keyword">continue</span>;</div><div class="line">                        <span class="comment">/*</span></div><div class="line">                         * 这里求出当前zone当前的可直接用的内存</div><div class="line">                         */</div><div class="line">                        <span class="built_in">free</span> = zone-&gt;free_pages;</div><div class="line">                        <span class="built_in">free</span> += zone-&gt;inactive_clean_pages;</div><div class="line"></div><div class="line">                        <span class="comment">/* Local shortage? */</span></div><div class="line">                        <span class="comment">/*</span></div><div class="line">                         * 这里直接与low进行比较。</div><div class="line">                         */</div><div class="line">                        <span class="keyword">if</span> (<span class="built_in">free</span> &lt; zone-&gt;pages_low)</div><div class="line">                                <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line"></div><div class="line">                        global_free += <span class="built_in">free</span>;</div><div class="line">                &#125;</div><div class="line">                pgdat = pgdat-&gt;node_next;</div><div class="line">        &#125; <span class="keyword">while</span> (pgdat);</div><div class="line"></div><div class="line">        <span class="comment">/* Global shortage? */</span></div><div class="line">        <span class="keyword">return</span> global_free &lt; global_target;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="2-8-5-2-c-2-异步刷写页面？"><a href="#2-8-5-2-c-2-异步刷写页面？" class="headerlink" title="2.8.5.2.c.2 异步刷写页面？"></a>2.8.5.2.c.2 异步刷写页面？</h4><p>前面讲了那么多，实际上都是在讲条件的检测，即下图中的<code>缺少可用内存页</code>。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">graph TD</div><div class="line">    KSWAP[kswapd] --&gt; A</div><div class="line">    A[for_ever]  --&gt; B&#123;缺少可用内存页&#125;</div><div class="line">    B --&gt; |yes| C[检查是否需要等待]</div><div class="line">    B --&gt; |no| E[refill_inactive_scan]</div><div class="line">    C --&gt; D[try_to_free_pages]</div><div class="line">    D --&gt; E</div><div class="line">    E --&gt; F[一些换出内存操作]</div><div class="line">    F --&gt; |下一轮 | A</div></pre></td></tr></table></figure>
+<p>当发现缺少可用内存页之后，接下来设置：<code>在换页的时候是否允许等待</code>。</p>
+<p>检测则是通过：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> wait = <span class="number">0</span>;</div><div class="line"><span class="comment">/* Do we need to do some synchronous flushing? */</span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 检查queue里面是否为空？</div><div class="line"> *</div><div class="line"> */</div><div class="line"><span class="keyword">if</span> (waitqueue_active(&amp;kswapd_done))</div><div class="line">    wait = <span class="number">1</span>;</div><div class="line">do_try_to_free_pages(GFP_KSWAPD, wait);</div></pre></td></tr></table></figure>
+<p>其中<code>waitqueue_active</code>定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// struct wait_queue *kswapd_done;</span></div><div class="line"><span class="comment">/* kswapd() -&gt; waitqueue_active() */</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">int</span> <span class="title">waitqueue_active</span><span class="params">(<span class="keyword">wait_queue_head_t</span> *q)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// 略去无关代码</span></div><div class="line">    ...</div><div class="line">	<span class="keyword">return</span> !list_empty(&amp;q-&gt;task_list);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><code>kswapd_done</code>是一个指向<code>wait_queue</code>结构体的指针。而<code>wait_queue_head_t</code>的定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> <span class="number">__</span>wait_queue_head &#123;</div><div class="line">	<span class="keyword">wq_lock_t</span> lock;</div><div class="line">	<span class="keyword">struct</span> list_head task_list;</div><div class="line"><span class="meta">#<span class="meta-keyword">if</span> WAITQUEUE_DEBUG</span></div><div class="line">	<span class="keyword">long</span> <span class="number">__</span>magic;</div><div class="line">	<span class="keyword">long</span> <span class="number">__</span>creator;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div><div class="line">&#125;;</div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="number">__</span>wait_queue_head <span class="keyword">wait_queue_head_t</span>;</div></pre></td></tr></table></figure>
+<p>而<code>list_emtpy()</code>函数定义如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* kswapd() -&gt; waitqueue_active() -&gt; list_empty() */</span></div><div class="line"><span class="comment">/**</span></div><div class="line"> * list_empty - tests whether a list is empty</div><div class="line"> * @head: the list to test.</div><div class="line"> */</div><div class="line"><span class="keyword">static</span> <span class="number">__</span><span class="function">inline__ <span class="keyword">int</span> <span class="title">list_empty</span><span class="params">(<span class="keyword">struct</span> list_head *head)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">return</span> head-&gt;next == head;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以，<code>waitqueue_active</code>本质上等价于</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">list_head *head = &amp;(kswapd_done-&gt;task_list);</div><div class="line"><span class="keyword">return</span> head-&gt;next != head</div></pre></td></tr></table></figure>
+<p>也就是看<code>kswapd_done</code>链表里面有没有元素。如果不为空，那么说明前面一轮的运行<br><code>kswapd</code>还有事儿没做完。这一轮要做的事需要排队等在后面做。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">wait = <span class="number">1</span></div></pre></td></tr></table></figure>
+<p>也就是这个原因。</p>
+<h4 id="2-8-5-2-c-3-do-try-to-free-pages"><a href="#2-8-5-2-c-3-do-try-to-free-pages" class="headerlink" title="2.8.5.2.c.3 do_try_to_free_pages()"></a>2.8.5.2.c.3 do_try_to_free_pages()</h4><p>紧接着，来到了<code>do_try_to_free_pages</code>函数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * kswapd传进来的参数：</div><div class="line"> *     gfp_mask = GFP_KSWAPD</div><div class="line"> *                #define GFP_KSWAPD  (__GFP_IO)</div><div class="line"> *     表示当前的行为是允许磁盘IO的。</div><div class="line"> *</div><div class="line"> *     user = wait: 即是否可以异步刷页面?</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">int</span> <span class="title">do_try_to_free_pages</span><span class="params">(<span class="keyword">unsigned</span> <span class="keyword">int</span> gfp_mask, <span class="keyword">int</span> user)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> ret = <span class="number">0</span>;</div><div class="line"></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 * If we're low on free pages, move pages from the</div><div class="line">	 * inactive_dirty list to the inactive_clean list.</div><div class="line">	 *</div><div class="line">	 * 如果当前free page已经很少了，那么把inactive_dirty_list</div><div class="line">	 * 里面的页面想办法移动到inactive_clean_list中。</div><div class="line">	 *</div><div class="line">	 * Usually bdflush will have pre-cleaned the pages</div><div class="line">	 * before we get around to moving them to the other</div><div class="line">	 * list, so this is a relatively cheap operation.</div><div class="line">	 *</div><div class="line">	 * 通常而言，bdflush也会预先清理出一些页面来。</div><div class="line">	 * 在我们想办法把一些页面移动到inactive_clean_list</div><div class="line">	 * 的时候，应该先处理这些页面。这样代价比较小。</div><div class="line">	 *</div><div class="line">	 * 如果内存页面短缺，或者脏页面数大于可直接使用的页面</div><div class="line">	 * 可直接使用的页面等价于：</div><div class="line">	 *     nr_free_pages + nr_inactive_clean_pages.</div><div class="line">	 */</div><div class="line">	<span class="keyword">if</span> (free_shortage() || nr_inactive_dirty_pages &gt; nr_free_pages() +</div><div class="line">			nr_inactive_clean_pages())</div><div class="line">		ret += page_launder(gfp_mask, user);</div><div class="line"></div><div class="line">	...</div><div class="line">	...</div><div class="line">	<span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里最重要的函数就是<code>page_launder</code>了。这个函数比较长。需要有点耐心才能看完。</p>
+<h5 id="2-8-5-2-c-3-a-page-launder"><a href="#2-8-5-2-c-3-a-page-launder" class="headerlink" title="2.8.5.2.c.3.a page_launder()"></a>2.8.5.2.c.3.a page_launder()</h5><p>page_launder()函数的设计与功能，主要查看如下代码注释：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * page_launder - clean dirty inactive pages, move to inactive_clean list</div><div class="line"> * @gfp_mask: what operations we are allowed to do</div><div class="line"> * @sync: should we wait synchronously for the cleaning of pages</div><div class="line"> *</div><div class="line"> * page_launder函数的主要作用是把脏页刷到inactive_clean list中去。</div><div class="line"> * gfp_mask: __GFP_IO当被kswapd调用的时候</div><div class="line"> * sync: 是否可以同步刷页面？这个如前文所述，需要查看一下kswapd_done</div><div class="line"> *       队列中是否还有事儿没搞完。如果没有弄完，那么sync = 1。</div><div class="line"> *</div><div class="line"> * When this function is called, we are most likely low on free +</div><div class="line"> * inactive_clean pages. Since we want to refill those pages as</div><div class="line"> * soon as possible, we'll make two loops over the inactive list,</div><div class="line"> * one to move the already cleaned pages to the inactive_clean lists</div><div class="line"> * and one to (often asynchronously) clean the dirty inactive pages.</div><div class="line"> *</div><div class="line"> * 当这个函数被调用的时候，我们很可能遇到了free + inactive_clean_pages</div><div class="line"> * 因为我们想快速地填充free/inactive_clean_pages，所以会遍历</div><div class="line"> * inactive list两次。</div><div class="line"> *     － 把已经清理的页面放到inactive_clean list中去。</div><div class="line"> *     － 异步地把清理脏inactive pages。</div><div class="line"> *</div><div class="line"> * In situations where kswapd cannot keep up, user processes will</div><div class="line"> * end up calling this function. Since the user process needs to</div><div class="line"> * have a page before it can continue with its allocation, we'll</div><div class="line"> * do synchronous page flushing in that case.</div><div class="line"> *</div><div class="line"> * 当kswapd来不及清理的时候，用户的进程可能就会来调用这个函数的。</div><div class="line"> * 在调用这个函数之前，user process至少还有一个页面。</div><div class="line"> * 这里的意思应该是说，当user process还差一个页面就没有使用页面</div><div class="line"> * 的时候，就要开始调用这个函数了。反过来说，正是还有一个页面可</div><div class="line"> * 供使用，所以user process在刷写页面的时候，总是异步的。</div><div class="line"> *</div><div class="line"> * This code is heavily inspired by the FreeBSD source code. Thanks</div><div class="line"> * go out to Matthew Dillon.</div><div class="line"> *</div><div class="line"> * 这段程序很大程序上受了freeBSD的启发。</div><div class="line"> */</div></pre></td></tr></table></figure>
+<p> 程序的一开始初始化了很多变量：</p>
+ <figure class="highlight"><table><tr><td class="code"><pre><div class="line">#define MAX_LAUNDER 		(4 * (1 &lt;&lt; page_cluster))</div><div class="line">int page_launder(int gfp_mask, int sync)</div><div class="line">&#123;</div><div class="line">	int launder_loop, maxscan, cleaned_pages, maxlaunder;</div><div class="line">	int can_get_io_locks;</div><div class="line">	struct list_head * page_lru;</div><div class="line">	struct page * page;</div><div class="line"></div><div class="line">	/*</div><div class="line">	 * We can only grab the IO locks (eg. for flushing dirty</div><div class="line">	 * buffers to disk) if __GFP_IO is set.</div><div class="line">	 */</div><div class="line">	can_get_io_locks = gfp_mask &amp; __GFP_IO;</div><div class="line"></div><div class="line">	launder_loop = 0;</div><div class="line">	maxlaunder = 0;</div><div class="line">	cleaned_pages = 0;</div><div class="line"></div><div class="line">  //接下来开始两轮的页面扫描</div></pre></td></tr></table></figure>
+<p>首先看搞懂这几个变量的含义与使用场景：</p>
+<table>
+<thead>
+<tr>
+<th>变量</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>can_get_io_locks</td>
+<td>在处理内存页面的时候，是否可以进行磁盘的IO。</td>
+</tr>
+<tr>
+<td>launder_loop</td>
+<td>已经进行了几轮扫描。取值范围[0, 1]</td>
+</tr>
+<tr>
+<td>maxlaunder</td>
+<td>表示已经刷写了多少页面。</td>
+</tr>
+<tr>
+<td>cleaned_pages</td>
+<td>表示新增了多少可用页面</td>
+</tr>
+</tbody>
+</table>
+<p><strong>can_get_io_locks</strong></p>
+<p>这个变量的主要作用在于控制是否可以在刷写页面腾内存的时候，是否可以进行磁盘的IO。<br>使用这个变量的代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> can_get_io_locks;</div><div class="line"><span class="comment">/*</span></div><div class="line"> * We can only grab the IO locks (eg. for flushing dirty</div><div class="line"> * buffers to disk) if __GFP_IO is set.</div><div class="line"> *</div><div class="line"> * 只有当__GFP_IO被设置在gfp_mask里面的时候，才可以尝试去拿IO锁</div><div class="line"> */</div><div class="line">can_get_io_locks = gfp_mask &amp; <span class="number">__</span>GFP_IO;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * If we don't have enough free pages, we loop back once</div><div class="line"> * to queue the dirty pages for write out. When we were called</div><div class="line"> * by a user process (that /needs/ a free page) and we didn't</div><div class="line"> * free anything yet, we wait synchronously on the write out of</div><div class="line"> * MAX_SYNC_LAUNDER pages.</div><div class="line"> *</div><div class="line"> * 如果还是没有足够的页面，这里跳回去，开始把队列中需要刷写出去的页面刷写出去。</div><div class="line"> * 但是，当遇到一个需要free page的页面用户进程调用这个函数的时候，并且什么内</div><div class="line"> * 页面都释放不出来的时候，就开始同步地刷MAX_SYNC_LAUNDER个页面。</div><div class="line"> *</div><div class="line"> * We also wake up bdflush, since bdflush should, under most</div><div class="line"> * loads, flush out the dirty pages before we have to wait on</div><div class="line"> * IO.</div><div class="line"> *</div><div class="line"> * 并且这里会唤醒bdflush，因为bdflush应该大部分情况下会把这些脏页面刷写出去。</div><div class="line"> * 这些刷写的页面刚好是在等待IO的。</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="keyword">if</span> (can_get_io_locks &amp;&amp; !launder_loop &amp;&amp; free_shortage()) &#123;</div><div class="line">  launder_loop = <span class="number">1</span>;</div><div class="line">  <span class="comment">/* If we cleaned pages, never do synchronous IO. */</span></div><div class="line">  <span class="comment">// 如果已经得到了一些free pages，那么就再不要再做同步的IO了。</span></div><div class="line">  <span class="comment">// 这里想法应该是，我已经为你准备了一些内存页面了。就不需要再老等</span></div><div class="line">  <span class="comment">// 刷写磁盘了。</span></div><div class="line">  <span class="keyword">if</span> (cleaned_pages)</div><div class="line">    sync = <span class="number">0</span>;</div><div class="line">  <span class="comment">/* We only do a few "out of order" flushes. */</span></div><div class="line">  <span class="comment">// 刷写页面的最大次数控制。</span></div><div class="line">  maxlaunder = MAX_LAUNDER;</div><div class="line">  <span class="comment">/* Kflushd takes care of the rest. */</span></div><div class="line">  <span class="comment">// 唤醒bdflush来刷写页面。</span></div><div class="line">  wakeup_bdflush(<span class="number">0</span>);</div><div class="line">  <span class="keyword">goto</span> dirty_page_rescan;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由此可以看出，是否可以获得IO锁，决定了会不会进行二次扫描。由于第二轮扫描主要是刷写页面到磁盘。<br>因此，如果不能获得IO锁。第二轮的扫描没有意义。</p>
+<p><strong>同步还是异步</strong></p>
+<p>需要注意的是，什么时候用同步，什么时候用异步？这需要看内存页面是否够用。简单点说，就是：</p>
+<ul>
+<li>当内存页面紧张的时候，用同步。因为一波人等着用内存呢，赶快想点办法挤点出来吧。</li>
+<li>当内存还有点存量，虽然也不太足够的时候，用异步。异步就是把刷写页面的请求提交出去<br>后面有机会再把页面刷写出去。</li>
+</ul>
+<p><strong>launder_loop</strong></p>
+<p>这是第几次刷写页面了。</p>
+<ul>
+<li>第一次主要是移动页面，代价比较小。</li>
+<li>第二次是开始刷写页面，代价比较大。并且看情况来决定是否会执行。</li>
+</ul>
+<p><strong>maxlaunder</strong></p>
+<p>首先看一下，哪些地方使用到了这个变量：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> launder_loop;</div><div class="line"></div><div class="line">launder_loop = <span class="number">0</span>;</div><div class="line"><span class="comment">/*</span></div><div class="line"> * Dirty swap-cache page? Write it out if</div><div class="line"> * last copy..</div><div class="line"> */</div><div class="line"> <span class="keyword">if</span> (PageDirty(page)) &#123;</div><div class="line">   ....</div><div class="line">   <span class="comment">/* First time through? Move it to the back of the list */</span></div><div class="line">   <span class="comment">/*</span></div><div class="line">    * 当第一次扫描的时候，遇到脏页面，只是把脏页面移动到尾部。</div><div class="line">    */</div><div class="line">   <span class="keyword">if</span> (!launder_loop) &#123;</div><div class="line">     list_del(page_lru);</div><div class="line">     list_add(page_lru, &amp;inactive_dirty_list);</div><div class="line">     UnlockPage(page);</div><div class="line">     <span class="keyword">continue</span>;</div><div class="line">   &#125;</div><div class="line">   ....</div><div class="line"> &#125;</div><div class="line"></div><div class="line"> <span class="keyword">if</span> (page-&gt;buffers) &#123;</div><div class="line">   <span class="keyword">int</span> wait = <span class="number">0</span>;</div><div class="line"></div><div class="line">   ....</div><div class="line">   <span class="comment">/* Will we do (asynchronous) IO? */</span></div><div class="line">   <span class="comment">/*</span></div><div class="line">    * 如果是第二次扫描，并且刷了这么多页面出去，还是free pages不够。</div><div class="line">    * 因为如果发现够了的话，直接就退出page_launder了。</div><div class="line">    * 所以，这里就把页面的刷写方式改成同步刷写页面。</div><div class="line">    * 间接表明整个系统的页面已经比较紧张了。</div><div class="line">    */</div><div class="line">   <span class="keyword">if</span> (launder_loop &amp;&amp; maxlaunder == <span class="number">0</span> &amp;&amp; sync)</div><div class="line">      wait = <span class="number">2</span>;	<span class="comment">/* Synchrounous IO */</span></div><div class="line">   <span class="comment">/*</span></div><div class="line">    * 如果是第二次扫描，并且还没有刷够maxlaunder，那么就异步刷出页面</div><div class="line">    * 表明事态还不是那么紧急严重。</div><div class="line">    */</div><div class="line">   <span class="keyword">else</span> <span class="keyword">if</span> (launder_loop &amp;&amp; maxlaunder-- &gt; <span class="number">0</span>)</div><div class="line">      wait = <span class="number">1</span>;	<span class="comment">/* Async IO */</span></div><div class="line">   <span class="comment">/*</span></div><div class="line">    * 如果是第一次扫描</div><div class="line">    * 如果是第二次扫描，并且maxlaunder用光，并且sync为0。</div><div class="line">    * 那么这个时候，就再尝试移动页面，看看能不能成功。</div><div class="line">    */</div><div class="line">   <span class="keyword">else</span></div><div class="line">      wait = <span class="number">0</span>;	<span class="comment">/* No IO */</span></div><div class="line">   ...</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>需要注意的是，<code>sync</code>变量在这里起的作用是有点意思的。比如考虑<code>sync = 1</code>的场景。</p>
+<ul>
+<li>第一轮扫描页面，没得说，肯定都是移动页面到其他list为主。</li>
+<li>第二轮扫描页面，当maxlaunder大于0的时候，采用异步IO</li>
+<li>第二轮扫描页面，当maxlaunder用光，并且sync为1的时候，表明可以同步等待页面刷写。<br>那么就同步刷写页面。</li>
+</ul>
+<p>而当<code>sync = 0</code>的时候，</p>
+<ul>
+<li>第一轮扫描页面，没得说，肯定都是移动页面到其他list为主。</li>
+<li>第二轮扫描页面，当maxlaunder大于0的时候，采用异步IO</li>
+<li>第二轮扫描页面，当maxlaunder用光，并且sync为0的时候，<code>wait = 0</code>，这个时候行为<br>回退到第一轮扫描的情况。又只能移动页面到各个list。</li>
+</ul>
+<p><strong>cleaned_pages</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">cleaned_pages = <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="comment">/* Try to free the page buffers. */</span></div><div class="line">clearedbuf = try_to_free_buffers(page, wait);</div><div class="line"></div><div class="line"></div><div class="line"><span class="comment">/* The buffers were not freed. */</span></div><div class="line"><span class="keyword">if</span> (!clearedbuf) &#123;</div><div class="line">   <span class="comment">// 如果页面没有释放成功的操作在这里。</span></div><div class="line"><span class="comment">/* The page was only in the buffer cache. */</span></div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (!page-&gt;mapping) &#123;</div><div class="line">    atomic_dec(&amp;buffermem_pages);</div><div class="line">    freed_page = <span class="number">1</span>;</div><div class="line">    cleaned_pages++;</div><div class="line"><span class="comment">/* The page has more users besides the cache and us. */</span></div><div class="line">&#125; <span class="keyword">else</span> <span class="comment">/* page-&gt;mapping &amp;&amp; page_count(page) == 2 */</span> &#123;</div><div class="line">    add_page_to_inactive_clean_list(page);</div><div class="line">    cleaned_pages++;</div><div class="line">&#125; ...</div><div class="line">....</div><div class="line"></div><div class="line">&#125; <span class="keyword">else</span> <span class="keyword">if</span> (page-&gt;mapping &amp;&amp; !PageDirty(page)) &#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * If a page had an extra reference in</div><div class="line">     * deactivate_page(), we will find it here.</div><div class="line">     * Now the page is really freeable, so we</div><div class="line">     * move it to the inactive_clean list.</div><div class="line">     */</div><div class="line">    del_page_from_inactive_dirty_list(page);</div><div class="line">    add_page_to_inactive_clean_list(page);</div><div class="line">    UnlockPage(page);</div><div class="line">    cleaned_pages++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里看一下，什么情况下<code>cleaned_pages</code>会增加。</p>
+<ul>
+<li>当刷写页面，并且释放缓存之后。如果发现这个页面并没有设备上的页面与之映射，则直接变成可用页面。</li>
+<li>有设备与之映射，但是只有一个进程在引用，即<code>kswapd</code>，那么直接可以放到可用页面中。</li>
+<li>如果有设备映射，但是页面是干净的。那么直接也是可用页面。</li>
+<li>当需要展开第二轮扫描的时候，如果发现<code>cleaned_pages</code>已经刷写了一些页面出去，那么第二轮扫描<br>就不需要再采用同步刷写的方式了。实际上的意思是说，我已经腾出一些页面了。可能不是那么紧张了。</li>
+</ul>
+<p><strong>while循环</strong></p>
+<p>这里面最关键的是，需要看懂下面这个代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">while</span> ((page_lru = inactive_dirty_list.prev) != &amp;inactive_dirty_list &amp;&amp;</div><div class="line">      maxscan-- &gt; <span class="number">0</span>) &#123;</div><div class="line">    ...</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>细心一点可以发现，在<code>while</code>循环中，每次都是赋值给<code>page_lru = inactive_dirty_list.prev</code>。<br>也就是说，每次都是取<code>inactive_dirty_list.prev</code>。难道不会死循环么？带着这个问题，依次查看<br>整个<code>page_launder</code>的代码。</p>
+<ul>
+<li>Case 1: 不该在<code>inactive_dirty_list</code>中的页面</li>
+</ul>
+<p>如果是放在<code>inactive_dirty_list</code>里面的页面，肯定都是需要带有<code>PG_inactive_dirty</code>标记的。<br>如果没有带，肯定是什么地方放错了。这里直接从队列中移出去。</p>
+<p>移动出去之后，关于脏页的记录肯定需要减1。对应zone中的记录也需要减1。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* Wrong page on list?! (list corruption, should not happen) */</span></div><div class="line"><span class="keyword">if</span> (!PageInactiveDirty(page)) &#123;</div><div class="line">  printk(<span class="string">"VM: page_launder, wrong page on list.\n"</span>);</div><div class="line">  list_del(page_lru);</div><div class="line">  nr_inactive_dirty_pages--;</div><div class="line">  page-&gt;zone-&gt;inactive_dirty_pages--;</div><div class="line">  <span class="keyword">continue</span>;</div><div class="line">&#125;</div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PageInactiveDirty(page)	test_bit(PG_inactive_dirty, &amp;(page)-&gt;flags)</span></div></pre></td></tr></table></figure>
+<p>那么回到最初始的问题，当这里从continue跳转回去之后，处理的页面还是之前的页面么？那么需要看一下<br><code>list_del(page_lru)</code>的展如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * list_del - deletes entry from list.</div><div class="line"> * @entry: the element to delete from the list.</div><div class="line"> * Note: list_empty on entry does not return true after this, the entry is in an undefined state.</div><div class="line"> */</div><div class="line"><span class="keyword">static</span> <span class="number">__</span><span class="function">inline__ <span class="keyword">void</span> <span class="title">list_del</span><span class="params">(<span class="keyword">struct</span> list_head *entry)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="number">__l</span>ist_del(entry-&gt;prev, entry-&gt;next);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * Delete a list entry by making the prev/next entries</div><div class="line"> * point to each other.</div><div class="line"> *</div><div class="line"> * This is only for internal list manipulation where we know</div><div class="line"> * the prev/next entries already!</div><div class="line"> */</div><div class="line"><span class="keyword">static</span> <span class="number">__</span>inline__ <span class="keyword">void</span> <span class="number">__l</span>ist_del(<span class="keyword">struct</span> list_head * prev,</div><div class="line">				  <span class="keyword">struct</span> list_head * next)</div><div class="line">&#123;</div><div class="line">	next-&gt;prev = prev;</div><div class="line">	prev-&gt;next = next;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以发现，最后形成的结果就是:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">inactive_dirty_list-&gt;prev = page_lru-&gt;prev;</div><div class="line">page_lru-&gt;prev-&gt;next = inactive_dirty_list;</div></pre></td></tr></table></figure>
+<p>当执行完continue之后，这里起到的效果是<code>page_lru = page_lru-&gt;prev</code>。所以<code>Case 1</code>是<br>不会进入到死循环中的。</p>
+<ul>
+<li>Case 2: 页面还在使用中</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* Page is or was in use?  Move it to the active list. */</span></div><div class="line"><span class="keyword">if</span> (PageTestandClearReferenced(page) || page-&gt;age &gt; <span class="number">0</span> ||</div><div class="line">    (!page-&gt;buffers &amp;&amp; page_count(page) &gt; <span class="number">1</span>) ||</div><div class="line">    page_ramdisk(page)) &#123;</div><div class="line">  del_page_from_inactive_dirty_list(page);</div><div class="line">  add_page_to_active_list(page);</div><div class="line">  <span class="keyword">continue</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> PageTestandClearReferenced(page)	\</span></div><div class="line">  test_and_clear_bit(PG_referenced, &amp;(page)-&gt;flags)</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> page_ramdisk(page) \</span></div><div class="line">	(page-&gt;buffers &amp;&amp; (MAJOR(page-&gt;buffers-&gt;b_dev) == RAMDISK_MAJOR))</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> del_page_from_inactive_dirty_list(page) &#123; \</span></div><div class="line">  	list_del(&amp;(page)-&gt;lru); \</div><div class="line">  	ClearPageInactiveDirty(page); \</div><div class="line">  	nr_inactive_dirty_pages--; \</div><div class="line">  	page-&gt;zone-&gt;inactive_dirty_pages--; \</div><div class="line">  	DEBUG_ADD_PAGE \</div><div class="line">  	ZERO_PAGE_BUG \</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ClearPageInactiveDirty(page)	\</span></div><div class="line">  clear_bit(PG_inactive_dirty, &amp;(page)-&gt;flags)</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> add_page_to_active_list(page) &#123; \</span></div><div class="line">	DEBUG_ADD_PAGE \</div><div class="line">	ZERO_PAGE_BUG \</div><div class="line">	SetPageActive(page); \</div><div class="line">	list_add(&amp;(page)-&gt;lru, &amp;active_list); \</div><div class="line">	nr_active_pages++; \</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>下面四种情况是需要把页面移回到<code>active_list</code>。</p>
+<table>
+<thead>
+<tr>
+<th>情况</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Referenced</td>
+<td>页面又被引用到了。</td>
+</tr>
+<tr>
+<td>page-&gt;age</td>
+<td>页面的使用周期还没有减为0。</td>
+</tr>
+<tr>
+<td>!page-&gt;buffer &amp;&amp; page_count(page) &gt; 1</td>
+<td>没有设备缓冲区引用到这个页面，并且还有进程在使用。</td>
+</tr>
+<tr>
+<td>page_ramdisk(page)</td>
+<td>页面被用来做内存ramdisk文件系统。注意检查的时候，是说这个页面有对应的缓冲区的。</td>
+</tr>
+</tbody>
+</table>
+<p>移回去的时候，操作是先把页面从<code>inactive_dirty_list</code>中移出去。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> del_page_from_inactive_dirty_list(page) &#123; \</span></div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 这里开始把页面从inactive_dirty_list移出去</div><div class="line">     */</div><div class="line">  	list_del(&amp;(page)-&gt;lru); \</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 这里清除掉页面的脏标记</div><div class="line">     */</div><div class="line">  	ClearPageInactiveDirty(page); \</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 这里与前面Case 1的处理方式一模一样。</div><div class="line">     */</div><div class="line">  	nr_inactive_dirty_pages--; \</div><div class="line">  	page-&gt;zone-&gt;inactive_dirty_pages--; \</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 用于debug，可以不用管。</div><div class="line">     */</div><div class="line">  	DEBUG_ADD_PAGE \</div><div class="line">  	ZERO_PAGE_BUG \</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> add_page_to_active_list(page) &#123; \</span></div><div class="line">  <span class="comment">/*</span></div><div class="line">   * 用于debug，可以不用管</div><div class="line">   */</div><div class="line">	DEBUG_ADD_PAGE \</div><div class="line">	ZERO_PAGE_BUG \</div><div class="line">  <span class="comment">/*</span></div><div class="line">   * 把页面设置为活路页面</div><div class="line">   */</div><div class="line">	SetPageActive(page); \</div><div class="line">  <span class="comment">/*</span></div><div class="line">   * 把页面添加到active_list中。</div><div class="line">   */</div><div class="line">	list_add(&amp;(page)-&gt;lru, &amp;active_list); \</div><div class="line">  <span class="comment">/*</span></div><div class="line">   * 增加活跃页面的记数。</div><div class="line">   */</div><div class="line">	nr_active_pages++; \</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以，那么这里可以看出来。由于页面已经从<code>inactive_dirty_list</code>里面移走了。所以最终形成的结果<br>与<code>Case 1</code>的结果实球上是一样的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">inactive_dirty_list-&gt;prev = page_lru-&gt;prev;</div><div class="line">page_lru-&gt;prev-&gt;next = inactive_dirty_list;</div></pre></td></tr></table></figure>
+<p>当执行完continue之后，这里起到的效果是<code>page_lru = page_lru-&gt;prev</code>。所以<code>Case 1</code>是<br>不会进入到死循环中的。</p>
+<p>那么<code>Case 2</code>与<code>Case 1</code>的最大的区别在于：</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>区别</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Case 1</td>
+<td>扫描的时候，发现页面没有脏标记的。页面不该在这个list中。</td>
+</tr>
+<tr>
+<td>Case 2</td>
+<td>页面是脏的，但是又被激活了。需要移动到active_list中。</td>
+</tr>
+<tr>
+<td>Case 1</td>
+<td>不需要管标记，也不需要记住需要移动到哪里去。</td>
+</tr>
+<tr>
+<td>Case 2</td>
+<td>需要清理标记，也需要移动到active_list中去。</td>
+</tr>
+</tbody>
+</table>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Kernel/">Kernel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Kernel/">Kernel</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-linux.kernel/2.8页面的定期换出" data-title="2.8 页面的定期换出" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
     <article id="post-OpenStack/Problem.Solving/Evacuate.No.ValidHost" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -332,88 +759,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-OpenStack/Problem.Solving/Evacuate.No.ValidHost" data-title="Evacuate NoValidHost Found" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-linux.kernel/atom_t" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/01/15/linux.kernel/atom_t/" class="article-date">
-  	<time datetime="2017-01-15T06:20:29.000Z" itemprop="datePublished">2017-01-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/01/15/linux.kernel/atom_t/">Ceph通过WoboQ阅读源码</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><a href="http://blog.csdn.net/qb_2008/article/details/6840808" target="_blank" rel="external"></a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Kernel/">Kernel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Kernel/">Kernel</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-linux.kernel/atom_t" data-title="Ceph通过WoboQ阅读源码" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
