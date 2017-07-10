@@ -136,7 +136,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.33px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 11.67px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 16.67px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 13.33px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 11.67px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -243,6 +243,102 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-OpenStack/docker-openstack" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/19/OpenStack/docker-openstack/" class="article-date">
+  	<time datetime="2016-09-19T12:04:13.000Z" itemprop="datePublished">2016-09-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/09/19/OpenStack/docker-openstack/">Docker安装OpenStack</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>在安装的时候，尽管写脚本是一种比较好的安装方式。</p>
+<ul>
+<li>但是脚本并不能实时的进行测试。</li>
+<li>每个人的安装环境各不相同。</li>
+<li>脚本有可能不能满足所有人的安装需求。</li>
+</ul>
+<p>那么采用<code>Docker</code>来进行安装，则是一种比较有意思并且可移植的方法。下面介绍基于<code>Docker</code>安装<code>OpenStack</code>的方法，注意这里的目标是：</p>
+<ul>
+<li>尽量把能安装的组件都安装到Docker里面。</li>
+<li>希望提供微服务功能，也就是说，把OpenStack的组件分开安装到各个<code>Docker</code>的<code>Container</code>里面。</li>
+<li><code>nova-compute</code>也希望能够放进去。</li>
+</ul>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/blog/2016/09/19/OpenStack/docker-openstack/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-OpenStack/docker-openstack" data-title="Docker安装OpenStack" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-ceph/ceph-woboq" class="article article-type-post" itemscope itemprop="blogPost">
   

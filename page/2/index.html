@@ -136,7 +136,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.33px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 11.67px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 16.67px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 13.33px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 11.67px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -244,11 +244,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-ceph/Chap1.编程技法/11.XioDispatchHook" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-unixv6/pdp11/pdp11-instructions" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/" class="article-date">
-  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
+      <a href="/blog/2016/12/26/unixv6/pdp11/pdp11-instructions/" class="article-date">
+  	<time datetime="2016-12-26T14:16:34.000Z" itemprop="datePublished">2016-12-26</time>
 </a>
     </div>
   
@@ -259,7 +259,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/">ceph:buffer:raw_pipe的实现分析</a>
+      <a class="article-title" href="/blog/2016/12/26/unixv6/pdp11/pdp11-instructions/">PDP11解读之1-奇怪的数组</a>
     </h1>
   
 
@@ -268,7 +268,27 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        
+        <h1 id="奇怪的数组"><a href="#奇怪的数组" class="headerlink" title="奇怪的数组"></a>奇怪的数组</h1><p>在看<code>PDP11</code>指令集的实现的时候，有一段有意思的代码。一开始没看明白，后来看懂了。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> disasmtable = []<span class="keyword">struct</span> &#123;</div><div class="line">	inst, arg <span class="keyword">uint16</span></div><div class="line">	msg       <span class="keyword">string</span></div><div class="line">	flag      <span class="keyword">uint</span></div><div class="line">	b         <span class="keyword">bool</span></div><div class="line">&#125;&#123;</div><div class="line">	&#123;<span class="number">0077700</span>, <span class="number">0005000</span>, <span class="string">"CLR"</span>, flagD, <span class="literal">true</span>&#125;,</div><div class="line">  ...,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>数组前面这段数字表示啥意思？</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="number">0077700</span>, <span class="number">0005000</span></div></pre></td></tr></table></figure>
+<p>首先可以确定的是<code>inst</code>表示的是:<code>0077700</code>，而<code>arg</code>表示的是<code>0005000</code>。<code>CLR</code>表示的是汇编命令。那么看一下<code>CLR</code>指令的定义：</p>
+<p><img src="/blog/img/clr.instu.jpeg" alt=""></p>
+<p>在这里，可以看到<code>0005000</code>最接近的也就是<code>00050DD</code>。在这里就需要注意一下这个指令的含义了：</p>
+<ul>
+<li>这是一个单指令，操作数是寄存器</li>
+<li>不能操作内存</li>
+<li>后面六位指的是寄存器。</li>
+<li><code>CLRB</code>指令的头一位表示的是操作的对象是<code>byte</code>。</li>
+</ul>
+<h1 id="译指令部分"><a href="#译指令部分" class="headerlink" title="译指令部分"></a>译指令部分</h1><p>所以在查看一条指令是不是<code>CLR</code>的时候，需要去掉后6位。看前面的10位的值是不是<code>00050</code>。那么最好的操作办法就是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">instruction &amp; b0 111 111 111 000 000 == 0 000 101 000 000 000</div></pre></td></tr></table></figure>
+<p>如果相等，那么肯定就是<code>CLR</code>指令。所以后面可以看到译码部分是这样写的。（代码第一部分，查找指令）。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *cpu)</span> <span class="title">disasm</span><span class="params">(a uint18)</span> <span class="title">string</span></span> &#123;</div><div class="line">	<span class="comment">// 从给定的地址处，读出指令</span></div><div class="line">	<span class="comment">// 这里取出的指令是16位的</span></div><div class="line">	ins := c.unibus.read16(a)</div><div class="line"></div><div class="line">	l := disasmtable[<span class="number">0</span>]</div><div class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(disasmtable); i++ &#123;</div><div class="line">		l = disasmtable[i]</div><div class="line">		<span class="comment">// 指令与上去</span></div><div class="line">		<span class="comment">// 都是16位的，与的结果得到arg</span></div><div class="line">		<span class="keyword">if</span> (ins &amp; l.inst) == l.arg &#123;</div><div class="line">			<span class="keyword">goto</span> found</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">panic</span>(fmt.Sprintf(<span class="string">"disasm: cannot disassemble instruction %06o at %06o"</span>, ins, a))</div><div class="line">	<span class="keyword">return</span> <span class="string">"???"</span></div><div class="line">  ...</div><div class="line">  <span class="comment">// .. 后面是查找到指令之后的处理。</span></div></pre></td></tr></table></figure>
+<h1 id="几个参数"><a href="#几个参数" class="headerlink" title="几个参数"></a>几个参数</h1><p>在处理指令的参数之前，需要考虑看一下如下代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line">&#123;<span class="number">0177700</span>, <span class="number">0006700</span>, <span class="string">"SXT"</span>, flagD, <span class="literal">false</span>&#125;,</div><div class="line">&#123;<span class="number">0070000</span>, <span class="number">0010000</span>, <span class="string">"MOV"</span>, flagS | flagD, <span class="literal">true</span>&#125;,</div></pre></td></tr></table></figure>
+<p>在这里，<code>flagD</code>和<code>flagS|flagD</code>就表示不同的参数。其中<code>flagD</code>表示只有目标参数。而<code>flagS|flagD</code>则是即有源参数也有目标参数。</p>
+
       
     </div>
     
@@ -276,12 +296,12 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Unix-V6/">Unix V6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/pdp11/">pdp11</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/PDP11/">PDP11</a>
 	</div>
 
 
@@ -301,7 +321,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/11.XioDispatchHook" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-unixv6/pdp11/pdp11-instructions" data-title="PDP11解读之1-奇怪的数组" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -420,6 +440,87 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/11.XioDispatchHook" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/" class="article-date">
+  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/">ceph:buffer:raw_pipe的实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/11.XioDispatchHook" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -592,95 +693,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned" data-title="ceph:buffer:raw_posix_aligned实现分析" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/" class="article-date">
-  	<time datetime="2016-12-18T16:06:43.000Z" itemprop="datePublished">2016-12-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/">ceph:buffer:raw_mmap_pages实现分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h1><p>这里首先需要介绍一下<code>mmap</code>: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享。如下图所示：</p>
-<p><img src="/blog/img/ceph.buffer.raw.mmap.png" alt=""></p>
-<p>由上图可以看出，进程的虚拟地址空间，由多个虚拟内存区域构成。虚拟内存区域是进程的虚拟地址空间中的一个同质区间，即具有同样特性的连续地址范围。上图中所示的text数据段（代码段）、初始数据段、BSS数据段、堆、栈和内存映射，都是一个独立的虚拟内存区域。而为内存映射服务的地址空间处在堆栈之间的空余部分。</p>
-<p><strong>概述</strong><br>实际上就是开辟一个内存区域，把这个内存区域与磁盘上的一个文件映射。进而可以以操作内存的方式来操作这个文件。并且可以在多个进程之间共享这个文件。</p>
-<p>详细信息，可以参考<a href="http://www.cnblogs.com/huxiao-tee/p/4660352.html" target="_blank" rel="external">此文</a>。</p>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>由于代码比较短小，这里直接分析源代码：</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_mmap_pages : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_mmap_pages(unsigned l) : raw(l) &#123;</div><div class="line">        // MAP_PRIVATE //建立一个写入时拷贝的私有映射。</div><div class="line">        // 内存区域的写入不会影响到原文件。</div><div class="line">        // 这个标志和以上标志是互斥的，只能使用其中一个。</div><div class="line">        data = (char*)::mmap(NULL, len, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);</div><div class="line">        if (!data)</div><div class="line">            throw bad_alloc();</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    ~raw_mmap_pages() &#123;</div><div class="line">        ::munmap(data, len);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_mmap_pages(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>与前面的函数相比，这里就是直接是利用<code>mmap</code>生成一段内存区域。释放内存的时候，采用<code>munmap</code>函数。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages" data-title="ceph:buffer:raw_mmap_pages实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

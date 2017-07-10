@@ -4,17 +4,27 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Tag: OpenStack | 缘生故如幻</title>
+  <title>page_cluster解读 | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录一些有意思的事。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="缘生故如幻">
-<meta property="og:url" content="https://jiyou.github.io/blog/tags/OpenStack/index.html">
+  <meta name="description" content="page_cluster在源码中注解如下：
+/* How many pages do we try to swap or page in/out together? */int page_cluster;
+有多少页面，我们想一次性换入和换出？
+/* * Primitive swap readahead code. We simply read an aligned block of * (1 &amp;l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="page_cluster解读">
+<meta property="og:url" content="https://jiyou.github.io/blog/2017/07/01/linux.kernel/swapin_readahead/index.html">
 <meta property="og:site_name" content="缘生故如幻">
-<meta property="og:description" content="记录一些有意思的事。">
+<meta property="og:description" content="page_cluster在源码中注解如下：
+/* How many pages do we try to swap or page in/out together? */int page_cluster;
+有多少页面，我们想一次性换入和换出？
+/* * Primitive swap readahead code. We simply read an aligned block of * (1 &amp;l">
+<meta property="og:updated_time" content="2017-07-10T08:35:29.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="缘生故如幻">
-<meta name="twitter:description" content="记录一些有意思的事。">
+<meta name="twitter:title" content="page_cluster解读">
+<meta name="twitter:description" content="page_cluster在源码中注解如下：
+/* How many pages do we try to swap or page in/out together? */int page_cluster;
+有多少页面，我们想一次性换入和换出？
+/* * Primitive swap readahead code. We simply read an aligned block of * (1 &amp;l">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
   
@@ -242,137 +252,98 @@
 	</div>
 </nav>
 
-      <div class="body-wrap">
+      <div class="body-wrap"><article id="post-linux.kernel/swapin_readahead" class="article article-type-post" itemscope itemprop="blogPost">
   
-  
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/blog/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2017/01/17/OpenStack/Problem.Solving/Evacuate.No.ValidHost/" class="archive-article-date">
-  	<time datetime="2017-01-17T15:50:47.000Z" itemprop="datePublished">Jan 17</time>
+    <div class="article-meta">
+      <a href="/blog/2017/07/01/linux.kernel/swapin_readahead/" class="article-date">
+  	<time datetime="2017-07-01T06:20:29.000Z" itemprop="datePublished">2017-07-01</time>
 </a>
-        </div>
-    	 
+    </div>
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2017/01/17/OpenStack/Problem.Solving/Evacuate.No.ValidHost/">Evacuate NoValidHost Found</a>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      page_cluster解读
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Nova/">Nova</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
+      </header>
       
-        </div></section>
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/blog/archives/2016" class="archive-year">2016</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2016/09/20/OpenStack/install-openstack/" class="archive-article-date">
-  	<time datetime="2016-09-20T14:03:45.000Z" itemprop="datePublished">Sep 20</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2016/09/20/OpenStack/install-openstack/">install openstack</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
+      <div class="article-info article-info-post">
+        
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Kernel/">Kernel</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li></ul>
 	</div>
 
-          
+        
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
+	<a class="article-category-link" href="/blog/categories/Linux/">Linux</a>
 	</div>
 
 
-        </div>
         <div class="clearfix"></div>
-    </header>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>page_cluster在源码中注解如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* How many pages do we try to swap or page in/out together? */</span></div><div class="line"><span class="keyword">int</span> page_cluster;</div></pre></td></tr></table></figure>
+<p>有多少页面，我们想一次性换入和换出？</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * Primitive swap readahead code. We simply read an aligned block of</div><div class="line"> * (1 &lt;&lt; page_cluster) entries in the swap area. This method is chosen</div><div class="line"> * because it doesn't cost us any seek time.  We also make sure to queue</div><div class="line"> * the 'original' request together with the readahead ones...  </div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">swapin_readahead</span><span class="params">(<span class="keyword">swp_entry_t</span> entry)</span></span></div><div class="line">&#123;</div><div class="line">	<span class="keyword">int</span> i, num;</div><div class="line">	<span class="keyword">struct</span> page *new_page;</div><div class="line">	<span class="keyword">unsigned</span> <span class="keyword">long</span> offset;</div><div class="line"></div><div class="line">	<span class="comment">/*</span></div><div class="line">	 * Get the number of handles we should do readahead io to. Also,</div><div class="line">	 * grab temporary references on them, releasing them as io completes.</div><div class="line">	 */</div><div class="line">	num = valid_swaphandles(entry, &amp;offset);</div><div class="line">	<span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; num; offset++, i++) &#123;</div><div class="line">		<span class="comment">/* Don't block on I/O for read-ahead */</span></div><div class="line">		<span class="keyword">if</span> (atomic_read(&amp;nr_async_pages) &gt;= pager_daemon.swap_cluster</div><div class="line">				* (<span class="number">1</span> &lt;&lt; page_cluster)) &#123;</div><div class="line">			<span class="keyword">while</span> (i++ &lt; num)</div><div class="line">				swap_free(SWP_ENTRY(SWP_TYPE(entry), offset++));</div><div class="line">			<span class="keyword">break</span>;</div><div class="line">		&#125;</div><div class="line">		<span class="comment">/* Ok, do the async read-ahead now */</span></div><div class="line">		new_page = read_swap_cache_async(SWP_ENTRY(SWP_TYPE(entry), offset), <span class="number">0</span>);</div><div class="line">		<span class="keyword">if</span> (new_page != <span class="literal">NULL</span>)</div><div class="line">			page_cache_release(new_page);</div><div class="line">		swap_free(SWP_ENTRY(SWP_TYPE(entry), offset));</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
   </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2017/06/22/linux.kernel/2.8页面的定期换出/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">2.8 页面的定期换出</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/blog/2016/09/19/OpenStack/docker-openstack/" class="archive-article-date">
-  	<time datetime="2016-09-19T12:04:13.000Z" itemprop="datePublished">Sep 19</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/blog/2016/09/19/OpenStack/docker-openstack/">Docker安装OpenStack</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Docker/">Docker</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
-	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
 
-    
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-linux.kernel/swapin_readahead" data-title="page_cluster解读" data-url="https://jiyou.github.io/blog/blog/2017/07/01/linux.kernel/swapin_readahead/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
 
 </div>
       <footer id="footer">
@@ -396,9 +367,9 @@
 		mathjax: true,
 		animate: true,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		root: /blog/

@@ -136,7 +136,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.33px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 11.67px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 16.67px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 13.33px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 11.67px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -243,6 +243,104 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-ceph/Chap1.编程技法/2.spinlock的实现" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/15/ceph/Chap1.编程技法/2.spinlock的实现/" class="article-date">
+  	<time datetime="2016-12-15T15:50:47.000Z" itemprop="datePublished">2016-12-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/15/ceph/Chap1.编程技法/2.spinlock的实现/">spinlock实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="spinlock"><a href="#spinlock" class="headerlink" title="spinlock"></a>spinlock</h1><h2 id="接口声明"><a href="#接口声明" class="headerlink" title="接口声明"></a>接口声明</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">uint32_t</span> <span class="keyword">simple_spinlock_t</span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SIMPLE_SPINLOCK_INITIALIZER 0</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span>;</div></pre></td></tr></table></figure>
+<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>可以看出，<code>simple_spinlock_t</code>就是<code>uint32_t</code>也就是<code>unsigned int</code>类型。初始值设置为0。</p>
+<h1 id="上锁过程"><a href="#上锁过程" class="headerlink" title="上锁过程"></a>上锁过程</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">uint32_t</span> bar = <span class="number">13</span>;</div><div class="line"><span class="keyword">static</span> <span class="keyword">uint32_t</span> *foo = &amp;bar;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    <span class="number">__</span>sync_synchronize();</div><div class="line">    <span class="comment">// 取得旧有的值。</span></div><div class="line">    <span class="keyword">uint32_t</span> oldval = *lock;</div><div class="line">    <span class="comment">// 如果没上锁，直接锁上。获得锁。</span></div><div class="line">    <span class="keyword">if</span> (oldval == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (<span class="number">__</span>sync_bool_compare_and_swap(lock, <span class="number">0</span>, <span class="number">1</span>))</div><div class="line">	       <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// delay</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">      *foo = (*foo * <span class="number">33</span>) + <span class="number">17</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="number">__</span>sync_bool_compare_and_swap(lock, <span class="number">1</span>, <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里无论是上锁，还是解锁，主要是需要理解两个函数：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">__</span>sync_synchronize()</div><div class="line"><span class="number">__</span>sync_bool_compare_and_swap()</div></pre></td></tr></table></figure>
+<h1 id="GCC原子操作"><a href="#GCC原子操作" class="headerlink" title="GCC原子操作"></a>GCC原子操作</h1><p><a href="http://blog.csdn.net/benpaobagzb/article/details/51700250" target="_blank" rel="external">gcc 原子操作 CSDN</a></p>
+<h2 id="比较赋值"><a href="#比较赋值" class="headerlink" title="比较赋值"></a>比较赋值</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">bool</span> <span class="number">__</span>sync_bool_compare_and_swap (type *ptr, type oldval type newval, ...)</div><div class="line">type <span class="number">__</span>sync_val_compare_and_swap (type *ptr, type oldval type newval, ...)</div></pre></td></tr></table></figure>
+<p>这两个函数提供原子的比较和交换，如果<em>ptr == oldval,就将newval写入</em>ptr,<br>第一个函数在相等并写入的情况下返回true.<br>第二个函数在返回操作之前的值。</p>
+<h2 id="全顺序"><a href="#全顺序" class="headerlink" title="全顺序"></a>全顺序</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">__</span>sync_synchronize (...)</div></pre></td></tr></table></figure>
+<p>发出一个full barrier。memory barrier有几种类型：</p>
+<ul>
+<li>acquire barrier : 不允许将barrier之后的内存读取指令移到barrier之前（linux kernel中的wmb()）。</li>
+<li>release barrier : 不允许将barrier之前的内存读取指令移到barrier之后 (linux kernel中的rmb())。</li>
+<li>full barrier    : 以上两种barrier的合集(linux kernel中的mb())。</li>
+</ul>
+<h1 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h1><p>实际上，除去原语操作之后的函数可以改写如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">uint32_t</span> oldval = *lock;</div><div class="line">    <span class="keyword">if</span> (oldval == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (*lock == <span class="number">0</span>) *lock = <span class="number">1</span>;</div><div class="line">      <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// delay</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">      *foo = (*foo * <span class="number">33</span>) + <span class="number">17</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">if</span> (*lock == <span class="number">1</span>) *lock = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/2.spinlock的实现" data-title="spinlock实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-ceph/Chap1.编程技法/1.raw.buffer" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -673,90 +771,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-unixv6/The-7th-Page" data-title="The Kernel 7th APR" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-unixv6/Unix-v6-interrupt" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/11/21/unixv6/Unix-v6-interrupt/" class="article-date">
-  	<time datetime="2016-11-21T09:05:41.000Z" itemprop="datePublished">2016-11-21</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/11/21/unixv6/Unix-v6-interrupt/">Unix V6 中断响应处理整理</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="中断处理硬件部分"><a href="#中断处理硬件部分" class="headerlink" title="中断处理硬件部分"></a>中断处理硬件部分</h1><p><img src="/blog/img/unixv6/interrupt-hardware.jpeg" alt=""></p>
-<h1 id="中断处理软件部分"><a href="#中断处理软件部分" class="headerlink" title="中断处理软件部分"></a>中断处理软件部分</h1><h2 id="被中断的为用户进程"><a href="#被中断的为用户进程" class="headerlink" title="被中断的为用户进程"></a>被中断的为用户进程</h2><p><img src="/blog/img/unixv6/interrupt-user-program.jpeg" alt=""></p>
-<h2 id="被中断的是内核进程"><a href="#被中断的是内核进程" class="headerlink" title="被中断的是内核进程"></a>被中断的是内核进程</h2><p><img src="/blog/img/unixv6/interrupt-kernel-program.jpeg" alt=""></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Unix-V6/">Unix V6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/中断/">中断</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/UnixV6/">UnixV6</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-unixv6/Unix-v6-interrupt" data-title="Unix V6 中断响应处理整理" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

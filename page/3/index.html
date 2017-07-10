@@ -136,7 +136,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.33px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 10px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 11.67px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 16.67px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 13.33px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 11.67px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -244,11 +244,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/" class="article-date">
-  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
+      <a href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/" class="article-date">
+  	<time datetime="2016-12-18T16:06:43.000Z" itemprop="datePublished">2016-12-19</time>
 </a>
     </div>
   
@@ -259,7 +259,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/">ceph::buffer::raw_malloc实现分析</a>
+      <a class="article-title" href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/">ceph:buffer:raw_mmap_pages实现分析</a>
     </h1>
   
 
@@ -268,10 +268,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>代码比较简单，直接分析代码即可。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_malloc : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_malloc(unsigned l) : raw(l) &#123;</div><div class="line">        // 如果data内存区域长度大于0.</div><div class="line">        // 那么在这里申请好内存。</div><div class="line">        if (len) &#123;</div><div class="line">            data = (char *)malloc(len);</div><div class="line">            if (!data)</div><div class="line">                throw bad_alloc();</div><div class="line">        &#125; else &#123;</div><div class="line">            // 如果内存长度为0.</div><div class="line">            // 那么这里直接把data指针设置为0。</div><div class="line">            data = 0;</div><div class="line">        &#125;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw_malloc(unsigned l, char *b) : raw(b, l) &#123;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        // 为什么这里不调用inc_history_alloc()?</div><div class="line">    &#125;</div><div class="line">    ~raw_malloc() &#123;</div><div class="line">        // 释放内存</div><div class="line">        free(data);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    // 这里是只是生成相同大小的新内存区域。</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_malloc(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>需要注意的是，所有关于内存的记录都是在构造函数和析构函数里面完成。从总体上来说，这个类没有什么特别的地方，就是内存生成的时候，指定用的是<code>malloc</code>罢了。</p>
-<p><strong>注意</strong><br><code>explicit</code>放在代码里，会导致代码无法高亮。</p>
+        <h1 id="mmap"><a href="#mmap" class="headerlink" title="mmap"></a>mmap</h1><p>这里首先需要介绍一下<code>mmap</code>: mmap是一种内存映射文件的方法，即将一个文件或者其它对象映射到进程的地址空间，实现文件磁盘地址和进程虚拟地址空间中一段虚拟地址的一一对映关系。实现这样的映射关系后，进程就可以采用指针的方式读写操作这一段内存，而系统会自动回写脏页面到对应的文件磁盘上，即完成了对文件的操作而不必再调用read,write等系统调用函数。相反，内核空间对这段区域的修改也直接反映用户空间，从而可以实现不同进程间的文件共享。如下图所示：</p>
+<p><img src="/blog/img/ceph.buffer.raw.mmap.png" alt=""></p>
+<p>由上图可以看出，进程的虚拟地址空间，由多个虚拟内存区域构成。虚拟内存区域是进程的虚拟地址空间中的一个同质区间，即具有同样特性的连续地址范围。上图中所示的text数据段（代码段）、初始数据段、BSS数据段、堆、栈和内存映射，都是一个独立的虚拟内存区域。而为内存映射服务的地址空间处在堆栈之间的空余部分。</p>
+<p><strong>概述</strong><br>实际上就是开辟一个内存区域，把这个内存区域与磁盘上的一个文件映射。进而可以以操作内存的方式来操作这个文件。并且可以在多个进程之间共享这个文件。</p>
+<p>详细信息，可以参考<a href="http://www.cnblogs.com/huxiao-tee/p/4660352.html" target="_blank" rel="external">此文</a>。</p>
+<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>由于代码比较短小，这里直接分析源代码：</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_mmap_pages : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_mmap_pages(unsigned l) : raw(l) &#123;</div><div class="line">        // MAP_PRIVATE //建立一个写入时拷贝的私有映射。</div><div class="line">        // 内存区域的写入不会影响到原文件。</div><div class="line">        // 这个标志和以上标志是互斥的，只能使用其中一个。</div><div class="line">        data = (char*)::mmap(NULL, len, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_ANON, -1, 0);</div><div class="line">        if (!data)</div><div class="line">            throw bad_alloc();</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    ~raw_mmap_pages() &#123;</div><div class="line">        ::munmap(data, len);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_mmap_pages(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>与前面的函数相比，这里就是直接是利用<code>mmap</code>生成一段内存区域。释放内存的时候，采用<code>munmap</code>函数。</p>
 
       
     </div>
@@ -305,7 +309,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" data-title="ceph::buffer::raw_malloc实现分析" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages" data-title="ceph:buffer:raw_mmap_pages实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -390,6 +394,91 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/5.track.buffer" data-title="ceph内存使用计数" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/" class="article-date">
+  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc/">ceph::buffer::raw_malloc实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p>代码比较简单，直接分析代码即可。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">class buffer::raw_malloc : public buffer::raw &#123;</div><div class="line">public:</div><div class="line">    explicit raw_malloc(unsigned l) : raw(l) &#123;</div><div class="line">        // 如果data内存区域长度大于0.</div><div class="line">        // 那么在这里申请好内存。</div><div class="line">        if (len) &#123;</div><div class="line">            data = (char *)malloc(len);</div><div class="line">            if (!data)</div><div class="line">                throw bad_alloc();</div><div class="line">        &#125; else &#123;</div><div class="line">            // 如果内存长度为0.</div><div class="line">            // 那么这里直接把data指针设置为0。</div><div class="line">            data = 0;</div><div class="line">        &#125;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        inc_history_alloc(len);</div><div class="line">    &#125;</div><div class="line">    raw_malloc(unsigned l, char *b) : raw(b, l) &#123;</div><div class="line">        inc_total_alloc(len);</div><div class="line">        // 为什么这里不调用inc_history_alloc()?</div><div class="line">    &#125;</div><div class="line">    ~raw_malloc() &#123;</div><div class="line">        // 释放内存</div><div class="line">        free(data);</div><div class="line">        dec_total_alloc(len);</div><div class="line">    &#125;</div><div class="line">    // 这里是只是生成相同大小的新内存区域。</div><div class="line">    raw* clone_empty() &#123;</div><div class="line">        return new raw_malloc(len);</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>需要注意的是，所有关于内存的记录都是在构造函数和析构函数里面完成。从总体上来说，这个类没有什么特别的地方，就是内存生成的时候，指定用的是<code>malloc</code>罢了。</p>
+<p><strong>注意</strong><br><code>explicit</code>放在代码里，会导致代码无法高亮。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" data-title="ceph::buffer::raw_malloc实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -585,104 +674,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/3.PAGE_VARs" data-title="PAGE常量" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/Chap1.编程技法/2.spinlock的实现" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/15/ceph/Chap1.编程技法/2.spinlock的实现/" class="article-date">
-  	<time datetime="2016-12-15T15:50:47.000Z" itemprop="datePublished">2016-12-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/15/ceph/Chap1.编程技法/2.spinlock的实现/">spinlock实现分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="spinlock"><a href="#spinlock" class="headerlink" title="spinlock"></a>spinlock</h1><h2 id="接口声明"><a href="#接口声明" class="headerlink" title="接口声明"></a>接口声明</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">uint32_t</span> <span class="keyword">simple_spinlock_t</span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SIMPLE_SPINLOCK_INITIALIZER 0</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span>;</div></pre></td></tr></table></figure>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>可以看出，<code>simple_spinlock_t</code>就是<code>uint32_t</code>也就是<code>unsigned int</code>类型。初始值设置为0。</p>
-<h1 id="上锁过程"><a href="#上锁过程" class="headerlink" title="上锁过程"></a>上锁过程</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">uint32_t</span> bar = <span class="number">13</span>;</div><div class="line"><span class="keyword">static</span> <span class="keyword">uint32_t</span> *foo = &amp;bar;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    <span class="number">__</span>sync_synchronize();</div><div class="line">    <span class="comment">// 取得旧有的值。</span></div><div class="line">    <span class="keyword">uint32_t</span> oldval = *lock;</div><div class="line">    <span class="comment">// 如果没上锁，直接锁上。获得锁。</span></div><div class="line">    <span class="keyword">if</span> (oldval == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (<span class="number">__</span>sync_bool_compare_and_swap(lock, <span class="number">0</span>, <span class="number">1</span>))</div><div class="line">	       <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// delay</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">      *foo = (*foo * <span class="number">33</span>) + <span class="number">17</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="number">__</span>sync_bool_compare_and_swap(lock, <span class="number">1</span>, <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里无论是上锁，还是解锁，主要是需要理解两个函数：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">__</span>sync_synchronize()</div><div class="line"><span class="number">__</span>sync_bool_compare_and_swap()</div></pre></td></tr></table></figure>
-<h1 id="GCC原子操作"><a href="#GCC原子操作" class="headerlink" title="GCC原子操作"></a>GCC原子操作</h1><p><a href="http://blog.csdn.net/benpaobagzb/article/details/51700250" target="_blank" rel="external">gcc 原子操作 CSDN</a></p>
-<h2 id="比较赋值"><a href="#比较赋值" class="headerlink" title="比较赋值"></a>比较赋值</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">bool</span> <span class="number">__</span>sync_bool_compare_and_swap (type *ptr, type oldval type newval, ...)</div><div class="line">type <span class="number">__</span>sync_val_compare_and_swap (type *ptr, type oldval type newval, ...)</div></pre></td></tr></table></figure>
-<p>这两个函数提供原子的比较和交换，如果<em>ptr == oldval,就将newval写入</em>ptr,<br>第一个函数在相等并写入的情况下返回true.<br>第二个函数在返回操作之前的值。</p>
-<h2 id="全顺序"><a href="#全顺序" class="headerlink" title="全顺序"></a>全顺序</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">__</span>sync_synchronize (...)</div></pre></td></tr></table></figure>
-<p>发出一个full barrier。memory barrier有几种类型：</p>
-<ul>
-<li>acquire barrier : 不允许将barrier之后的内存读取指令移到barrier之前（linux kernel中的wmb()）。</li>
-<li>release barrier : 不允许将barrier之前的内存读取指令移到barrier之后 (linux kernel中的rmb())。</li>
-<li>full barrier    : 以上两种barrier的合集(linux kernel中的mb())。</li>
-</ul>
-<h1 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h1><p>实际上，除去原语操作之后的函数可以改写如下：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">uint32_t</span> oldval = *lock;</div><div class="line">    <span class="keyword">if</span> (oldval == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (*lock == <span class="number">0</span>) *lock = <span class="number">1</span>;</div><div class="line">      <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// delay</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">      *foo = (*foo * <span class="number">33</span>) + <span class="number">17</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">if</span> (*lock == <span class="number">1</span>) *lock = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/2.spinlock的实现" data-title="spinlock实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
