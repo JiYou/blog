@@ -77,7 +77,7 @@
 						<li>Links</li>
 						
 						
-						<li>Über</li>
+						<li>About</li>
 						
 					</ul>
 				</div>
@@ -90,31 +90,17 @@
 					<nav class="header-menu">
 						<ul>
 						
-							<li><a href="/blog/">最近文章</a></li>
+							<li><a href="/blog/">主页</a></li>
 				        
 							<li><a href="/blog/archives">所有文章</a></li>
 				        
-							<li><a href="/blog/categories/随笔">随笔</a></li>
-				        
-							<li><a href="/blog/categories/xv6">xv6</a></li>
-				        
 							<li><a href="/blog/categories/ceph">ceph</a></li>
-				        
-							<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
-				        
-							<li><a href="/blog/categories/OS">OS</a></li>
-				        
-							<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
-				        
-							<li><a href="/blog/categories/libevent">libevent</a></li>
 				        
 							<li><a href="/blog/categories/PDP11">PDP11</a></li>
 				        
 							<li><a href="/blog/categories/Linux">Linux</a></li>
 				        
 							<li><a href="/blog/categories/Kernel">Kernel</a></li>
-				        
-							<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 				        
 						</ul>
 					</nav>
@@ -196,31 +182,17 @@
 			<nav class="header-menu">
 				<ul>
 				
-					<li><a href="/blog/">最近文章</a></li>
+					<li><a href="/blog/">主页</a></li>
 		        
 					<li><a href="/blog/archives">所有文章</a></li>
 		        
-					<li><a href="/blog/categories/随笔">随笔</a></li>
-		        
-					<li><a href="/blog/categories/xv6">xv6</a></li>
-		        
 					<li><a href="/blog/categories/ceph">ceph</a></li>
-		        
-					<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
-		        
-					<li><a href="/blog/categories/OS">OS</a></li>
-		        
-					<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
-		        
-					<li><a href="/blog/categories/libevent">libevent</a></li>
 		        
 					<li><a href="/blog/categories/PDP11">PDP11</a></li>
 		        
 					<li><a href="/blog/categories/Linux">Linux</a></li>
 		        
 					<li><a href="/blog/categories/Kernel">Kernel</a></li>
-		        
-					<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 		        
 		        <div class="clearfix"></div>
 				</ul>
@@ -253,6 +225,8 @@
     </div>
   
   <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
       <header class="article-header">
@@ -338,6 +312,8 @@
     </div>
   
   <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
       <header class="article-header">
@@ -859,6 +835,8 @@
   
   <div class="article-inner">
     
+      <input type="hidden" class="isFancy" />
+    
     
       <header class="article-header">
         
@@ -969,6 +947,8 @@
     </div>
   
   <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
       <header class="article-header">
@@ -1087,6 +1067,8 @@
   
   <div class="article-inner">
     
+      <input type="hidden" class="isFancy" />
+    
     
       <header class="article-header">
         
@@ -1194,9 +1176,491 @@
 
 
   
+    <article id="post-unixv6/pdp11/pdp11-instructions" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/26/unixv6/pdp11/pdp11-instructions/" class="article-date">
+  	<time datetime="2016-12-26T14:16:34.000Z" itemprop="datePublished">2016-12-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/26/unixv6/pdp11/pdp11-instructions/">PDP11解读之1-奇怪的数组</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="奇怪的数组"><a href="#奇怪的数组" class="headerlink" title="奇怪的数组"></a>奇怪的数组</h1><p>在看<code>PDP11</code>指令集的实现的时候，有一段有意思的代码。一开始没看明白，后来看懂了。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> disasmtable = []<span class="keyword">struct</span> &#123;</div><div class="line">	inst, arg <span class="keyword">uint16</span></div><div class="line">	msg       <span class="keyword">string</span></div><div class="line">	flag      <span class="keyword">uint</span></div><div class="line">	b         <span class="keyword">bool</span></div><div class="line">&#125;&#123;</div><div class="line">	&#123;<span class="number">0077700</span>, <span class="number">0005000</span>, <span class="string">"CLR"</span>, flagD, <span class="literal">true</span>&#125;,</div><div class="line">  ...,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>数组前面这段数字表示啥意思？</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="number">0077700</span>, <span class="number">0005000</span></div></pre></td></tr></table></figure>
+<p>首先可以确定的是<code>inst</code>表示的是:<code>0077700</code>，而<code>arg</code>表示的是<code>0005000</code>。<code>CLR</code>表示的是汇编命令。那么看一下<code>CLR</code>指令的定义：</p>
+<p><img src="/blog/img/clr.instu.jpeg" alt=""></p>
+<p>在这里，可以看到<code>0005000</code>最接近的也就是<code>00050DD</code>。在这里就需要注意一下这个指令的含义了：</p>
+<ul>
+<li>这是一个单指令，操作数是寄存器</li>
+<li>不能操作内存</li>
+<li>后面六位指的是寄存器。</li>
+<li><code>CLRB</code>指令的头一位表示的是操作的对象是<code>byte</code>。</li>
+</ul>
+<h1 id="译指令部分"><a href="#译指令部分" class="headerlink" title="译指令部分"></a>译指令部分</h1><p>所以在查看一条指令是不是<code>CLR</code>的时候，需要去掉后6位。看前面的10位的值是不是<code>00050</code>。那么最好的操作办法就是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">instruction &amp; b0 111 111 111 000 000 == 0 000 101 000 000 000</div></pre></td></tr></table></figure>
+<p>如果相等，那么肯定就是<code>CLR</code>指令。所以后面可以看到译码部分是这样写的。（代码第一部分，查找指令）。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *cpu)</span> <span class="title">disasm</span><span class="params">(a uint18)</span> <span class="title">string</span></span> &#123;</div><div class="line">	<span class="comment">// 从给定的地址处，读出指令</span></div><div class="line">	<span class="comment">// 这里取出的指令是16位的</span></div><div class="line">	ins := c.unibus.read16(a)</div><div class="line"></div><div class="line">	l := disasmtable[<span class="number">0</span>]</div><div class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(disasmtable); i++ &#123;</div><div class="line">		l = disasmtable[i]</div><div class="line">		<span class="comment">// 指令与上去</span></div><div class="line">		<span class="comment">// 都是16位的，与的结果得到arg</span></div><div class="line">		<span class="keyword">if</span> (ins &amp; l.inst) == l.arg &#123;</div><div class="line">			<span class="keyword">goto</span> found</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">panic</span>(fmt.Sprintf(<span class="string">"disasm: cannot disassemble instruction %06o at %06o"</span>, ins, a))</div><div class="line">	<span class="keyword">return</span> <span class="string">"???"</span></div><div class="line">  ...</div><div class="line">  <span class="comment">// .. 后面是查找到指令之后的处理。</span></div></pre></td></tr></table></figure>
+<h1 id="几个参数"><a href="#几个参数" class="headerlink" title="几个参数"></a>几个参数</h1><p>在处理指令的参数之前，需要考虑看一下如下代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line">&#123;<span class="number">0177700</span>, <span class="number">0006700</span>, <span class="string">"SXT"</span>, flagD, <span class="literal">false</span>&#125;,</div><div class="line">&#123;<span class="number">0070000</span>, <span class="number">0010000</span>, <span class="string">"MOV"</span>, flagS | flagD, <span class="literal">true</span>&#125;,</div></pre></td></tr></table></figure>
+<p>在这里，<code>flagD</code>和<code>flagS|flagD</code>就表示不同的参数。其中<code>flagD</code>表示只有目标参数。而<code>flagS|flagD</code>则是即有源参数也有目标参数。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Unix-V6/">Unix V6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/pdp11/">pdp11</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/PDP11/">PDP11</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-unixv6/pdp11/pdp11-instructions" data-title="PDP11解读之1-奇怪的数组" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/11.XioDispatchHook" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/" class="article-date">
+  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/">ceph:buffer:raw_pipe的实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/11.XioDispatchHook" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe/" class="article-date">
+  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe/">ceph:buffer:raw_pipe的实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>首先需要理解<code>splice</code>系统调用的作用。</p>
+<p><a href="http://blog.csdn.net/qq276592716/article/details/23047539" target="_blank" rel="external">splice系统调用</a><br><a href="http://blog.csdn.net/jasonliuvip/article/details/22600569" target="_blank" rel="external">splice系统调用2</a></p>
+<p>以及注意看《Linux高性能服务器编程》。</p>
+<h1 id="raw-pipe的作用"><a href="#raw-pipe的作用" class="headerlink" title="raw_pipe的作用"></a>raw_pipe的作用</h1><p><code>raw_pipe</code>的作用，主要是利用OS的<code>pipe</code>来实现一些功能。因此，成员主要是：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">bool</span> source_consumed;</div><div class="line"><span class="keyword">int</span> pipefds[<span class="number">2</span>];</div></pre></td></tr></table></figure>
+<p>这里<code>pipefds</code>就是用来记录两个<code>pipe</code>。</p>
+<h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>需要注意下面这个函数的原型是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">explicit raw_pipe(unsigned len) : raw(len), source_consumed(false) &#123;</div></pre></td></tr></table></figure>
+<p>为了高亮的原因，去掉了<code>explicit</code>关键字。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"> raw_pipe(<span class="keyword">unsigned</span> len) : raw(len), source_consumed(<span class="literal">false</span>) &#123;</div><div class="line">    <span class="comment">// 这里去获取系统的pipe size。</span></div><div class="line">    <span class="comment">// 如果设置的长度比系统支持的最大的还要大。那么报错。</span></div><div class="line">    <span class="keyword">size_t</span> max = get_max_pipe_size();</div><div class="line">    <span class="keyword">if</span> (len &gt; max) &#123;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: requested length "</span> &lt;&lt; len</div><div class="line">              &lt;&lt; <span class="string">" &gt; max length "</span> &lt;&lt; max &lt;&lt; bendl;</div><div class="line">        <span class="keyword">throw</span> malformed_input(<span class="string">"length larger than max pipe size"</span>);</div><div class="line">    &#125;</div><div class="line">    pipefds[<span class="number">0</span>] = <span class="number">-1</span>;</div><div class="line">    pipefds[<span class="number">1</span>] = <span class="number">-1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">int</span> r;</div><div class="line">    <span class="comment">// 这里生成管道文件。</span></div><div class="line">    <span class="keyword">if</span> (::pipe(pipefds) == <span class="number">-1</span>) &#123;</div><div class="line">        r = -errno;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error creating pipe: "</span> &lt;&lt; cpp_strerror(r) &lt;&lt; bendl;</div><div class="line">        <span class="keyword">throw</span> error_code(r);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 这里设置非阻塞。</span></div><div class="line">    r = set_nonblocking(pipefds);</div><div class="line">    <span class="keyword">if</span> (r &lt; <span class="number">0</span>) &#123;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error setting nonblocking flag on temp pipe: "</span></div><div class="line">              &lt;&lt; cpp_strerror(r) &lt;&lt; bendl;</div><div class="line">        <span class="keyword">throw</span> error_code(r);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 这里设置管道的缓冲区大小。</span></div><div class="line">    r = set_pipe_size(pipefds, len);</div><div class="line">    <span class="keyword">if</span> (r &lt; <span class="number">0</span>) &#123;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: could not set pipe size"</span> &lt;&lt; bendl;</div><div class="line">        <span class="comment">// continue, since the pipe should become large enough as needed</span></div><div class="line">    &#125;</div><div class="line"></div><div class="line">    inc_total_alloc(len);</div><div class="line">    inc_history_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_pipe "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" alloc "</span> &lt;&lt; len &lt;&lt; <span class="string">" "</span></div><div class="line">          &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="析构函数"><a href="#析构函数" class="headerlink" title="析构函数"></a>析构函数</h1><p>析构函数就简单了许多。直接是释放内存。实际上，从<code>raw</code>基类的构造函数看来。当传入的参数只有<code>len</code>的时候，是不会生成新的内存的。但是为了安全起见，还是有如下判断：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (data) <span class="built_in">free</span>(data);</div></pre></td></tr></table></figure>
+<p>除此之外的代码即是关闭两个<code>pipe</code>文件。<br><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">~raw_pipe() &#123;</div><div class="line">    <span class="keyword">if</span> (data)</div><div class="line">        <span class="built_in">free</span>(data);</div><div class="line">    close_pipe(pipefds);</div><div class="line">    dec_total_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_pipe "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" free "</span> &lt;&lt; (<span class="keyword">void</span> *)data &lt;&lt; <span class="string">" "</span></div><div class="line">          &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h1 id="zero-copy"><a href="#zero-copy" class="headerlink" title="zero copy"></a>zero copy</h1><p>由于splice系统调用的使用，就是为了避免内存的拷贝。也就是把用户缓冲区绑定到了内核缓冲区。所以可以支持<code>zero copy</code>。不过这些事情都是由操作系统来完成的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">can_zero_copy</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="绑定源缓冲区"><a href="#绑定源缓冲区" class="headerlink" title="绑定源缓冲区"></a>绑定源缓冲区</h1><p>将<code>fd</code>绑定到<code>pipefds[1]</code>上。这里调用的是<code>safe_splice</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">    <span class="comment">// typedef long long loff_t;</span></div><div class="line">    <span class="comment">// typedef long long off64_t;</span></div><div class="line">    <span class="function"><span class="keyword">int</span> <span class="title">set_source</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">loff_t</span> *off)</span> </span>&#123;</div><div class="line">        <span class="comment">// 3 # define SPLICE_F_NONBLOCK 2</span></div><div class="line">        <span class="comment">/* Don't block on the pipe splicing</span></div><div class="line">         * (but we may still block on the fd we</div><div class="line">         * splice from/to).</div><div class="line">         */</div><div class="line">        <span class="keyword">int</span> flags = SPLICE_F_NONBLOCK;</div><div class="line">        <span class="comment">// 这里是将fd所指向的文件号，绑定到pipefds[1]里。</span></div><div class="line">        <span class="comment">// 然后off表示偏移值</span></div><div class="line">        <span class="comment">// NULL表示pipefds[1]中的偏移值。</span></div><div class="line">        <span class="keyword">ssize_t</span> r = safe_splice(fd, off, pipefds[<span class="number">1</span>], <span class="literal">NULL</span>, len, flags);</div><div class="line">        <span class="keyword">if</span> (r &lt; <span class="number">0</span>) &#123;</div><div class="line">            bdout &lt;&lt; <span class="string">"raw_pipe: error splicing into pipe: "</span> &lt;&lt; cpp_strerror(r)</div><div class="line">                  &lt;&lt; bendl;</div><div class="line">            <span class="keyword">return</span> r;</div><div class="line">        &#125;</div><div class="line">        <span class="comment">// update length with actual amount read</span></div><div class="line">        len = r;</div><div class="line">        <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">## safe_splice函数</div><div class="line"></div><div class="line">`safe_splice`函数处理的主要是重定向的问题。完成用户缓冲区与内核缓冲区的映射。从而可以免去内存的拷贝。</div><div class="line"></div><div class="line">```<span class="function">cpp</span></div><div class="line">ssize_t <span class="title">safe_splice</span><span class="params">(<span class="keyword">int</span> fd_in, <span class="keyword">loff_t</span> *off_in, <span class="keyword">int</span> fd_out, <span class="keyword">loff_t</span> *off_out,</span></div><div class="line">                    <span class="keyword">size_t</span> len, <span class="keyword">unsigned</span> <span class="keyword">int</span> flags)</div><div class="line">&#123;</div><div class="line">    <span class="keyword">size_t</span> cnt = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (cnt &lt; len) &#123;</div><div class="line">        <span class="keyword">ssize_t</span> r = splice(fd_in, off_in, fd_out, off_out, len - cnt, flags);</div><div class="line">        <span class="keyword">if</span> (r &lt;= <span class="number">0</span>) &#123;</div><div class="line">            <span class="keyword">if</span> (r == <span class="number">0</span>) &#123;</div><div class="line">                <span class="comment">// EOF</span></div><div class="line">                <span class="keyword">return</span> cnt;</div><div class="line">            &#125;</div><div class="line">            <span class="keyword">if</span> (errno == EINTR)</div><div class="line">                <span class="keyword">continue</span>;</div><div class="line">            <span class="keyword">if</span> (errno == EAGAIN)</div><div class="line">                <span class="keyword">break</span>;</div><div class="line">            <span class="keyword">return</span> -errno;</div><div class="line">        &#125;</div><div class="line">        cnt += r;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> cnt;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>函数实现得比较简单，就是一个while循环，不断地把数据拷贝到<code>fd_out</code>区域。</p>
+<h1 id="绑定目地缓冲区"><a href="#绑定目地缓冲区" class="headerlink" title="绑定目地缓冲区"></a>绑定目地缓冲区</h1><p>实际上，与前面<code>set_source</code>函数并没有太大区别。只是这里使用的是<code>pipefds[0]</code>。需要注意的是，管道的两个文件描述符，完成的功能实际上是不一样的。<code>pipefds[1]</code>主要是往里面写入数据。而<code>pipefds[0]</code>主要是往里面读数据。所以<code>pipefds[1]</code>是作为源数据缓冲区，而<code>pipefds[0]</code>是做为目的缓冲区。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">zero_copy_to_fd</span><span class="params">(<span class="keyword">int</span> fd, <span class="keyword">loff_t</span> *offset)</span> </span>&#123;</div><div class="line">    assert(!source_consumed);</div><div class="line">    <span class="keyword">int</span> flags = SPLICE_F_NONBLOCK;</div><div class="line">    <span class="keyword">ssize_t</span> r = safe_splice_exact(pipefds[<span class="number">0</span>], <span class="literal">NULL</span>, fd, offset, len, flags);</div><div class="line">    <span class="keyword">if</span> (r &lt; <span class="number">0</span>) &#123;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error splicing from pipe to fd: "</span></div><div class="line">              &lt;&lt; cpp_strerror(r) &lt;&lt; bendl;</div><div class="line">        <span class="keyword">return</span> r;</div><div class="line">    &#125;</div><div class="line">    source_consumed = <span class="literal">true</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="save-splice-exact"><a href="#save-splice-exact" class="headerlink" title="save_splice_exact"></a>save_splice_exact</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">ssize_t</span> safe_splice_exact(<span class="keyword">int</span> fd_in, <span class="keyword">loff_t</span> *off_in, <span class="keyword">int</span> fd_out,</div><div class="line">			  <span class="keyword">loff_t</span> *off_out, <span class="keyword">size_t</span> len, <span class="keyword">unsigned</span> <span class="keyword">int</span> flags)</div><div class="line">&#123;</div><div class="line">  <span class="keyword">ssize_t</span> ret = safe_splice(fd_in, off_in, fd_out, off_out, len, flags);</div><div class="line">  <span class="keyword">if</span> (ret &lt; <span class="number">0</span>)</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">  <span class="keyword">if</span> ((<span class="keyword">size_t</span>)ret != len)</div><div class="line">    <span class="keyword">return</span> -EDOM;</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>函数与前面<code>safe_splice</code>没有太大的区别。只是加强了返回值的检查。</p>
+<h1 id="clone-empty"><a href="#clone-empty" class="headerlink" title="clone_empty"></a>clone_empty</h1><p>对于<code>pipe-based</code>的缓冲区来说，应该是不会支持clone操作的。并且只是作为其他类型的buffers的单元测试在使用。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">buffer::<span class="function">raw* <span class="title">clone_empty</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// cloning doesn't make sense for pipe-based buffers,</span></div><div class="line">    <span class="comment">// and is only used by unit tests for other types of buffers</span></div><div class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>不过需要注意的是，在<code>raw</code>基类中，<code>clone</code>函数应该是需要加强一下处理吧：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function">raw *<span class="title">clone</span><span class="params">()</span> </span>&#123;</div><div class="line">  raw *c = clone_empty();</div><div class="line">  <span class="built_in">memcpy</span>(c-&gt;data, data, len);</div><div class="line">  <span class="keyword">return</span> c;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果这里直接从<code>clone_empty</code>返回<code>NULL</code>，那么接下来执行<code>memcpy(c-&gt;data, data, len)</code>就会失败。</p>
+<h1 id="获取数据区域"><a href="#获取数据区域" class="headerlink" title="获取数据区域"></a>获取数据区域</h1><p><code>get_data</code>会调用<code>copy_pipe</code>。需要注意的是，如果<code>data</code>缓冲区非空，那么直接返回<code>data</code>。如果<code>data</code>缓冲区是空的，那么复制<code>pipes</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">get_data</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (data)</div><div class="line">        <span class="keyword">return</span> data;</div><div class="line">    <span class="keyword">return</span> copy_pipe(pipefds);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="copy-pipes"><a href="#copy-pipes" class="headerlink" title="copy pipes"></a>copy pipes</h2><p>在看这段代码之前，首先需要查看一下<code>tee</code>函数的用法。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*splice()和tee()实现将文件"./1.txt"同时拷贝到文件"./2.txt"和"./3.txt"中*/</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;unistd.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;fcntl.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    <span class="keyword">int</span> fd1 = open(<span class="string">"./1.txt"</span>, O_RDONLY);</div><div class="line">    <span class="keyword">int</span> fd2 = open(<span class="string">"./2.txt"</span>, O_RDWR| O_CREAT | O_TRUNC, <span class="number">0666</span>);</div><div class="line">    <span class="keyword">int</span> fd3 = open(<span class="string">"./3.txt"</span>, O_RDWR| O_CREAT | O_TRUNC, <span class="number">0666</span>);</div><div class="line"></div><div class="line">    <span class="comment">/*用于向"./2.txt"输入数据*/</span></div><div class="line">    <span class="keyword">int</span> pipefd2[<span class="number">2</span>];</div><div class="line">    <span class="comment">/*用于向"./3.txt"输入数据*/</span></div><div class="line">    <span class="keyword">int</span> pipefd3[<span class="number">2</span>];</div><div class="line">    pipe(pipefd2);</div><div class="line">    pipe(pipefd3);</div><div class="line"></div><div class="line">    <span class="comment">/*将fd1文件的内容输入管道pipefd2中*/</span></div><div class="line">    splice(fd1, <span class="literal">NULL</span>, pipefd2[<span class="number">1</span>], <span class="literal">NULL</span>, <span class="number">10086</span>, SPLICE_F_MORE);</div><div class="line">    <span class="comment">/*将管道pipefd2的内容复制到管道pipefd3中，不消耗管道pipefd2上的数据，管道pipefd2上的数据可以用于后续操作*/</span></div><div class="line">    tee(pipefd2[<span class="number">0</span>], pipefd3[<span class="number">1</span>], <span class="number">10086</span>, SPLICE_F_NONBLOCK);</div><div class="line">    <span class="comment">/*将管道pipefd2的内容写入fd2文件中*/</span></div><div class="line">    splice(pipefd2[<span class="number">0</span>], <span class="literal">NULL</span>, fd2, <span class="literal">NULL</span>, <span class="number">10086</span>, SPLICE_F_MORE);</div><div class="line">    <span class="comment">/*将管道pipefd3的内容写入fd3文件中*/</span></div><div class="line">    splice(pipefd3[<span class="number">0</span>], <span class="literal">NULL</span>, fd3, <span class="literal">NULL</span>, <span class="number">10086</span>, SPLICE_F_MORE);</div><div class="line"></div><div class="line">    close(fd1);</div><div class="line">    close(fd2);</div><div class="line">    close(fd3);</div><div class="line">    close(pipefd2[<span class="number">0</span>]);</div><div class="line">    close(pipefd2[<span class="number">1</span>]);</div><div class="line">    close(pipefd3[<span class="number">0</span>]);</div><div class="line">    close(pipefd3[<span class="number">1</span>]);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>tee和splice的简单介绍如下图。</p>
+<p><img src="/blog/img/A2DA71DD-0E55-4F58-A7DA-5632E2BDE03E.jpeg" alt=""></p>
+<p>理解了<code>tee</code>和<code>splice</code>的用法，那么再来看<code>copy_pipe</code>函数。传入的参数是<code>pipefds</code>实际上，由于是类成员，可以不要这个参数的。</p>
+<p><img src="/blog/img/ceph.buffer.raw.pipe.source_consumed.jpeg" alt=""></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">char</span> *<span class="title">copy_pipe</span><span class="params">(<span class="keyword">int</span> *fds)</span> </span>&#123;</div><div class="line">    <span class="comment">/* preserve original pipe contents by copying into a temporary</span></div><div class="line">     * pipe before reading.</div><div class="line">     */</div><div class="line">    <span class="keyword">int</span> tmpfd[<span class="number">2</span>];</div><div class="line">    <span class="keyword">int</span> r;</div><div class="line">    <span class="comment">// source_consumed主要是用于是否消费pipefds[0].</span></div><div class="line">    <span class="comment">// 如果pipefds[0]被zero_copy_to_fd调用过，那么source_consumed会被设置成为true。</span></div><div class="line">    <span class="comment">// 也就是说输出源被绑定给了别外一个文件。</span></div><div class="line">    <span class="comment">// 在复制的时候，pipefds[0]输出源是不能被绑定到别的文件上面的。</span></div><div class="line">    assert(!source_consumed);</div><div class="line">    assert(fds[<span class="number">0</span>] &gt;= <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="comment">// 这里生成临时的pipe文件</span></div><div class="line">    <span class="keyword">if</span> (::pipe(tmpfd) == <span class="number">-1</span>) &#123;</div><div class="line">        r = -errno;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error creating temp pipe: "</span> &lt;&lt; cpp_strerror(r)</div><div class="line">              &lt;&lt; bendl;</div><div class="line">        <span class="keyword">throw</span> error_code(r);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 设置pipe非阻塞</span></div><div class="line">    r = set_nonblocking(tmpfd);</div><div class="line">    <span class="keyword">if</span> (r &lt; <span class="number">0</span>) &#123;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error setting nonblocking flag on temp pipe: "</span></div><div class="line">              &lt;&lt; cpp_strerror(r) &lt;&lt; bendl;</div><div class="line">        <span class="keyword">throw</span> error_code(r);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 设置pipe size</span></div><div class="line">    r = set_pipe_size(tmpfd, len);</div><div class="line">    <span class="keyword">if</span> (r &lt; <span class="number">0</span>) &#123;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error setting pipe size on temp pipe: "</span></div><div class="line">              &lt;&lt; cpp_strerror(r) &lt;&lt; bendl;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 这里把fds[0]输出，mapping到tmpfd[1]输入上。</span></div><div class="line">    <span class="comment">// 注意这里采用的是tee函数。就是会把fds[0]mapping到tmpfd[1]文件管道里面。</span></div><div class="line">    <span class="keyword">int</span> flags = SPLICE_F_NONBLOCK;</div><div class="line">    <span class="keyword">if</span> (::tee(fds[<span class="number">0</span>], tmpfd[<span class="number">1</span>], len, flags) == <span class="number">-1</span>) &#123;</div><div class="line">        r = errno;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error tee'ing into temp pipe: "</span> &lt;&lt; cpp_strerror(r)</div><div class="line">              &lt;&lt; bendl;</div><div class="line">        close_pipe(tmpfd);</div><div class="line">        <span class="keyword">throw</span> error_code(r);</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 申请长度为len的内存区域。</span></div><div class="line">    data = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>(len);</div><div class="line">    <span class="keyword">if</span> (!data) &#123;</div><div class="line">        close_pipe(tmpfd);</div><div class="line">        <span class="keyword">throw</span> bad_alloc();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 然后从tmpfd[1]那边读取长度为len的数据到data缓冲区buffer中。</span></div><div class="line">    r = safe_read(tmpfd[<span class="number">0</span>], data, len);</div><div class="line">    <span class="keyword">if</span> (r &lt; (<span class="keyword">ssize_t</span>)len) &#123;</div><div class="line">        bdout &lt;&lt; <span class="string">"raw_pipe: error reading from temp pipe:"</span> &lt;&lt; cpp_strerror(r)</div><div class="line">              &lt;&lt; bendl;</div><div class="line">        <span class="built_in">free</span>(data);</div><div class="line">        data = <span class="literal">NULL</span>;</div><div class="line">        close_pipe(tmpfd);</div><div class="line">        <span class="keyword">throw</span> error_code(r);</div><div class="line">    &#125;</div><div class="line">    close_pipe(tmpfd);</div><div class="line">    <span class="keyword">return</span> data;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="关于pipe的操作"><a href="#关于pipe的操作" class="headerlink" title="关于pipe的操作"></a>关于pipe的操作</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">private:</div><div class="line">    int set_pipe_size(int *fds, long length) &#123;</div><div class="line">#ifdef CEPH_HAVE_SETPIPE_SZ</div><div class="line">        if (::fcntl(fds[1], F_SETPIPE_SZ, length) == -1) &#123;</div><div class="line">            int r = -errno;</div><div class="line">            if (r == -EPERM) &#123;</div><div class="line">                // pipe limit must have changed - EPERM means we requested</div><div class="line">                // more than the maximum size as an unprivileged user</div><div class="line">                update_max_pipe_size();</div><div class="line">                throw malformed_input(&quot;length larger than new max pipe size&quot;);</div><div class="line">            &#125;</div><div class="line">            return r;</div><div class="line">        &#125;</div><div class="line">#endif</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    int set_nonblocking(int *fds) &#123;</div><div class="line">        if (::fcntl(fds[0], F_SETFL, O_NONBLOCK) == -1)</div><div class="line">            return -errno;</div><div class="line">        if (::fcntl(fds[1], F_SETFL, O_NONBLOCK) == -1)</div><div class="line">            return -errno;</div><div class="line">        return 0;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    void close_pipe(int *fds) &#123;</div><div class="line">        if (fds[0] &gt;= 0)</div><div class="line">            VOID_TEMP_FAILURE_RETRY(::close(fds[0]));</div><div class="line">        if (fds[1] &gt;= 0)</div><div class="line">            VOID_TEMP_FAILURE_RETRY(::close(fds[1]));</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    bool source_consumed;</div><div class="line">    int pipefds[2];</div><div class="line">&#125;;</div><div class="line">#endif // CEPH_HAVE_SPLICE</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/9.ceph.buffer.raw.hack_aligned" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/21/ceph/Chap1.编程技法/9.ceph.buffer.raw.hack_aligned/" class="article-date">
+  	<time datetime="2016-12-20T16:06:43.000Z" itemprop="datePublished">2016-12-21</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/21/ceph/Chap1.编程技法/9.ceph.buffer.raw.hack_aligned/">ceph:buffer:raw_hack_aligned实现</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> __CYGWIN__</span></div><div class="line"><span class="keyword">class</span> buffer::raw_hack_aligned : <span class="keyword">public</span> buffer::raw &#123;</div><div class="line">    <span class="keyword">unsigned</span> align;</div><div class="line">    <span class="keyword">char</span> *realdata;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    raw_hack_aligned(<span class="keyword">unsigned</span> l, <span class="keyword">unsigned</span> <span class="number">_</span>align) : raw(l) &#123;</div><div class="line">        align = <span class="number">_</span>align;</div><div class="line">        realdata = <span class="keyword">new</span> <span class="keyword">char</span>[len+align<span class="number">-1</span>];</div><div class="line">        <span class="keyword">unsigned</span> off = ((<span class="keyword">unsigned</span>)realdata) &amp; (align<span class="number">-1</span>);</div><div class="line">        <span class="keyword">if</span> (off)</div><div class="line">            data = realdata + align - off;</div><div class="line">        <span class="keyword">else</span></div><div class="line">            data = realdata;</div><div class="line">        inc_total_alloc(len+align<span class="number">-1</span>);</div><div class="line">        inc_history_alloc(len+align<span class="number">-1</span>);</div><div class="line">        <span class="comment">//cout &lt;&lt; "hack aligned " &lt;&lt; (unsigned)data</span></div><div class="line">        <span class="comment">//&lt;&lt; " in raw " &lt;&lt; (unsigned)realdata</span></div><div class="line">        <span class="comment">//&lt;&lt; " off " &lt;&lt; off &lt;&lt; std::endl;</span></div><div class="line">        assert(((<span class="keyword">unsigned</span>)data &amp; (align<span class="number">-1</span>)) == <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line">    ~raw_hack_aligned() &#123;</div><div class="line">        <span class="keyword">delete</span>[] realdata;</div><div class="line">        dec_total_alloc(len+align<span class="number">-1</span>);</div><div class="line">    &#125;</div><div class="line">    <span class="function">raw* <span class="title">clone_empty</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> raw_hack_aligned(len, align);</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>这里是为了地址对齐的时候的处理。比如要按照<code>4 char</code>对齐，那么万一申请内存的时候，申请地止是在<code>address = 3</code>。那么这个时候，就需要移动指针的位置。比如申请了<code>6 chars</code>。这个时候移动指针位置到<code>address = 4</code>的时候，申请的内存本来是6个char。这个时候就只剩了5个了。所以为了对齐，需要多申请一些内存。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">realdata = <span class="keyword">new</span> <span class="keyword">char</span>[len+align<span class="number">-1</span>];</div></pre></td></tr></table></figure>
+<p>这也就是<code>realdata</code>申请那么多内存的原因。</p>
+<p>那么接下来，需要查看一下当前的地址是不是对齐的。如果不是对齐的，那么还需要移动一下。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">unsigned</span> off = ((<span class="keyword">unsigned</span>)realdata) &amp; (align<span class="number">-1</span>);</div><div class="line"><span class="keyword">if</span> (off)</div><div class="line">    data = realdata + align - off;</div><div class="line"><span class="keyword">else</span></div><div class="line">    data = realdata;</div></pre></td></tr></table></figure>
+<p>在移动的时候，如果采用<code>delete [] data</code>来释放内存，这样做是不准确的。因为如果内存指针有移动的话，释放的内存是不准确的。所以这个类添加了一个变量<code>realdata</code>用来记录原始的内存申请指针。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/9.ceph.buffer.raw.hack_aligned" data-title="ceph:buffer:raw_hack_aligned实现" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/20/ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned/" class="article-date">
+  	<time datetime="2016-12-19T16:06:43.000Z" itemprop="datePublished">2016-12-20</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/20/ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned/">ceph:buffer:raw_posix_aligned实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p><code>raw_posix_aligned</code>类跟前面的类并没有太大的区别。不一样的地方在于使用的申请内存的函数不相同。这里使用的是<code>posix_memalign</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> buffer::raw_posix_aligned : <span class="keyword">public</span> buffer::raw &#123;</div><div class="line">  <span class="keyword">unsigned</span> align;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  raw_posix_aligned(<span class="keyword">unsigned</span> l, <span class="keyword">unsigned</span> <span class="number">_</span>align) : raw(l) &#123;</div><div class="line">    align = <span class="number">_</span>align;</div><div class="line">    assert((align &gt;= <span class="keyword">sizeof</span>(<span class="keyword">void</span> *)) &amp;&amp; (align &amp; (align - <span class="number">1</span>)) == <span class="number">0</span>);</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> DARWIN</span></div><div class="line">    data = (<span class="keyword">char</span> *) valloc (len);</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line">    data = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> r = ::posix_memalign((<span class="keyword">void</span>**)(<span class="keyword">void</span>*)&amp;data, align, len);</div><div class="line">    <span class="keyword">if</span> (r)</div><div class="line"><span class="keyword">throw</span> bad_alloc();</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* DARWIN */</span></span></div><div class="line">    <span class="keyword">if</span> (!data)</div><div class="line"><span class="keyword">throw</span> bad_alloc();</div><div class="line">    inc_total_alloc(len);</div><div class="line">    inc_history_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_posix_aligned "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" alloc "</span> &lt;&lt; (<span class="keyword">void</span> *)data &lt;&lt; <span class="string">" l="</span> &lt;&lt; l &lt;&lt; <span class="string">", align="</span> &lt;&lt; align &lt;&lt; <span class="string">" total_alloc="</span> &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">  &#125;</div><div class="line">  ~raw_posix_aligned() &#123;</div><div class="line">    ::<span class="built_in">free</span>((<span class="keyword">void</span>*)data);</div><div class="line">    dec_total_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_posix_aligned "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" free "</span> &lt;&lt; (<span class="keyword">void</span> *)data &lt;&lt; <span class="string">" "</span> &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">  &#125;</div><div class="line">  <span class="function">raw* <span class="title">clone_empty</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> raw_posix_aligned(len, align);</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>这里可以看一下<code>clone_empty</code>函数，就只是new一个对象返回回去即可。与其他子类的实现几乎类似。不太一样的地方在于这个类是需要自己完成内存的申请和释放的（在构造函数/析构函数）里面。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned" data-title="ceph:buffer:raw_posix_aligned实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/7/">7</a><a class="extend next" rel="next" href="/blog/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><a class="page-number" href="/blog/page/4/">4</a><a class="extend next" rel="next" href="/blog/page/2/">Next &raquo;</a>
     </nav>
   
 </div>
@@ -1214,10 +1678,12 @@
 </footer>
     </div>
     
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
 
 <script>
 	var yiliaConfig = {
-		fancybox: false,
+		fancybox: true,
 		mathjax: true,
 		animate: true,
 		isHome: true,

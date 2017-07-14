@@ -78,7 +78,7 @@
 						<li>Links</li>
 						
 						
-						<li>Über</li>
+						<li>About</li>
 						
 					</ul>
 				</div>
@@ -91,31 +91,17 @@
 					<nav class="header-menu">
 						<ul>
 						
-							<li><a href="/blog/">最近文章</a></li>
+							<li><a href="/blog/">主页</a></li>
 				        
 							<li><a href="/blog/archives">所有文章</a></li>
 				        
-							<li><a href="/blog/categories/随笔">随笔</a></li>
-				        
-							<li><a href="/blog/categories/xv6">xv6</a></li>
-				        
 							<li><a href="/blog/categories/ceph">ceph</a></li>
-				        
-							<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
-				        
-							<li><a href="/blog/categories/OS">OS</a></li>
-				        
-							<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
-				        
-							<li><a href="/blog/categories/libevent">libevent</a></li>
 				        
 							<li><a href="/blog/categories/PDP11">PDP11</a></li>
 				        
 							<li><a href="/blog/categories/Linux">Linux</a></li>
 				        
 							<li><a href="/blog/categories/Kernel">Kernel</a></li>
-				        
-							<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 				        
 						</ul>
 					</nav>
@@ -197,31 +183,17 @@
 			<nav class="header-menu">
 				<ul>
 				
-					<li><a href="/blog/">最近文章</a></li>
+					<li><a href="/blog/">主页</a></li>
 		        
 					<li><a href="/blog/archives">所有文章</a></li>
 		        
-					<li><a href="/blog/categories/随笔">随笔</a></li>
-		        
-					<li><a href="/blog/categories/xv6">xv6</a></li>
-		        
 					<li><a href="/blog/categories/ceph">ceph</a></li>
-		        
-					<li><a href="/blog/categories/OpenStack">OpenStack</a></li>
-		        
-					<li><a href="/blog/categories/OS">OS</a></li>
-		        
-					<li><a href="/blog/categories/UnixV6">UnixV6</a></li>
-		        
-					<li><a href="/blog/categories/libevent">libevent</a></li>
 		        
 					<li><a href="/blog/categories/PDP11">PDP11</a></li>
 		        
 					<li><a href="/blog/categories/Linux">Linux</a></li>
 		        
 					<li><a href="/blog/categories/Kernel">Kernel</a></li>
-		        
-					<li><a href="/blog/categories/mit.6.828">mit.6.828</a></li>
 		        
 		        <div class="clearfix"></div>
 				</ul>
@@ -252,6 +224,8 @@
     </div>
   
   <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
     
     
       <header class="article-header">
@@ -418,17 +392,25 @@
 </article>
 
 
-
-
-<div class="share_addthis">
-  <div class="sharing addthis_toolbox share">
-    <a class="addthis_button_facebook_like"></a>
-    <a class="addthis_button_tweet"></a>
-    <a class="addthis_button_google_plusone" g:plusone:size="medium"></a>
-    <a class="addthis_counter addthis_pill_style"></a>
-  </div>
-  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-560c64c35486b3d4" async="async"></script>
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
 </div>
+
+
 
 
 
@@ -473,10 +455,12 @@
 </footer>
     </div>
     
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
 
 <script>
 	var yiliaConfig = {
-		fancybox: false,
+		fancybox: true,
 		mathjax: true,
 		animate: true,
 		isHome: false,
