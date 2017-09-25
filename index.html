@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -215,6 +215,137 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-ceph/rbdImage/rbd.image.info" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2017/07/14/ceph/rbdImage/rbd.image.info/" class="article-date">
+  	<time datetime="2017-07-13T16:06:43.000Z" itemprop="datePublished">2017-07-14</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2017/07/14/ceph/rbdImage/rbd.image.info/">RBD Image Info的获取</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里主要是介绍一下如何获取<code>RBD Image</code>的info。</p>
+<p>客户端代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">rbd_image_t</span> image;</div><div class="line">ret = rbd_open_read_only(io_ctx, <span class="string">"myimage"</span>, &amp;image, <span class="number">0</span>);</div><div class="line"><span class="keyword">if</span> (ret) &#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Open image meets error!\n"</span>);</div><div class="line">    <span class="keyword">goto</span> free_mem;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">rbd_image_info_t</span> info;</div><div class="line">ret = rbd_stat(image, &amp;info, <span class="keyword">sizeof</span>(info));</div><div class="line"><span class="keyword">if</span> (ret) &#123;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Read image %s meets error!\n"</span>, <span class="string">"myimage"</span>);</div><div class="line">    <span class="keyword">goto</span> inter_free_mem;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="built_in">printf</span>(<span class="string">"size = %lu\n"</span>, info.size);</div></pre></td></tr></table></figure>
+<p>这里主要是想通过这一段代码获取到<code>RBD image</code>（下文简称为image）的信息。这里主要是看一下代<br>码所走的流程。</p>
+<h1 id="librbd提供的接口"><a href="#librbd提供的接口" class="headerlink" title="librbd提供的接口"></a>librbd提供的接口</h1><p><code>librbd</code>提供的接口是<code>rbd_stat</code>。看一下这个接口的核心代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">extern</span> <span class="string">"C"</span> <span class="function"><span class="keyword">int</span> <span class="title">rbd_stat</span><span class="params">(<span class="keyword">rbd_image_t</span> image, <span class="keyword">rbd_image_info_t</span> *info,</span></span></div><div class="line">			<span class="keyword">size_t</span> infosize)</div><div class="line">&#123;</div><div class="line">  librbd::ImageCtx *ictx = (librbd::ImageCtx *)image;</div><div class="line">  <span class="keyword">int</span> r = librbd::info(ictx, *info, infosize);</div><div class="line">  <span class="keyword">return</span> r;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>有意思的是，这里需要分几个层次来看这么几个数据结构：</p>
+<table>
+<thead>
+<tr>
+<th>层面</th>
+<th>数据结构</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>C客户端</td>
+<td>rbd_image_t</td>
+<td>实际上就是一个void*指针，客户端并不能解析其内部结构(不能过过rbd_image_t-&gt;member来引用内部成员)。任何需要使用这个数据结构的地方，都是传入rbd_image_t。</td>
+</tr>
+<tr>
+<td>API接口</td>
+<td>librbd::ImageCtx</td>
+<td>返回给客户端的时候，实际上只返回一个指针回去。</td>
+</tr>
+</tbody>
+</table>
+<p>也就是说，在给客户端使用的时候，直接给的是<code>void *</code>。并且客户端并不能直接引用内部成员。但是在API函数内部使用的时候，直接强制转换成为<code>librbd::ImageCtx</code>类型再使用。</p>
+<h1 id="刷新Image信息"><a href="#刷新Image信息" class="headerlink" title="刷新Image信息"></a>刷新Image信息</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">info</span><span class="params">(ImageCtx *ictx, <span class="keyword">image_info_t</span>&amp; info, <span class="keyword">size_t</span> infosize)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> r = ictx-&gt;state-&gt;refresh_if_required();</div><div class="line">  <span class="keyword">if</span> (r &lt; <span class="number">0</span>)</div><div class="line">    <span class="keyword">return</span> r;</div><div class="line"></div><div class="line">  image_info(ictx, info, infosize);</div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里逻辑比较简单，就是看一下是否需要刷新一下状态。如果需要，那么就刷新它。如果刷新失败，则返回相应错误。正常情况下返回0。</p>
+<p>当取到相应的值之后，返回<code>image_info_t</code>结构。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div><div class="line"><span class="keyword">int</span> ImageState&lt;I&gt;::refresh_if_required() &#123;</div><div class="line">  C_SaferCond ctx;</div><div class="line">  &#123;</div><div class="line">    m_lock.Lock();</div><div class="line">    <span class="comment">// 如果已经更新过了，那么这里就不需再更新</span></div><div class="line">    <span class="keyword">if</span> (m_last_refresh == m_refresh_seq) &#123;</div><div class="line">      m_lock.Unlock();</div><div class="line">      <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 如果rbd_image_t已经关闭了，那么就不能再更新了。</span></div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (is_closed()) &#123;</div><div class="line">      m_lock.Unlock();</div><div class="line">      <span class="keyword">return</span> -ESHUTDOWN;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 这里生成更新Action</span></div><div class="line">    <span class="function">Action <span class="title">action</span><span class="params">(ACTION_TYPE_REFRESH)</span></span>;</div><div class="line">    action.refresh_seq = m_refresh_seq;</div><div class="line">    execute_action_unlock(action, &amp;ctx);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> ctx.wait();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先看一下判断是否需要刷新的条件：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (m_last_refresh == m_refresh_seq) &#123;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里，如两个变量不相等，那么就是需要进行更新。这两个变量都是<code>ImageCtx</code>的成员。这两个成员:</p>
+<ul>
+<li><code>m_last_refresh</code>是指最后真正更新的次数</li>
+<li><code>m_refresh_seq</code>是指需要更新的序列</li>
+</ul>
+<p><code>m_refresh_seq</code>是由服务方主动通知：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> I&gt;</div><div class="line"><span class="keyword">void</span> ImageState&lt;I&gt;::handle_update_notification() &#123;</div><div class="line">  Mutex::<span class="function">Locker <span class="title">locker</span><span class="params">(m_lock)</span></span>;</div><div class="line">  ++m_refresh_seq;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>因此，这里的逻辑就是，服务器主动通知客户端需要更新了。客户端只是记录下需要更新。并不立马更新。<br>在需要更新动的时候，通过<code>m_last_refresh</code>与<code>m_refresh_seq</code>进行比较。如果两者不相等，那么<br>就说明需要进行相应的更新操作了。</p>
+<h1 id="ImageState"><a href="#ImageState" class="headerlink" title="ImageState"></a>ImageState</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">image_info</span><span class="params">(ImageCtx *ictx, <span class="keyword">image_info_t</span>&amp; info, <span class="keyword">size_t</span> infosize)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">int</span> obj_order = ictx-&gt;order;</div><div class="line"></div><div class="line">  <span class="comment">// 如果正在做快照，应该是不允许做其他改动的。所以这里需要上锁。</span></div><div class="line">  <span class="comment">// 这里应该是可以改成读写锁？</span></div><div class="line">  <span class="comment">// 确实是读写锁。也就是说，在做snapshot的时候，应该是可以通过</span></div><div class="line">  <span class="comment">// get_read()来得到一个读锁的。</span></div><div class="line">  ictx-&gt;snap_lock.get_read();</div><div class="line">  info.size = ictx-&gt;get_image_size(ictx-&gt;snap_id);</div><div class="line">  ictx-&gt;snap_lock.put_read();</div><div class="line"></div><div class="line">  <span class="comment">// 设置object size.</span></div><div class="line">  info.obj_size = <span class="number">1U</span>LL &lt;&lt; obj_order;</div><div class="line"></div><div class="line">  <span class="comment">// 得到image里面的object数目。</span></div><div class="line">  <span class="comment">// 通过条带来进行计算</span></div><div class="line">  info.num_objs = Striper::get_num_objects(ictx-&gt;layout, info.size);</div><div class="line">  info.order = obj_order;</div><div class="line">  <span class="built_in">memcpy</span>(&amp;info.block_name_prefix, ictx-&gt;object_prefix.c_str(),</div><div class="line">   min((<span class="keyword">size_t</span>)RBD_MAX_BLOCK_NAME_SIZE,</div><div class="line">       ictx-&gt;object_prefix.length() + <span class="number">1</span>));</div><div class="line"></div><div class="line">  <span class="comment">// 下面这些是不想再分出去的信息。</span></div><div class="line">  <span class="comment">// clear deprecated fields</span></div><div class="line">  info.parent_pool = <span class="number">-1</span>L;</div><div class="line">  info.parent_name[<span class="number">0</span>] = <span class="string">'\0'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="读写锁"><a href="#读写锁" class="headerlink" title="读写锁"></a>读写锁</h2><p>读写锁的实现是放在：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">//src/common/RWlock.h</span></div></pre></td></tr></table></figure>
+<p>实际上就是<code>pthread_rwlock_t</code>的封装。由于做snapshot的时候，是个明显示的读写锁问题。所以这里的snap_lock就是读写锁。</p>
+<p>##</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/rbdImage/rbd.image.info" data-title="RBD Image Info的获取" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-linux.kernel/swapin_readahead" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -1279,89 +1410,6 @@
 
 
   
-    <article id="post-ceph/Chap1.编程技法/11.XioDispatchHook" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/" class="article-date">
-  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/">ceph:buffer:raw_pipe的实现分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/11.XioDispatchHook" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
     <article id="post-ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1433,12 +1481,12 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -1459,6 +1507,89 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/11.XioDispatchHook" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/" class="article-date">
+  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/">ceph:buffer:raw_pipe的实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/11.XioDispatchHook" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -1523,12 +1654,12 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -1549,92 +1680,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/9.ceph.buffer.raw.hack_aligned" data-title="ceph:buffer:raw_hack_aligned实现" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/20/ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned/" class="article-date">
-  	<time datetime="2016-12-19T16:06:43.000Z" itemprop="datePublished">2016-12-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/20/ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned/">ceph:buffer:raw_posix_aligned实现分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><p><code>raw_posix_aligned</code>类跟前面的类并没有太大的区别。不一样的地方在于使用的申请内存的函数不相同。这里使用的是<code>posix_memalign</code>。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> buffer::raw_posix_aligned : <span class="keyword">public</span> buffer::raw &#123;</div><div class="line">  <span class="keyword">unsigned</span> align;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  raw_posix_aligned(<span class="keyword">unsigned</span> l, <span class="keyword">unsigned</span> <span class="number">_</span>align) : raw(l) &#123;</div><div class="line">    align = <span class="number">_</span>align;</div><div class="line">    assert((align &gt;= <span class="keyword">sizeof</span>(<span class="keyword">void</span> *)) &amp;&amp; (align &amp; (align - <span class="number">1</span>)) == <span class="number">0</span>);</div><div class="line"><span class="meta">#<span class="meta-keyword">ifdef</span> DARWIN</span></div><div class="line">    data = (<span class="keyword">char</span> *) valloc (len);</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line">    data = <span class="number">0</span>;</div><div class="line">    <span class="keyword">int</span> r = ::posix_memalign((<span class="keyword">void</span>**)(<span class="keyword">void</span>*)&amp;data, align, len);</div><div class="line">    <span class="keyword">if</span> (r)</div><div class="line"><span class="keyword">throw</span> bad_alloc();</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* DARWIN */</span></span></div><div class="line">    <span class="keyword">if</span> (!data)</div><div class="line"><span class="keyword">throw</span> bad_alloc();</div><div class="line">    inc_total_alloc(len);</div><div class="line">    inc_history_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_posix_aligned "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" alloc "</span> &lt;&lt; (<span class="keyword">void</span> *)data &lt;&lt; <span class="string">" l="</span> &lt;&lt; l &lt;&lt; <span class="string">", align="</span> &lt;&lt; align &lt;&lt; <span class="string">" total_alloc="</span> &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">  &#125;</div><div class="line">  ~raw_posix_aligned() &#123;</div><div class="line">    ::<span class="built_in">free</span>((<span class="keyword">void</span>*)data);</div><div class="line">    dec_total_alloc(len);</div><div class="line">    bdout &lt;&lt; <span class="string">"raw_posix_aligned "</span> &lt;&lt; <span class="keyword">this</span> &lt;&lt; <span class="string">" free "</span> &lt;&lt; (<span class="keyword">void</span> *)data &lt;&lt; <span class="string">" "</span> &lt;&lt; buffer::get_total_alloc() &lt;&lt; bendl;</div><div class="line">  &#125;</div><div class="line">  <span class="function">raw* <span class="title">clone_empty</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> <span class="keyword">new</span> raw_posix_aligned(len, align);</div><div class="line">  &#125;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
-<p>这里可以看一下<code>clone_empty</code>函数，就只是new一个对象返回回去即可。与其他子类的实现几乎类似。不太一样的地方在于这个类是需要自己完成内存的申请和释放的（在构造函数/析构函数）里面。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/8.ceph.buffer.raw_aligned" data-title="ceph:buffer:raw_posix_aligned实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

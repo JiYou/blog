@@ -122,7 +122,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -215,6 +215,135 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-unixv6/The-7th-Page" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/11/22/unixv6/The-7th-Page/" class="article-date">
+  	<time datetime="2016-11-22T13:45:44.000Z" itemprop="datePublished">2016-11-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/11/22/unixv6/The-7th-Page/">The Kernel 7th APR</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>由于<code>PDP-11/40</code>采用的是<code>unibus</code>模式。也就是说，所有的寄存器，外设等等都是在同一个地址空间里面。所以PSW寄存器也是在内存地址空间里面。<br>首先是查看<code>PSW</code>的地址。在<code>PDP-11/40</code>的手册里面，写的地址是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">0777,776 CPU STATUS</div></pre></td></tr></table></figure>
+<p>但是在《反璞归真－Unix技术内幕》书中却是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">0177,776</div></pre></td></tr></table></figure>
+<p>这两者如何统一？哪个是对的？</p>
+<h1 id="模式"><a href="#模式" class="headerlink" title="模式"></a>模式</h1><p>实际上，两个都是对的。这是因为<code>PDP-11/40 handbook</code>主要是介绍物理硬件特性，不会介绍软件部分，因此这里写的地址是真实的物理地址，采用8进制的方式。</p>
+<p>而在书中主要是介绍内核为主，那么在介绍地址的时候，采用的是虚拟地址。所以，一个对应的是真实的物理地址，一个对应的是操作系统内核模式下的虚拟地址。</p>
+<h1 id="如何统一"><a href="#如何统一" class="headerlink" title="如何统一"></a>如何统一</h1><p>那么，这里需要查看一下如何通过虚拟地址，转换成真实的物理地址。注意，下面在讨论的时候，都是在内核模式下讨论。</p>
+<h2 id="2进制"><a href="#2进制" class="headerlink" title="2进制"></a>2进制</h2><p><code>PSW</code>虚拟地址的2进制为：<code>注意：PDP-11/40</code>是一个16位机器。虚拟地址也是16位。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1,111,111,111,111,110</div></pre></td></tr></table></figure>
+<p>虚拟地址分为三部分：页选择位，块编号，块内偏移。</p>
+<h3 id="页选择位"><a href="#页选择位" class="headerlink" title="页选择位"></a>页选择位</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1,11   1,111,111,111,110</div><div class="line">|__|</div><div class="line">  |------&gt; APR选择，这里选中第七号APR</div></pre></td></tr></table></figure>
+<p>这里可以看出，选中的APR为第7个APR。第7个APR的内容在代码中是如下设置：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// file sys/conf/m40.s</span></div><div class="line"><span class="number">737</span>     mov $IO,(r0)+</div><div class="line"><span class="number">738</span>     mov $<span class="number">77406</span>,(r1)+        / rw <span class="number">4</span>k</div><div class="line"></div><div class="line"><span class="number">828</span> IO  = <span class="number">7600</span></div></pre></td></tr></table></figure>
+<p>在这里，主要是将7号APR中的PAR设置为<code>IO</code>，而<code>IO</code>的值为7600。</p>
+<p><strong>注意</strong>代码中都是采用的是8进制数。</p>
+<p><code>07600</code>换算成<code>10</code>进制数就是<code>H3968</code>。但是，注意的是PAR指定的是以块为单位，也就是说，选中的是整个硬件系统<code>4096</code>块里面的<code>3968</code>块做为基址。而一个块是64字节。因此，这里PAR的基址也就是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">3968 * 64 = 248KB</div></pre></td></tr></table></figure>
+<p>而整个系统只有<code>256KB</code>，因此，第7号APR选中的是系统的最后8KB。</p>
+<p>这里利用8进制来表示基地址：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">7600</span> * <span class="number">100</span> = <span class="number">760000</span> <span class="comment">// H64的8进制就是100。</span></div></pre></td></tr></table></figure>
+<h3 id="块编号"><a href="#块编号" class="headerlink" title="块编号"></a>块编号</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1,11   1,111,111,    111,110</div><div class="line">       |________|</div><div class="line">           |------&gt; 选中0177块</div></pre></td></tr></table></figure>
+<p>8进制的0177，换成10进制，也就是127。所以这里指向的是系统最后一块64字节。</p>
+<p>在这一页中，<code>177</code>块的地址为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">177 * 100 = 17700 // H64表示8进制为100</div></pre></td></tr></table></figure>
+<h3 id="偏移量"><a href="#偏移量" class="headerlink" title="偏移量"></a>偏移量</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1,11   1,111,111,    111,110</div><div class="line">                      |___|</div><div class="line">                        |------&gt; 偏移值为76</div></pre></td></tr></table></figure>
+<p>而<code>076</code>换成10进制，也就是62。</p>
+<p>所以虚拟地址：<code>0177,776</code>表示的真实的物理地址是256KB的最高位的最后两个字节。</p>
+<h3 id="换算"><a href="#换算" class="headerlink" title="换算"></a>换算</h3><p><code>基地址＋块地址＋偏移量 = 760000 + 17700 + 76 = 777 776</code>。也就是真实的物理地址。</p>
+<h1 id="基他寄存器的地址映射"><a href="#基他寄存器的地址映射" class="headerlink" title="基他寄存器的地址映射"></a>基他寄存器的地址映射</h1><h2 id="SSR0"><a href="#SSR0" class="headerlink" title="SSR0"></a>SSR0</h2><p>通过同样的计算方法，也可以算出其他寄存器的位置。比如书中讲到SSR0寄存器的虚拟地址为<code>65402</code>。注意，这里用的是10进制。那么换算成8进制，就是<code>177572</code>。</p>
+<p>写成2进制：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1 111, 111, 101, 111, 010</div><div class="line">切分一下，得到</div><div class="line"></div><div class="line">1 11----1, 111, 101----111, 010</div></pre></td></tr></table></figure>
+<p>可以看到，这里又选中了7号APR，块号为0175, 内部偏移量为072。那么8进制表示的物理地址为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">7600 * 100 + 175 * 100 + 72 = 7600 + 17500 + 72 = 777 572</div></pre></td></tr></table></figure>
+<p>刚好又对应上<code>PDP-11/40 handbook</code>中<code>B-2</code>页的：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">777752 11/45 SSR0</div></pre></td></tr></table></figure>
+<h2 id="UISA0"><a href="#UISA0" class="headerlink" title="UISA0"></a>UISA0</h2><p>UISA0的虚拟地址用10进制表示为：<code>65440</code>。用8进制则是：<code>177640</code>。写成2进制：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1,111,111,110,100,000</div><div class="line">切分一下：</div><div class="line">1,11-------1,111,110,-----100,000</div></pre></td></tr></table></figure>
+<p>可以看到，选中的仍然是7号APR，内部偏移量为<code>0176</code>，块内偏移量为<code>60</code>。那么可以计算出物理地址为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">7600 * 100 + 176 * 100 + 60 = 760000 + 17600 + 60 = 777660</div></pre></td></tr></table></figure>
+<h2 id="计算物理地址的程序"><a href="#计算物理地址的程序" class="headerlink" title="计算物理地址的程序"></a>计算物理地址的程序</h2><p>这里写个计算物理地址的程序：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">struct</span> <span class="number">_</span>virtual_address &#123;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> offset:<span class="number">6</span>;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> block_no:<span class="number">7</span>;</div><div class="line">    <span class="keyword">unsigned</span> <span class="keyword">int</span> apr_no:<span class="number">3</span>;</div><div class="line">&#125; <span class="number">__</span>attribute__ ((packed))  virtual_address;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span> </span>&#123;</div><div class="line">    virtual_address x;</div><div class="line">    <span class="keyword">short</span> vd;</div><div class="line">    <span class="keyword">int</span> apr_no, block_no, offset;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">int</span> apr_base_address = <span class="number">0760000</span>;</div><div class="line">    <span class="keyword">int</span> address = <span class="number">0</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (argc != <span class="number">2</span>) &#123;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"Usage: lookup-address address_in_hex\n"</span>);</div><div class="line">        <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    vd = atoi(argv[<span class="number">1</span>]);</div><div class="line">    x = *((virtual_address*)(&amp;vd));</div><div class="line"></div><div class="line">    apr_no = x.apr_no;</div><div class="line">    block_no = x.block_no;</div><div class="line">    offset = x.offset;</div><div class="line"></div><div class="line">    assert(apr_no == <span class="number">7</span>);</div><div class="line"></div><div class="line">    address = apr_base_address + block_no * <span class="number">64</span> + offset;</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"%o\n"</span>, address);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>比如可以查看<code>65454</code>的地址为：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">./lookup-address 65454</div><div class="line">777656</div></pre></td></tr></table></figure>
+<h1 id="其他地址"><a href="#其他地址" class="headerlink" title="其他地址"></a>其他地址</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Type    Address     Vector    Description</div><div class="line">-       17 777 776  -         PSW - Program status word</div><div class="line">-       17 777 774  -         Stack limit register</div><div class="line">-       17 777 772  -         PIRQ - Software IRQ register</div><div class="line">-       17 777 766  -         CER - CPU Error Register</div><div class="line">-       17 777 640  -         MMU User mode PAR  &lt;--- 重要</div><div class="line">-       17 777 600  -         MMU User mode PDR</div><div class="line">-       17 777 576  -         MMU SR2</div><div class="line">-       17 777 574  -         MMU SR1</div><div class="line">-       17 777 572  -         MMU SR0</div><div class="line">-       17 777 570  -         Console switch and display register</div><div class="line">KL11    17 777 560  60/64/4   KL11 Console serial line</div><div class="line">KW11L   17 777 546  100/6     KW-11L Line clock - default 60Hz</div><div class="line">RK11    17 777 400  220/5     RK11 RK05 Disk controller</div><div class="line">RH11/70 17 776 700  254/5     RH11/RH70 Mass bus controller - RP/RM disk</div><div class="line">KL11    17 776 500  300/304/4 KL11 optional 2nd serial line</div><div class="line">KL11    17 776 510  310/314/4 KL11 optional 3rd serial line</div><div class="line">KL11    17 776 520  320/324/4 KL11 optional 4th serial line</div><div class="line">XU      17 774 510  120/5     DEUNA controller</div><div class="line">RL11    17 774 400  160/5     RL11 RL02 disk controller</div><div class="line">M9312   17 773 000  -         M9312-style bootrom</div><div class="line">-       17 772 516  -         MMU SR3</div><div class="line">-       17 772 340  -         MMU Kernel mode PAR  &lt;-- 重要</div><div class="line">-       17 772 300  -         MMU Kernel mode PDR</div><div class="line">-       17 772 240  -         MMU Supervisor mode PAR</div><div class="line">-       17 772 200  -         MMU Supervisor mode PDR</div><div class="line">-       17 770 200  -         Unibus map registers</div></pre></td></tr></table></figure>
+<p>来源：<a href="http://pdp2011.sytse.net/wordpress/pdp-11/" target="_blank" rel="external">http://pdp2011.sytse.net/wordpress/pdp-11/</a></p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Unix-V6/">Unix V6</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/UnixV6/">UnixV6</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-unixv6/The-7th-Page" data-title="The Kernel 7th APR" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-unixv6/Unix-v6-interrupt" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -344,7 +473,7 @@
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -533,7 +662,7 @@
 <figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">librbd::<span class="function">AioCompletion* <span class="title">get_aio_completion</span><span class="params">(librbd::RBD::AioCompletion *comp)</span> </span>&#123;</div><div class="line">  <span class="keyword">return</span> <span class="keyword">reinterpret_cast</span>&lt;librbd::AioCompletion *&gt;(comp-&gt;pc); <span class="comment">// &lt;-- 这里就是直接返回那个pc指针。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>后面的读取应该可以明白，就是把磁盘指定位置<code>offset = 0, length = 2048</code>的内容读取到缓冲区里面。</p>
 <h1 id="aio-read"><a href="#aio-read" class="headerlink" title="aio_read()"></a>aio_read()</h1><p>接下来就是进入到接口里面<code>aio_read()</code>函数部分：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// file: librbd/AioImageRequestWQ.cc:94</span></div><div class="line"><span class="comment">// 这里需要注意从上层传进来的参数。其中op_flags ＝ 0并且 native_async = 0</span></div><div class="line"></div><div class="line"><span class="keyword">void</span> AioImageRequestWQ::aio_read(AioCompletion *c, <span class="keyword">uint64_t</span> off, <span class="keyword">uint64_t</span> len,</div><div class="line">                                 <span class="keyword">char</span> *buf, bufferlist *pbl, <span class="keyword">int</span> op_flags,</div><div class="line">                                 <span class="keyword">bool</span> native_async) &#123;</div><div class="line"></div><div class="line">  c-&gt;init_time(&amp;m_image_ctx, librbd::AIO_TYPE_READ);  <span class="comment">// 这里m_image_ctx会引用aio_work_queue这里面的成员m_image_ctx。这里就是librbd::ImageCtx类型。</span></div><div class="line">  CephContext *cct = m_image_ctx.cct; <span class="comment">// 注意m_image_ctx里面会包含一个CephContext的指针。</span></div><div class="line">  </div><div class="line">  <span class="comment">// 输出debut信息</span></div><div class="line">  ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">"aio_read: ictx="</span> &lt;&lt; &amp;m_image_ctx &lt;&lt; <span class="string">", "</span></div><div class="line">                 &lt;&lt; <span class="string">"completion="</span> &lt;&lt; c &lt;&lt; <span class="string">", off="</span> &lt;&lt; off &lt;&lt; <span class="string">", "</span></div><div class="line">                 &lt;&lt; <span class="string">"len="</span> &lt;&lt; len &lt;&lt; <span class="string">", "</span> &lt;&lt; <span class="string">"flags="</span> &lt;&lt; op_flags &lt;&lt; dendl;</div><div class="line"></div><div class="line">  <span class="comment">// 这里native_async为0</span></div><div class="line">  <span class="keyword">if</span> (native_async &amp;&amp; m_image_ctx.event_socket.is_valid()) &#123;</div><div class="line">    c-&gt;set_event_notify(<span class="literal">true</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (!start_in_flight_op(c)) &#123;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  RWLock::<span class="function">RLocker <span class="title">owner_locker</span><span class="params">(m_image_ctx.owner_lock)</span></span>;</div><div class="line"></div><div class="line">  <span class="comment">// if journaling is enabled -- we need to replay the journal because</span></div><div class="line">  <span class="comment">// it might contain an uncommitted write</span></div><div class="line">  <span class="keyword">bool</span> lock_required;</div><div class="line">  &#123;</div><div class="line">    RWLock::<span class="function">RLocker <span class="title">locker</span><span class="params">(m_lock)</span></span>;</div><div class="line">    lock_required = m_require_lock_on_read;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (m_image_ctx.non_blocking_aio || writes_blocked() || !writes_empty() ||</div><div class="line">      lock_required) &#123;</div><div class="line">    <span class="built_in">queue</span>(<span class="keyword">new</span> AioImageRead&lt;&gt;(m_image_ctx, c, &#123;&#123;off, len&#125;&#125;, buf, pbl, op_flags));</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    c-&gt;start_op();</div><div class="line">    AioImageRequest&lt;&gt;::aio_read(&amp;m_image_ctx, c, &#123;&#123;off, len&#125;&#125;, buf, pbl,</div><div class="line">                                op_flags);</div><div class="line">    finish_in_flight_op();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// file: librbd/AioImageRequestWQ.cc:94</span></div><div class="line"><span class="comment">// 这里需要注意从上层传进来的参数。其中op_flags ＝ 0并且 native_async = 0</span></div><div class="line"></div><div class="line"><span class="keyword">void</span> AioImageRequestWQ::aio_read(AioCompletion *c, <span class="keyword">uint64_t</span> off, <span class="keyword">uint64_t</span> len,</div><div class="line">                                 <span class="keyword">char</span> *buf, bufferlist *pbl, <span class="keyword">int</span> op_flags,</div><div class="line">                                 <span class="keyword">bool</span> native_async) &#123;</div><div class="line"></div><div class="line">  c-&gt;init_time(&amp;m_image_ctx, librbd::AIO_TYPE_READ);  <span class="comment">// 这里m_image_ctx会引用aio_work_queue这里面的成员m_image_ctx。这里就是librbd::ImageCtx类型。</span></div><div class="line">  CephContext *cct = m_image_ctx.cct; <span class="comment">// 注意m_image_ctx里面会包含一个CephContext的指针。</span></div><div class="line"></div><div class="line">  <span class="comment">// 输出debut信息</span></div><div class="line">  ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">"aio_read: ictx="</span> &lt;&lt; &amp;m_image_ctx &lt;&lt; <span class="string">", "</span></div><div class="line">                 &lt;&lt; <span class="string">"completion="</span> &lt;&lt; c &lt;&lt; <span class="string">", off="</span> &lt;&lt; off &lt;&lt; <span class="string">", "</span></div><div class="line">                 &lt;&lt; <span class="string">"len="</span> &lt;&lt; len &lt;&lt; <span class="string">", "</span> &lt;&lt; <span class="string">"flags="</span> &lt;&lt; op_flags &lt;&lt; dendl;</div><div class="line"></div><div class="line">  <span class="comment">// 这里native_async为0</span></div><div class="line">  <span class="keyword">if</span> (native_async &amp;&amp; m_image_ctx.event_socket.is_valid()) &#123;</div><div class="line">    c-&gt;set_event_notify(<span class="literal">true</span>);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (!start_in_flight_op(c)) &#123;</div><div class="line">    <span class="keyword">return</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  RWLock::<span class="function">RLocker <span class="title">owner_locker</span><span class="params">(m_image_ctx.owner_lock)</span></span>;</div><div class="line"></div><div class="line">  <span class="comment">// if journaling is enabled -- we need to replay the journal because</span></div><div class="line">  <span class="comment">// it might contain an uncommitted write</span></div><div class="line">  <span class="keyword">bool</span> lock_required;</div><div class="line">  &#123;</div><div class="line">    RWLock::<span class="function">RLocker <span class="title">locker</span><span class="params">(m_lock)</span></span>;</div><div class="line">    lock_required = m_require_lock_on_read;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="keyword">if</span> (m_image_ctx.non_blocking_aio || writes_blocked() || !writes_empty() ||</div><div class="line">      lock_required) &#123;</div><div class="line">    <span class="built_in">queue</span>(<span class="keyword">new</span> AioImageRead&lt;&gt;(m_image_ctx, c, &#123;&#123;off, len&#125;&#125;, buf, pbl, op_flags));</div><div class="line">  &#125; <span class="keyword">else</span> &#123;</div><div class="line">    c-&gt;start_op();</div><div class="line">    AioImageRequest&lt;&gt;::aio_read(&amp;m_image_ctx, c, &#123;&#123;off, len&#125;&#125;, buf, pbl,</div><div class="line">                                op_flags);</div><div class="line">    finish_in_flight_op();</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <h2 id="数据结构的引用"><a href="#数据结构的引用" class="headerlink" title="数据结构的引用"></a>数据结构的引用</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">BDRVRBDState *s = bs-&gt;opaque;</div><div class="line"></div><div class="line"><span class="comment">// then</span></div><div class="line"><span class="keyword">void</span> *image = s-&gt;image;</div><div class="line"></div><div class="line">librbd::ImageCtx *ictx = (librbd::ImageCtx *)image;</div><div class="line"></div><div class="line"><span class="comment">// 然后在AioImageRequestWQ里面还有一个ImageCtx类，这个类的指针也是指同前面传进来的s-&gt;image这个image的地址。</span></div></pre></td></tr></table></figure>
 <p>其他更加详细的数据结构的，需要看<code>rbd_aio_open</code>函数。总的来，这里可以看出来，<code>ImageCtx</code>应该是指向同一个数据结构。</p>
 <h2 id="回调函数时间初始化"><a href="#回调函数时间初始化" class="headerlink" title="回调函数时间初始化"></a>回调函数时间初始化</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// librbd/AioCompletion.cc</span></div><div class="line">  &gt;|<span class="number">129</span>       <span class="keyword">void</span> AioCompletion::init_time(ImageCtx *i, <span class="keyword">aio_type_t</span> t) &#123;                                                               |</div><div class="line">   |<span class="number">130</span>         Mutex::<span class="function">Locker <span class="title">locker</span><span class="params">(lock)</span></span>;                                                                                            |</div><div class="line">   |<span class="number">131</span>         <span class="keyword">if</span> (ictx == <span class="literal">nullptr</span>) &#123;   <span class="comment">// 刚进这里的时候，ictx为空                                                                      |</span></div><div class="line">   |<span class="number">132</span>           ictx = i;                                                                                                            |</div><div class="line">   |<span class="number">133</span>           aio_type = t;          <span class="comment">// RBD_AIO_READ                                                                               |</span></div><div class="line">   |<span class="number">134</span>           start_time = ceph_clock_now(ictx-&gt;cct);                                                                              |</div><div class="line">   |<span class="number">135</span>         &#125;                                                                                                                      |</div><div class="line">   |<span class="number">136</span>       &#125;</div></pre></td></tr></table></figure>
@@ -688,7 +817,7 @@ $10 = {val = 0}</code></li>
 <li>上层应用只关于需要读取的内容位于文件的什么位置，比如<code>offset</code>和<code>length</code>。</li>
 <li>而底层只关心需要读取的内容，对于对象存储而言，可能就是只关心某个对象，所以这里应该是需要转换。</li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// file: osdc/Striper.cc:43</span></div><div class="line"><span class="keyword">void</span> Striper::file_to_extents(</div><div class="line">  CephContext *cct, <span class="keyword">const</span> <span class="keyword">char</span> *object_format,</div><div class="line">  <span class="keyword">const</span> <span class="keyword">file_layout_t</span> *layout,</div><div class="line">  <span class="keyword">uint64_t</span> offset, <span class="keyword">uint64_t</span> len,</div><div class="line">  <span class="keyword">uint64_t</span> trunc_size,</div><div class="line">  <span class="built_in">map</span>&lt;<span class="keyword">object_t</span>,<span class="built_in">vector</span>&lt;ObjectExtent&gt; &gt;&amp; object_extents,</div><div class="line">  <span class="keyword">uint64_t</span> buffer_offset)</div><div class="line">&#123;</div><div class="line">  ldout(cct, <span class="number">10</span>) &lt;&lt; <span class="string">"file_to_extents "</span> &lt;&lt; offset &lt;&lt; <span class="string">"~"</span> &lt;&lt; len</div><div class="line">		 &lt;&lt; <span class="string">" format "</span> &lt;&lt; object_format</div><div class="line">		 &lt;&lt; dendl;</div><div class="line">  assert(len &gt; <span class="number">0</span>);</div><div class="line"></div><div class="line">  <span class="comment">/*</span></div><div class="line">   * we want only one extent per object!  this means that each extent</div><div class="line">   * we read may map into different bits of the final read</div><div class="line">   * buffer.. hence ObjectExtent.buffer_extents</div><div class="line">   */</div><div class="line">  <span class="comment">/*</span></div><div class="line">   * 我们只想一个extent一个对象！也就是说一个范围只需要去一个对象去读。这就意味着每个</div><div class="line">   * 要读取的范围可能被分到几个读buffer里面。比如放到ObjectExtent.buffer_extents</div><div class="line">   */</div><div class="line"></div><div class="line">  <span class="number">__u</span>32 object_size = layout-&gt;object_size;   <span class="comment">// 4MB</span></div><div class="line">  <span class="number">__u</span>32 su = layout-&gt;stripe_unit;            <span class="comment">// 4MB</span></div><div class="line">  <span class="number">__u</span>32 stripe_count = layout-&gt;stripe_count; <span class="comment">// 1</span></div><div class="line">  assert(object_size &gt;= su);</div><div class="line">  <span class="keyword">if</span> (stripe_count == <span class="number">1</span>) &#123;  <span class="comment">// 这里本来就是相等的。在debug的时候，直接这样赋值。</span></div><div class="line">    ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" sc is one, reset su to os"</span> &lt;&lt; dendl;</div><div class="line">    su = object_size;  <span class="comment">// 如果只有一个条带，那么只需要读一个object size就可以了？</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">uint64_t</span> stripes_per_object = object_size / su; <span class="comment">// 4MB/4MB == 1</span></div><div class="line"></div><div class="line"></div><div class="line">  <span class="keyword">uint64_t</span> cur = offset; <span class="comment">// = 0</span></div><div class="line">  <span class="keyword">uint64_t</span> left = len;   <span class="comment">// = 2048</span></div><div class="line">  <span class="keyword">while</span> (left &gt; <span class="number">0</span>) &#123;     <span class="comment">// left = 2048 &gt; 0, </span></div><div class="line">    <span class="comment">// layout into objects</span></div><div class="line">    <span class="keyword">uint64_t</span> blockno = cur / su; <span class="comment">// which block // 需要读哪个block</span></div><div class="line">    <span class="comment">// which horizontal stripe (Y)</span></div><div class="line">    <span class="keyword">uint64_t</span> stripeno = blockno / stripe_count;</div><div class="line">    <span class="comment">// which object in the object set (X)</span></div><div class="line">    <span class="keyword">uint64_t</span> stripepos = blockno % stripe_count;</div><div class="line">    <span class="comment">// which object set</span></div><div class="line">    <span class="keyword">uint64_t</span> objectsetno = stripeno / stripes_per_object;</div><div class="line">    <span class="comment">// object id</span></div><div class="line">    <span class="keyword">uint64_t</span> objectno = objectsetno * stripe_count + stripepos;</div><div class="line"></div><div class="line">    <span class="comment">// find oid, extent</span></div><div class="line">    <span class="keyword">char</span> buf[<span class="built_in">strlen</span>(object_format) + <span class="number">32</span>];</div><div class="line">    <span class="built_in">snprintf</span>(buf, <span class="keyword">sizeof</span>(buf), object_format, (<span class="keyword">long</span> <span class="keyword">long</span> <span class="keyword">unsigned</span>)objectno);</div><div class="line">    <span class="keyword">object_t</span> oid = buf;</div><div class="line"></div><div class="line">    <span class="comment">// map range into object</span></div><div class="line">    <span class="keyword">uint64_t</span> block_start = (stripeno % stripes_per_object) * su;</div><div class="line">    <span class="keyword">uint64_t</span> block_off = cur % su;</div><div class="line">    <span class="keyword">uint64_t</span> max = su - block_off;</div><div class="line"></div><div class="line">    <span class="keyword">uint64_t</span> x_offset = block_start + block_off;</div><div class="line">    <span class="keyword">uint64_t</span> x_len;</div><div class="line">    <span class="keyword">if</span> (left &gt; max)</div><div class="line">      x_len = max;</div><div class="line">    <span class="keyword">else</span></div><div class="line">      x_len = left;</div><div class="line"></div><div class="line">    ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" off "</span> &lt;&lt; cur &lt;&lt; <span class="string">" blockno "</span> &lt;&lt; blockno &lt;&lt; <span class="string">" stripeno "</span></div><div class="line">		   &lt;&lt; stripeno &lt;&lt; <span class="string">" stripepos "</span> &lt;&lt; stripepos &lt;&lt; <span class="string">" objectsetno "</span></div><div class="line">		   &lt;&lt; objectsetno &lt;&lt; <span class="string">" objectno "</span> &lt;&lt; objectno</div><div class="line">		   &lt;&lt; <span class="string">" block_start "</span> &lt;&lt; block_start &lt;&lt; <span class="string">" block_off "</span></div><div class="line">		   &lt;&lt; block_off &lt;&lt; <span class="string">" "</span> &lt;&lt; x_offset &lt;&lt; <span class="string">"~"</span> &lt;&lt; x_len</div><div class="line">		   &lt;&lt; dendl;</div><div class="line"></div><div class="line">    ObjectExtent *ex = <span class="number">0</span>;</div><div class="line">    <span class="built_in">vector</span>&lt;ObjectExtent&gt;&amp; exv = object_extents[oid];</div><div class="line">    <span class="keyword">if</span> (exv.empty() || exv.back().offset + exv.back().length != x_offset) &#123;</div><div class="line">      exv.resize(exv.size() + <span class="number">1</span>);</div><div class="line">      ex = &amp;exv.back();</div><div class="line">      ex-&gt;oid = oid;</div><div class="line">      ex-&gt;objectno = objectno;</div><div class="line">      ex-&gt;oloc = OSDMap::file_to_object_locator(*layout);</div><div class="line"></div><div class="line">      ex-&gt;offset = x_offset;</div><div class="line">      ex-&gt;length = x_len;</div><div class="line">      ex-&gt;truncate_size = object_truncate_size(cct, layout, objectno,</div><div class="line">					       trunc_size);</div><div class="line"></div><div class="line">      ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" added new "</span> &lt;&lt; *ex &lt;&lt; dendl;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">// add to extent</span></div><div class="line">      ex = &amp;exv.back();</div><div class="line">      ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" adding in to "</span> &lt;&lt; *ex &lt;&lt; dendl;</div><div class="line">      ex-&gt;length += x_len;</div><div class="line">    &#125;</div><div class="line">    ex-&gt;buffer_extents.push_back(make_pair(cur - offset + buffer_offset,</div><div class="line">					   x_len));</div><div class="line"></div><div class="line">    ldout(cct, <span class="number">15</span>) &lt;&lt; <span class="string">"file_to_extents  "</span> &lt;&lt; *ex &lt;&lt; <span class="string">" in "</span> &lt;&lt; ex-&gt;oloc</div><div class="line">		   &lt;&lt; dendl;</div><div class="line">    <span class="comment">// ldout(cct, 0) &lt;&lt; "map: ino " &lt;&lt; ino &lt;&lt; " oid " &lt;&lt; ex.oid &lt;&lt; " osd "</span></div><div class="line">    <span class="comment">//		  &lt;&lt; ex.osd &lt;&lt; " offset " &lt;&lt; ex.offset &lt;&lt; " len " &lt;&lt; ex.len</span></div><div class="line">    <span class="comment">//		  &lt;&lt; " ... left " &lt;&lt; left &lt;&lt; dendl;</span></div><div class="line"></div><div class="line">    left -= x_len;</div><div class="line">    cur += x_len;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// file: osdc/Striper.cc:43</span></div><div class="line"><span class="keyword">void</span> Striper::file_to_extents(</div><div class="line">  CephContext *cct, <span class="keyword">const</span> <span class="keyword">char</span> *object_format,</div><div class="line">  <span class="keyword">const</span> <span class="keyword">file_layout_t</span> *layout,</div><div class="line">  <span class="keyword">uint64_t</span> offset, <span class="keyword">uint64_t</span> len,</div><div class="line">  <span class="keyword">uint64_t</span> trunc_size,</div><div class="line">  <span class="built_in">map</span>&lt;<span class="keyword">object_t</span>,<span class="built_in">vector</span>&lt;ObjectExtent&gt; &gt;&amp; object_extents,</div><div class="line">  <span class="keyword">uint64_t</span> buffer_offset)</div><div class="line">&#123;</div><div class="line">  ldout(cct, <span class="number">10</span>) &lt;&lt; <span class="string">"file_to_extents "</span> &lt;&lt; offset &lt;&lt; <span class="string">"~"</span> &lt;&lt; len</div><div class="line">		 &lt;&lt; <span class="string">" format "</span> &lt;&lt; object_format</div><div class="line">		 &lt;&lt; dendl;</div><div class="line">  assert(len &gt; <span class="number">0</span>);</div><div class="line"></div><div class="line">  <span class="comment">/*</span></div><div class="line">   * we want only one extent per object!  this means that each extent</div><div class="line">   * we read may map into different bits of the final read</div><div class="line">   * buffer.. hence ObjectExtent.buffer_extents</div><div class="line">   */</div><div class="line">  <span class="comment">/*</span></div><div class="line">   * 我们只想一个extent一个对象！也就是说一个范围只需要去一个对象去读。这就意味着每个</div><div class="line">   * 要读取的范围可能被分到几个读buffer里面。比如放到ObjectExtent.buffer_extents</div><div class="line">   */</div><div class="line"></div><div class="line">  <span class="number">__u</span>32 object_size = layout-&gt;object_size;   <span class="comment">// 4MB</span></div><div class="line">  <span class="number">__u</span>32 su = layout-&gt;stripe_unit;            <span class="comment">// 4MB</span></div><div class="line">  <span class="number">__u</span>32 stripe_count = layout-&gt;stripe_count; <span class="comment">// 1</span></div><div class="line">  assert(object_size &gt;= su);</div><div class="line">  <span class="keyword">if</span> (stripe_count == <span class="number">1</span>) &#123;  <span class="comment">// 这里本来就是相等的。在debug的时候，直接这样赋值。</span></div><div class="line">    ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" sc is one, reset su to os"</span> &lt;&lt; dendl;</div><div class="line">    su = object_size;  <span class="comment">// 如果只有一个条带，那么只需要读一个object size就可以了？</span></div><div class="line">  &#125;</div><div class="line">  <span class="keyword">uint64_t</span> stripes_per_object = object_size / su; <span class="comment">// 4MB/4MB == 1</span></div><div class="line"></div><div class="line"></div><div class="line">  <span class="keyword">uint64_t</span> cur = offset; <span class="comment">// = 0</span></div><div class="line">  <span class="keyword">uint64_t</span> left = len;   <span class="comment">// = 2048</span></div><div class="line">  <span class="keyword">while</span> (left &gt; <span class="number">0</span>) &#123;     <span class="comment">// left = 2048 &gt; 0,</span></div><div class="line">    <span class="comment">// layout into objects</span></div><div class="line">    <span class="keyword">uint64_t</span> blockno = cur / su; <span class="comment">// which block // 需要读哪个block</span></div><div class="line">    <span class="comment">// which horizontal stripe (Y)</span></div><div class="line">    <span class="keyword">uint64_t</span> stripeno = blockno / stripe_count;</div><div class="line">    <span class="comment">// which object in the object set (X)</span></div><div class="line">    <span class="keyword">uint64_t</span> stripepos = blockno % stripe_count;</div><div class="line">    <span class="comment">// which object set</span></div><div class="line">    <span class="keyword">uint64_t</span> objectsetno = stripeno / stripes_per_object;</div><div class="line">    <span class="comment">// object id</span></div><div class="line">    <span class="keyword">uint64_t</span> objectno = objectsetno * stripe_count + stripepos;</div><div class="line"></div><div class="line">    <span class="comment">// find oid, extent</span></div><div class="line">    <span class="keyword">char</span> buf[<span class="built_in">strlen</span>(object_format) + <span class="number">32</span>];</div><div class="line">    <span class="built_in">snprintf</span>(buf, <span class="keyword">sizeof</span>(buf), object_format, (<span class="keyword">long</span> <span class="keyword">long</span> <span class="keyword">unsigned</span>)objectno);</div><div class="line">    <span class="keyword">object_t</span> oid = buf;</div><div class="line"></div><div class="line">    <span class="comment">// map range into object</span></div><div class="line">    <span class="keyword">uint64_t</span> block_start = (stripeno % stripes_per_object) * su;</div><div class="line">    <span class="keyword">uint64_t</span> block_off = cur % su;</div><div class="line">    <span class="keyword">uint64_t</span> max = su - block_off;</div><div class="line"></div><div class="line">    <span class="keyword">uint64_t</span> x_offset = block_start + block_off;</div><div class="line">    <span class="keyword">uint64_t</span> x_len;</div><div class="line">    <span class="keyword">if</span> (left &gt; max)</div><div class="line">      x_len = max;</div><div class="line">    <span class="keyword">else</span></div><div class="line">      x_len = left;</div><div class="line"></div><div class="line">    ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" off "</span> &lt;&lt; cur &lt;&lt; <span class="string">" blockno "</span> &lt;&lt; blockno &lt;&lt; <span class="string">" stripeno "</span></div><div class="line">		   &lt;&lt; stripeno &lt;&lt; <span class="string">" stripepos "</span> &lt;&lt; stripepos &lt;&lt; <span class="string">" objectsetno "</span></div><div class="line">		   &lt;&lt; objectsetno &lt;&lt; <span class="string">" objectno "</span> &lt;&lt; objectno</div><div class="line">		   &lt;&lt; <span class="string">" block_start "</span> &lt;&lt; block_start &lt;&lt; <span class="string">" block_off "</span></div><div class="line">		   &lt;&lt; block_off &lt;&lt; <span class="string">" "</span> &lt;&lt; x_offset &lt;&lt; <span class="string">"~"</span> &lt;&lt; x_len</div><div class="line">		   &lt;&lt; dendl;</div><div class="line"></div><div class="line">    ObjectExtent *ex = <span class="number">0</span>;</div><div class="line">    <span class="built_in">vector</span>&lt;ObjectExtent&gt;&amp; exv = object_extents[oid];</div><div class="line">    <span class="keyword">if</span> (exv.empty() || exv.back().offset + exv.back().length != x_offset) &#123;</div><div class="line">      exv.resize(exv.size() + <span class="number">1</span>);</div><div class="line">      ex = &amp;exv.back();</div><div class="line">      ex-&gt;oid = oid;</div><div class="line">      ex-&gt;objectno = objectno;</div><div class="line">      ex-&gt;oloc = OSDMap::file_to_object_locator(*layout);</div><div class="line"></div><div class="line">      ex-&gt;offset = x_offset;</div><div class="line">      ex-&gt;length = x_len;</div><div class="line">      ex-&gt;truncate_size = object_truncate_size(cct, layout, objectno,</div><div class="line">					       trunc_size);</div><div class="line"></div><div class="line">      ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" added new "</span> &lt;&lt; *ex &lt;&lt; dendl;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">      <span class="comment">// add to extent</span></div><div class="line">      ex = &amp;exv.back();</div><div class="line">      ldout(cct, <span class="number">20</span>) &lt;&lt; <span class="string">" adding in to "</span> &lt;&lt; *ex &lt;&lt; dendl;</div><div class="line">      ex-&gt;length += x_len;</div><div class="line">    &#125;</div><div class="line">    ex-&gt;buffer_extents.push_back(make_pair(cur - offset + buffer_offset,</div><div class="line">					   x_len));</div><div class="line"></div><div class="line">    ldout(cct, <span class="number">15</span>) &lt;&lt; <span class="string">"file_to_extents  "</span> &lt;&lt; *ex &lt;&lt; <span class="string">" in "</span> &lt;&lt; ex-&gt;oloc</div><div class="line">		   &lt;&lt; dendl;</div><div class="line">    <span class="comment">// ldout(cct, 0) &lt;&lt; "map: ino " &lt;&lt; ino &lt;&lt; " oid " &lt;&lt; ex.oid &lt;&lt; " osd "</span></div><div class="line">    <span class="comment">//		  &lt;&lt; ex.osd &lt;&lt; " offset " &lt;&lt; ex.offset &lt;&lt; " len " &lt;&lt; ex.len</span></div><div class="line">    <span class="comment">//		  &lt;&lt; " ... left " &lt;&lt; left &lt;&lt; dendl;</span></div><div class="line"></div><div class="line">    left -= x_len;</div><div class="line">    cur += x_len;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -697,12 +826,12 @@ $10 = {val = 0}</code></li>
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -792,12 +921,12 @@ $10 = {val = 0}</code></li>
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/bluestore/">bluestore</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/bluestore/">bluestore</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -941,7 +1070,7 @@ $10 = {val = 0}</code></li>
 <h2 id="pexent"><a href="#pexent" class="headerlink" title="pexent"></a>pexent</h2><p>那么再查看一下<code>pextent</code>的定义是怎么样的：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// pextent: physical extent</span></div><div class="line"><span class="keyword">struct</span> <span class="keyword">bluestore_pextent_t</span> : <span class="keyword">public</span> AllocExtent&#123;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <p>继承了<code>AllocExtent</code>这个类。而这个类的定义极其简单，也就是里面写明了：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// offset, length.</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> AllocExtent &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="keyword">uint64_t</span> offset;</div><div class="line">  <span class="keyword">uint32_t</span> length;</div><div class="line"></div><div class="line">  AllocExtent() &#123; </div><div class="line">    offset = <span class="number">0</span>;</div><div class="line">    length = <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  AllocExtent(<span class="keyword">int64_t</span> off, <span class="keyword">int32_t</span> len) : offset(off), length(len) &#123; &#125;</div><div class="line">  <span class="keyword">uint64_t</span> end() <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> offset + length;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// offset, length.</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> AllocExtent &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="keyword">uint64_t</span> offset;</div><div class="line">  <span class="keyword">uint32_t</span> length;</div><div class="line"></div><div class="line">  AllocExtent() &#123;</div><div class="line">    offset = <span class="number">0</span>;</div><div class="line">    length = <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  AllocExtent(<span class="keyword">int64_t</span> off, <span class="keyword">int32_t</span> len) : offset(off), length(len) &#123; &#125;</div><div class="line">  <span class="keyword">uint64_t</span> end() <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> offset + length;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -950,12 +1079,12 @@ $10 = {val = 0}</code></li>
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -1414,12 +1543,12 @@ $10 = {val = 0}</code></li>
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -1511,12 +1640,12 @@ $10 = {val = 0}</code></li>
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -1541,93 +1670,6 @@ $10 = {val = 0}</code></li>
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/ceph-debug" data-title="Qemu RBD调试Ceph" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-OpenStack/install-openstack" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/09/20/OpenStack/install-openstack/" class="article-date">
-  	<time datetime="2016-09-20T14:03:45.000Z" itemprop="datePublished">2016-09-20</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/20/OpenStack/install-openstack/">install openstack</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="安装OpenStack包"><a href="#安装OpenStack包" class="headerlink" title="安装OpenStack包"></a>安装OpenStack包</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">apt-get -y update</div><div class="line">apt-get install -y software-properties-common</div><div class="line">add-apt-repository -y cloud-archive:mitaka</div><div class="line">apt-get -y update &amp;&amp; apt-get -y dist-upgrade</div><div class="line">apt-get install -y python-openstackclient crudini</div><div class="line"></div><div class="line">sed -i <span class="string">"/sleep/d"</span> /etc/init/failsafe.conf</div></pre></td></tr></table></figure>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/OpenStack/">OpenStack</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/OpenStack/">OpenStack</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/20/OpenStack/install-openstack/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-OpenStack/install-openstack" data-title="install openstack" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

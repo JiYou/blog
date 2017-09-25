@@ -14,7 +14,7 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 <meta property="og:site_name" content="缘生故如幻">
 <meta property="og:description" content="代码代码比较简单，直接分析代码即可。
 class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_malloc(unsigned l) : raw(l) &amp;#123;        // 如果data内存区域长度大于0.        // 那么在这里申请好内存。        if (len) &amp;#123">
-<meta property="og:updated_time" content="2017-01-25T04:04:39.000Z">
+<meta property="og:updated_time" content="2017-07-15T01:48:15.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph::buffer::raw_malloc实现分析">
 <meta name="twitter:description" content="代码代码比较简单，直接分析代码即可。
@@ -126,7 +126,7 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -244,12 +244,12 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -272,18 +272,18 @@ class buffer::raw_malloc : public buffer::raw &amp;#123;public:    explicit raw_
     
 <nav id="article-nav">
   
-    <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/blog/2016/12/19/ceph/Chap1.编程技法/7.ceph.buffer.raw_mmap_pages/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          ceph内存使用计数
+          ceph:buffer:raw_mmap_pages实现分析
         
       </div>
     </a>
   
   
-    <a href="/blog/2016/12/17/ceph/Chap1.编程技法/4.ceph.buffer.raw_combined/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">ceph:buffer:raw_combined实现分析</div>
+    <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">ceph内存使用计数</div>
       <strong class="article-nav-caption">></strong>
     </a>
   

@@ -21,7 +21,7 @@ http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-c
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/bluestore-arch-wei.jpeg">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/bluestore-metadata.png">
 <meta property="og:image" content="https://jiyou.github.io/blog/blog/img/bluestore-onode-extent.jpeg">
-<meta property="og:updated_time" content="2016-10-18T05:48:11.000Z">
+<meta property="og:updated_time" content="2017-07-15T01:48:53.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Ceph Bluestore简介">
 <meta name="twitter:description" content="参考链接
@@ -136,7 +136,7 @@ http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-c
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -254,12 +254,12 @@ http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-c
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -343,7 +343,7 @@ http://www.slideshare.net/sageweil1/bluestore-a-new-faster-storage-backend-for-c
 <h2 id="pexent"><a href="#pexent" class="headerlink" title="pexent"></a>pexent</h2><p>那么再查看一下<code>pextent</code>的定义是怎么样的：</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// pextent: physical extent</span></div><div class="line"><span class="keyword">struct</span> <span class="keyword">bluestore_pextent_t</span> : <span class="keyword">public</span> AllocExtent&#123;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <p>继承了<code>AllocExtent</code>这个类。而这个类的定义极其简单，也就是里面写明了：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// offset, length.</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> AllocExtent &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="keyword">uint64_t</span> offset;</div><div class="line">  <span class="keyword">uint32_t</span> length;</div><div class="line"></div><div class="line">  AllocExtent() &#123; </div><div class="line">    offset = <span class="number">0</span>;</div><div class="line">    length = <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  AllocExtent(<span class="keyword">int64_t</span> off, <span class="keyword">int32_t</span> len) : offset(off), length(len) &#123; &#125;</div><div class="line">  <span class="keyword">uint64_t</span> end() <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> offset + length;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// offset, length.</span></div><div class="line"></div><div class="line"><span class="keyword">class</span> AllocExtent &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">  <span class="keyword">uint64_t</span> offset;</div><div class="line">  <span class="keyword">uint32_t</span> length;</div><div class="line"></div><div class="line">  AllocExtent() &#123;</div><div class="line">    offset = <span class="number">0</span>;</div><div class="line">    length = <span class="number">0</span>;</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  AllocExtent(<span class="keyword">int64_t</span> off, <span class="keyword">int32_t</span> len) : offset(off), length(len) &#123; &#125;</div><div class="line">  <span class="keyword">uint64_t</span> end() <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> offset + length;</div><div class="line">  &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
       
     </div>

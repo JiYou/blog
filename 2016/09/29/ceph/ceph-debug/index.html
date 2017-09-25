@@ -30,7 +30,7 @@ docker
 虚拟机里面安装docker。
 ceph安装在一个docker中。
 虚拟机在编译安装qemu/ceph。">
-<meta property="og:updated_time" content="2016-10-25T12:39:15.000Z">
+<meta property="og:updated_time" content="2017-07-15T01:49:05.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Qemu RBD调试Ceph">
 <meta name="twitter:description" content="这里主要是介绍如何使用qemu/rbd调试ceph关于rbd模块的代码。调试过程如下：
@@ -150,7 +150,7 @@ ceph安装在一个docker中。
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 20px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
 					</div>
 				</section>
 				
@@ -268,12 +268,12 @@ ceph安装在一个docker中。
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
 	</div>
 
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
 	</div>
 
 
@@ -337,7 +337,7 @@ ceph安装在一个docker中。
 <h1 id="准备Qemu"><a href="#准备Qemu" class="headerlink" title="准备Qemu"></a>准备Qemu</h1><p>已经写好了一个包，可以很快地创建虚拟机。下载命令如下：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git <span class="built_in">clone</span> https://github.com/JiYou/create.vm.git</div><div class="line">mv create.vm /cloud</div><div class="line"><span class="built_in">cd</span> /cloud</div><div class="line">./main</div></pre></td></tr></table></figure>
 <h2 id="测试虚拟机"><a href="#测试虚拟机" class="headerlink" title="测试虚拟机"></a>测试虚拟机</h2><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">cd</span> /cloud/</div><div class="line">./ubuntu-ceph h1</div></pre></td></tr></table></figure>
-<p>如果看到如下输出，那么证明安装成功： </p>
+<p>如果看到如下输出，那么证明安装成功：</p>
 <figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">.....</div><div class="line">+ sed -i s,%HOST_NAME%,h1,g /tmp/tmp.gcHNgxmKzO/etc/hosts</div><div class="line">+ <span class="built_in">echo</span> h1</div><div class="line">+ virsh define h1/h1</div><div class="line">Domain h1 defined from h1/h1</div><div class="line"></div><div class="line">+ virsh start h1</div><div class="line">Domain h1 started</div></pre></td></tr></table></figure>
 <h2 id="关闭虚拟机"><a href="#关闭虚拟机" class="headerlink" title="关闭虚拟机"></a>关闭虚拟机</h2><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">virsh destroy h1</div><div class="line">virsh undefine h1</div></pre></td></tr></table></figure>
 <h1 id="安装gdb"><a href="#安装gdb" class="headerlink" title="安装gdb"></a>安装gdb</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">apt-get install -y gdb</div></pre></td></tr></table></figure>
