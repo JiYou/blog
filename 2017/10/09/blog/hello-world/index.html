@@ -4,21 +4,24 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Ceph通过WoboQ阅读源码 | 缘生故如幻</title>
+  <title>窗边的小豆豆有感 | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="缘起主要原因还是因为看了这篇文章：https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。
-界面太爽，功能强大 强烈推荐。比Source Insight好用多了。">
+  <meta name="description" content="原文校长先生说这里是你们的图书馆，这里摆着的书，谁都可以读，读哪一本都行。不要说什么“几年级的学生该读哪些”这样的话，只要喜欢，什么时候来图书馆都可以。
+最大的感触应该就是｀不要说什么“”几年级的学生该读哪些”这样的话｀。
+现代教育知识为什么会划分年级和界限？如果有的学生学习能力就是很快？某些学科就是能够很快学完，比如一个一年级的学生，他的数学能够在一个月的时间就能够很熟练地掌握。那么是否可以在接">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Ceph通过WoboQ阅读源码">
-<meta property="og:url" content="https://jiyou.github.io/blog/2016/09/18/ceph/ceph-woboq/index.html">
+<meta property="og:title" content="窗边的小豆豆有感">
+<meta property="og:url" content="https://jiyou.github.io/blog/2017/10/09/blog/hello-world/index.html">
 <meta property="og:site_name" content="缘生故如幻">
-<meta property="og:description" content="缘起主要原因还是因为看了这篇文章：https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。
-界面太爽，功能强大 强烈推荐。比Source Insight好用多了。">
-<meta property="og:updated_time" content="2017-07-15T01:49:23.000Z">
+<meta property="og:description" content="原文校长先生说这里是你们的图书馆，这里摆着的书，谁都可以读，读哪一本都行。不要说什么“几年级的学生该读哪些”这样的话，只要喜欢，什么时候来图书馆都可以。
+最大的感触应该就是｀不要说什么“”几年级的学生该读哪些”这样的话｀。
+现代教育知识为什么会划分年级和界限？如果有的学生学习能力就是很快？某些学科就是能够很快学完，比如一个一年级的学生，他的数学能够在一个月的时间就能够很熟练地掌握。那么是否可以在接">
+<meta property="og:updated_time" content="2017-10-09T12:38:31.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Ceph通过WoboQ阅读源码">
-<meta name="twitter:description" content="缘起主要原因还是因为看了这篇文章：https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。
-界面太爽，功能强大 强烈推荐。比Source Insight好用多了。">
+<meta name="twitter:title" content="窗边的小豆豆有感">
+<meta name="twitter:description" content="原文校长先生说这里是你们的图书馆，这里摆着的书，谁都可以读，读哪一本都行。不要说什么“几年级的学生该读哪些”这样的话，只要喜欢，什么时候来图书馆都可以。
+最大的感触应该就是｀不要说什么“”几年级的学生该读哪些”这样的话｀。
+现代教育知识为什么会划分年级和界限？如果有的学生学习能力就是很快？某些学科就是能够很快学完，比如一个一年级的学生，他的数学能够在一个月的时间就能够很熟练地掌握。那么是否可以在接">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
   
@@ -226,11 +229,11 @@
 	</div>
 </nav>
 
-      <div class="body-wrap"><article id="post-ceph/ceph-woboq" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-blog/hello-world" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2016/09/18/ceph/ceph-woboq/" class="article-date">
-  	<time datetime="2016-09-18T06:20:29.000Z" itemprop="datePublished">2016-09-18</time>
+      <a href="/blog/2017/10/09/blog/hello-world/" class="article-date">
+  	<time datetime="2017-10-09T12:28:32.000Z" itemprop="datePublished">2017-10-09</time>
 </a>
     </div>
   
@@ -243,7 +246,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Ceph通过WoboQ阅读源码
+      窗边的小豆豆有感
     </h1>
   
 
@@ -252,12 +255,12 @@
       <div class="article-info article-info-post">
         
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Woboq/">Woboq</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/读书笔记/">读书笔记</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/随笔/">随笔</a></li></ul>
 	</div>
 
         
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	<a class="article-category-link" href="/blog/categories/blog/">blog</a>
 	</div>
 
 
@@ -267,21 +270,13 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>主要原因还是因为看了这篇文章：<a href="https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。" target="_blank" rel="external">https://zhuanlan.zhihu.com/p/22484207。然后点开了WoboQ的主页，觉得实在是看起来太爽。https://code.woboq.org/。所以决定也用来看看`Ceph`的代码。后面也可以尝试看看是否可以用来看`xv6`的代码。</a></p>
-<p><strong>界面太爽，功能强大</strong> 强烈推荐。比<code>Source Insight</code>好用多了。</p>
-<a id="more"></a>
-<h1 id="安装WoboQ"><a href="#安装WoboQ" class="headerlink" title="安装WoboQ"></a>安装WoboQ</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">apt-get update</div><div class="line">apt-get install clang-3.8 llvm-3.8 libclang-3.8-dev</div><div class="line"><span class="built_in">cd</span> /var/www/html</div><div class="line">git <span class="built_in">clone</span> https://github.com/woboq/woboq_codebrowser</div><div class="line"><span class="built_in">cd</span> woboq_codebrowser</div><div class="line">cmake . -DLLVM_CONFIG_EXECUTABLE=/usr/bin/llvm-config-3.8 -DCMAKE_BUILD_TYPE=Release</div><div class="line">make -j24</div></pre></td></tr></table></figure>
-<p>看到如下输出：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">[100%] Built target codebrowser_generator</div></pre></td></tr></table></figure>
-<p>表示编译成功。</p>
-<h1 id="Cmake-amp-Ceph"><a href="#Cmake-amp-Ceph" class="headerlink" title="Cmake &amp; Ceph"></a>Cmake &amp; Ceph</h1><p>参考：<a href="http://fossies.org/linux/ceph/README.cmake.md" target="_blank" rel="external">http://fossies.org/linux/ceph/README.cmake.md</a></p>
-<p>进入到<code>Ceph</code>源码目录，运行如下命令:</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">git reset --hard</div><div class="line">git clean -df</div><div class="line">./run-cmake-check.sh -DCMAKE_EXPORT_COMPILE_COMMANDS=ON</div></pre></td></tr></table></figure>
-<p><strong>注意</strong>如果之前用过其他的<code>build</code>比如<code>cmake</code>来编译过<code>Ceph</code>代码，那么务必运行<code>git reset --hard; git clean -df</code>先进行清理工作。</p>
-<h1 id="检查"><a href="#检查" class="headerlink" title="检查"></a>检查</h1><p>当编译成功之后，可以检查内容：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">cat build/compile_commands.json</div></pre></td></tr></table></figure>
-<h1 id="生成html"><a href="#生成html" class="headerlink" title="生成html"></a>生成html</h1><p>然后进入到<code>Ceph</code>根目录下的<code>build</code>目录：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">OUTPUTDIRECTORY=/var/www/html/ceph/build/ceph_html</div><div class="line">DATADIRECTORY=<span class="variable">$OUTPUTDIRECTORY</span>/../data</div><div class="line">BUILDIRECTORY=`<span class="built_in">pwd</span>`</div><div class="line">VERSION=<span class="string">"v11.0.0"</span></div><div class="line">/var/www/html/woboq_codebrowser/generator/codebrowser_generator -b <span class="variable">$BUILDIRECTORY</span> -o <span class="variable">$OUTPUTDIRECTORY</span> -p codebrowser:<span class="variable">$BUILDIRECTORY</span>:<span class="variable">$VERSION</span> src</div><div class="line">/var/www/html/woboq_codebrowser/indexgenerator/codebrowser_indexgenerator <span class="variable">$OUTPUTDIRECTORY</span></div></pre></td></tr></table></figure>
+        <h1 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">校长先生说</div><div class="line"></div><div class="line">这里是你们的图书馆，这里摆着的书，谁都可以读，读哪一本都行。不要说什么“几年级的学生该读哪些”这样的话，只要喜欢，什么时候来图书馆都可以。</div></pre></td></tr></table></figure>
+<p>最大的感触应该就是｀不要说什么“”几年级的学生该读哪些”这样的话｀。</p>
+<h1 id="现代教育"><a href="#现代教育" class="headerlink" title="现代教育"></a>现代教育</h1><p>知识为什么会划分年级和界限？如果有的学生学习能力就是很快？某些学科就是能够很快学完，比如一个一年级的学生，他的数学能够在一个月的时间就能够很熟练地掌握。那么是否可以在接下来的时间里面学习二年级的课程，而不是在一年级接下来的时间里面浪费剩下的时间。</p>
+<p>当前教育可能存在的一个问题是，是为社会的资本服务的。当学生毕业以后，其去向的相当部分实际上是为了参与到社会上的公司里面去上班。而对于一个工业社会而言，大批量生产与制造的标准化是一个非常重要的关键所在。</p>
+<p>那么，教育的目的是不是也是为了向这种大批量生产与制造的企业需求服务？而并不是考虑到每一个学生做为人的独立性与健全性。因此，教育的批量制造也是工业化教育的一种体现。在这种需求大背景下，指望培养出具有独立性的，有个性的，充分认识自我的人而言，可能并不是社会企业资本所需要的。</p>
+<h1 id="教育的真义"><a href="#教育的真义" class="headerlink" title="教育的真义"></a>教育的真义</h1><p>教育的真正意义可能并不是为了批量生产与制造。充分地认识与发展每个一个学生的个性，充分尊重孩子的心理路程。</p>
+<p>因为，每一个人的一生可能都是在寻找自我，充分地认识自我才是成功的关键。差异化才是不可替代。而同质化则意味着，雇主可以花同样的成本，随意地更换部件，如此而已。</p>
 
       
     </div>
@@ -291,18 +286,9 @@
     
 <nav id="article-nav">
   
-    <a href="/blog/2016/09/19/OpenStack/docker-openstack/" id="article-nav-newer" class="article-nav-link-wrap">
-      <strong class="article-nav-caption"><</strong>
-      <div class="article-nav-title">
-        
-          Docker安装OpenStack
-        
-      </div>
-    </a>
   
-  
-    <a href="/blog/2016/09/16/mit.6.828/jos-lab1-a/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">MIT 6.828 JOS课程1：HW Boot xv6</div>
+    <a href="/blog/2017/10/09/mit.6.824/lec.1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Lec1 Introduction</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -338,7 +324,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/ceph-woboq" data-title="Ceph通过WoboQ阅读源码" data-url="https://jiyou.github.io/blog/blog/2016/09/18/ceph/ceph-woboq/"></div>
+    <div class="ds-thread" data-thread-key="post-blog/hello-world" data-title="窗边的小豆豆有感" data-url="https://jiyou.github.io/blog/blog/2017/10/09/blog/hello-world/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

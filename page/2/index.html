@@ -104,6 +104,8 @@
 				        
 							<li><a href="/blog/categories/mit.6.824">mit.6.824</a></li>
 				        
+							<li><a href="/blog/categories/blog">blog</a></li>
+				        
 						</ul>
 					</nav>
 					<nav class="header-nav">
@@ -124,7 +126,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-824/" style="font-size: 10px;">MIT 6.824</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a> <a href="/blog/tags/分布式/" style="font-size: 10px;">分布式</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-824/" style="font-size: 10px;">MIT 6.824</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a> <a href="/blog/tags/分布式/" style="font-size: 10px;">分布式</a> <a href="/blog/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/blog/tags/随笔/" style="font-size: 10px;">随笔</a>
 					</div>
 				</section>
 				
@@ -198,6 +200,8 @@
 		        
 					<li><a href="/blog/categories/mit.6.824">mit.6.824</a></li>
 		        
+					<li><a href="/blog/categories/blog">blog</a></li>
+		        
 		        <div class="clearfix"></div>
 				</ul>
 			</nav>
@@ -219,6 +223,192 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-unixv6/pdp11/pdp11-instructions" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/26/unixv6/pdp11/pdp11-instructions/" class="article-date">
+  	<time datetime="2016-12-26T14:16:34.000Z" itemprop="datePublished">2016-12-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/26/unixv6/pdp11/pdp11-instructions/">PDP11解读之1-奇怪的数组</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="奇怪的数组"><a href="#奇怪的数组" class="headerlink" title="奇怪的数组"></a>奇怪的数组</h1><p>在看<code>PDP11</code>指令集的实现的时候，有一段有意思的代码。一开始没看明白，后来看懂了。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="keyword">var</span> disasmtable = []<span class="keyword">struct</span> &#123;</div><div class="line">	inst, arg <span class="keyword">uint16</span></div><div class="line">	msg       <span class="keyword">string</span></div><div class="line">	flag      <span class="keyword">uint</span></div><div class="line">	b         <span class="keyword">bool</span></div><div class="line">&#125;&#123;</div><div class="line">	&#123;<span class="number">0077700</span>, <span class="number">0005000</span>, <span class="string">"CLR"</span>, flagD, <span class="literal">true</span>&#125;,</div><div class="line">  ...,</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>数组前面这段数字表示啥意思？</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="number">0077700</span>, <span class="number">0005000</span></div></pre></td></tr></table></figure>
+<p>首先可以确定的是<code>inst</code>表示的是:<code>0077700</code>，而<code>arg</code>表示的是<code>0005000</code>。<code>CLR</code>表示的是汇编命令。那么看一下<code>CLR</code>指令的定义：</p>
+<p><img src="/blog/img/clr.instu.jpeg" alt=""></p>
+<p>在这里，可以看到<code>0005000</code>最接近的也就是<code>00050DD</code>。在这里就需要注意一下这个指令的含义了：</p>
+<ul>
+<li>这是一个单指令，操作数是寄存器</li>
+<li>不能操作内存</li>
+<li>后面六位指的是寄存器。</li>
+<li><code>CLRB</code>指令的头一位表示的是操作的对象是<code>byte</code>。</li>
+</ul>
+<h1 id="译指令部分"><a href="#译指令部分" class="headerlink" title="译指令部分"></a>译指令部分</h1><p>所以在查看一条指令是不是<code>CLR</code>的时候，需要去掉后6位。看前面的10位的值是不是<code>00050</code>。那么最好的操作办法就是：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">instruction &amp; b0 111 111 111 000 000 == 0 000 101 000 000 000</div></pre></td></tr></table></figure>
+<p>如果相等，那么肯定就是<code>CLR</code>指令。所以后面可以看到译码部分是这样写的。（代码第一部分，查找指令）。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *cpu)</span> <span class="title">disasm</span><span class="params">(a uint18)</span> <span class="title">string</span></span> &#123;</div><div class="line">	<span class="comment">// 从给定的地址处，读出指令</span></div><div class="line">	<span class="comment">// 这里取出的指令是16位的</span></div><div class="line">	ins := c.unibus.read16(a)</div><div class="line"></div><div class="line">	l := disasmtable[<span class="number">0</span>]</div><div class="line">	<span class="keyword">for</span> i := <span class="number">0</span>; i &lt; <span class="built_in">len</span>(disasmtable); i++ &#123;</div><div class="line">		l = disasmtable[i]</div><div class="line">		<span class="comment">// 指令与上去</span></div><div class="line">		<span class="comment">// 都是16位的，与的结果得到arg</span></div><div class="line">		<span class="keyword">if</span> (ins &amp; l.inst) == l.arg &#123;</div><div class="line">			<span class="keyword">goto</span> found</div><div class="line">		&#125;</div><div class="line">	&#125;</div><div class="line">	<span class="built_in">panic</span>(fmt.Sprintf(<span class="string">"disasm: cannot disassemble instruction %06o at %06o"</span>, ins, a))</div><div class="line">	<span class="keyword">return</span> <span class="string">"???"</span></div><div class="line">  ...</div><div class="line">  <span class="comment">// .. 后面是查找到指令之后的处理。</span></div></pre></td></tr></table></figure>
+<h1 id="几个参数"><a href="#几个参数" class="headerlink" title="几个参数"></a>几个参数</h1><p>在处理指令的参数之前，需要考虑看一下如下代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line">&#123;<span class="number">0177700</span>, <span class="number">0006700</span>, <span class="string">"SXT"</span>, flagD, <span class="literal">false</span>&#125;,</div><div class="line">&#123;<span class="number">0070000</span>, <span class="number">0010000</span>, <span class="string">"MOV"</span>, flagS | flagD, <span class="literal">true</span>&#125;,</div></pre></td></tr></table></figure>
+<p>在这里，<code>flagD</code>和<code>flagS|flagD</code>就表示不同的参数。其中<code>flagD</code>表示只有目标参数。而<code>flagS|flagD</code>则是即有源参数也有目标参数。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Unix-V6/">Unix V6</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/pdp11/">pdp11</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/PDP11/">PDP11</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-unixv6/pdp11/pdp11-instructions" data-title="PDP11解读之1-奇怪的数组" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/Chap1.编程技法/11.XioDispatchHook" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/" class="article-date">
+  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/">ceph:buffer:raw_pipe的实现分析</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/11.XioDispatchHook" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -317,89 +507,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/10.ceph.buffer.raw_pipe" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/Chap1.编程技法/11.XioDispatchHook" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/" class="article-date">
-  	<time datetime="2016-12-21T16:06:43.000Z" itemprop="datePublished">2016-12-22</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/22/ceph/Chap1.编程技法/11.XioDispatchHook/">ceph:buffer:raw_pipe的实现分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/11.XioDispatchHook" data-title="ceph:buffer:raw_pipe的实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -690,6 +797,92 @@
 
 
   
+    <article id="post-ceph/Chap1.编程技法/5.track.buffer" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" class="article-date">
+  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/">ceph内存使用计数</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="内存使用跟踪"><a href="#内存使用跟踪" class="headerlink" title="内存使用跟踪"></a>内存使用跟踪</h1><p>在<code>Ceph</code>里面对使用内存的地方，进行了计数，也就是统计了整个进程所使用的内存数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// src/common/buffer.c:54</span></div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic_t</span> buffer_total_alloc;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_bytes;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_num;</div><div class="line">  <span class="keyword">const</span> <span class="keyword">bool</span> buffer_track_alloc = get_env_bool(<span class="string">"CEPH_BUFFER_TRACK"</span>);</div><div class="line"></div><div class="line">  <span class="keyword">namespace</span> &#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.add(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">dec_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.sub(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 记录历史使用内存，所以这个函数是没有dec_xxx函数。</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_history_alloc</span><span class="params">(<span class="keyword">uint64_t</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc) &#123;</div><div class="line">      buffer_history_alloc_bytes.add(len);</div><div class="line">      buffer_history_alloc_num.inc();</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>有意思的是，需要注意一下<code>atomic64_t</code>这种变量的使用。这个变量，一般而言，<code>Linux</code>操作系统都是支持的。如果不支持，那么就需要引入一个叫<code>libatomic_ops</code>的库，使和其中的<code>AIO_T</code>类型。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/5.track.buffer" data-title="ceph内存使用计数" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
     <article id="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -754,92 +947,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/6.ceph.buffer.raw_malloc" data-title="ceph::buffer::raw_malloc实现分析" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/Chap1.编程技法/5.track.buffer" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/" class="article-date">
-  	<time datetime="2016-12-17T16:06:43.000Z" itemprop="datePublished">2016-12-18</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/18/ceph/Chap1.编程技法/5.track.buffer/">ceph内存使用计数</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="内存使用跟踪"><a href="#内存使用跟踪" class="headerlink" title="内存使用跟踪"></a>内存使用跟踪</h1><p>在<code>Ceph</code>里面对使用内存的地方，进行了计数，也就是统计了整个进程所使用的内存数。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// src/common/buffer.c:54</span></div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic_t</span> buffer_total_alloc;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_bytes;</div><div class="line">  <span class="keyword">static</span> <span class="keyword">atomic64_t</span> buffer_history_alloc_num;</div><div class="line">  <span class="keyword">const</span> <span class="keyword">bool</span> buffer_track_alloc = get_env_bool(<span class="string">"CEPH_BUFFER_TRACK"</span>);</div><div class="line"></div><div class="line">  <span class="keyword">namespace</span> &#123;</div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.add(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">dec_total_alloc</span><span class="params">(<span class="keyword">unsigned</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc)</div><div class="line">      buffer_total_alloc.sub(len);</div><div class="line">  &#125;</div><div class="line"></div><div class="line">  <span class="comment">// 记录历史使用内存，所以这个函数是没有dec_xxx函数。</span></div><div class="line">  <span class="function"><span class="keyword">void</span> <span class="title">inc_history_alloc</span><span class="params">(<span class="keyword">uint64_t</span> len)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (buffer_track_alloc) &#123;</div><div class="line">      buffer_history_alloc_bytes.add(len);</div><div class="line">      buffer_history_alloc_num.inc();</div><div class="line">    &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<p>有意思的是，需要注意一下<code>atomic64_t</code>这种变量的使用。这个变量，一般而言，<code>Linux</code>操作系统都是支持的。如果不支持，那么就需要引入一个叫<code>libatomic_ops</code>的库，使和其中的<code>AIO_T</code>类型。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/Ceph/">Ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/5.track.buffer" data-title="ceph内存使用计数" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -1039,106 +1146,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/3.PAGE_VARs" data-title="PAGE常量" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/Chap1.编程技法/2.spinlock的实现" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/12/15/ceph/Chap1.编程技法/2.spinlock的实现/" class="article-date">
-  	<time datetime="2016-12-15T15:50:47.000Z" itemprop="datePublished">2016-12-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/12/15/ceph/Chap1.编程技法/2.spinlock的实现/">spinlock实现分析</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="spinlock"><a href="#spinlock" class="headerlink" title="spinlock"></a>spinlock</h1><h2 id="接口声明"><a href="#接口声明" class="headerlink" title="接口声明"></a>接口声明</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">typedef</span> <span class="keyword">uint32_t</span> <span class="keyword">simple_spinlock_t</span>;</div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> SIMPLE_SPINLOCK_INITIALIZER 0</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span>;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span>;</div></pre></td></tr></table></figure>
-<h2 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h2><p>可以看出，<code>simple_spinlock_t</code>就是<code>uint32_t</code>也就是<code>unsigned int</code>类型。初始值设置为0。</p>
-<h1 id="上锁过程"><a href="#上锁过程" class="headerlink" title="上锁过程"></a>上锁过程</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">static</span> <span class="keyword">uint32_t</span> bar = <span class="number">13</span>;</div><div class="line"><span class="keyword">static</span> <span class="keyword">uint32_t</span> *foo = &amp;bar;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    <span class="number">__</span>sync_synchronize();</div><div class="line">    <span class="comment">// 取得旧有的值。</span></div><div class="line">    <span class="keyword">uint32_t</span> oldval = *lock;</div><div class="line">    <span class="comment">// 如果没上锁，直接锁上。获得锁。</span></div><div class="line">    <span class="keyword">if</span> (oldval == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (<span class="number">__</span>sync_bool_compare_and_swap(lock, <span class="number">0</span>, <span class="number">1</span>))</div><div class="line">	       <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// delay</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">      *foo = (*foo * <span class="number">33</span>) + <span class="number">17</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="number">__</span>sync_bool_compare_and_swap(lock, <span class="number">1</span>, <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里无论是上锁，还是解锁，主要是需要理解两个函数：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">__</span>sync_synchronize()</div><div class="line"><span class="number">__</span>sync_bool_compare_and_swap()</div></pre></td></tr></table></figure>
-<h1 id="GCC原子操作"><a href="#GCC原子操作" class="headerlink" title="GCC原子操作"></a>GCC原子操作</h1><p><a href="http://blog.csdn.net/benpaobagzb/article/details/51700250" target="_blank" rel="external">gcc 原子操作 CSDN</a></p>
-<h2 id="比较赋值"><a href="#比较赋值" class="headerlink" title="比较赋值"></a>比较赋值</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">bool</span> <span class="number">__</span>sync_bool_compare_and_swap (type *ptr, type oldval type newval, ...)</div><div class="line">type <span class="number">__</span>sync_val_compare_and_swap (type *ptr, type oldval type newval, ...)</div></pre></td></tr></table></figure>
-<p>这两个函数提供原子的比较和交换，如果<em>ptr == oldval,就将newval写入</em>ptr,<br>第一个函数在相等并写入的情况下返回true.<br>第二个函数在返回操作之前的值。</p>
-<h2 id="全顺序"><a href="#全顺序" class="headerlink" title="全顺序"></a>全顺序</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="number">__</span>sync_synchronize (...)</div></pre></td></tr></table></figure>
-<p>发出一个full barrier。memory barrier有几种类型：</p>
-<ul>
-<li>acquire barrier : 不允许将barrier之后的内存读取指令移到barrier之前（linux kernel中的wmb()）。</li>
-<li>release barrier : 不允许将barrier之前的内存读取指令移到barrier之后 (linux kernel中的rmb())。</li>
-<li>full barrier    : 以上两种barrier的合集(linux kernel中的mb())。</li>
-</ul>
-<h1 id="理解"><a href="#理解" class="headerlink" title="理解"></a>理解</h1><p>实际上，除去原语操作之后的函数可以改写如下：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_lock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">while</span>(<span class="number">1</span>) &#123;</div><div class="line">    <span class="keyword">uint32_t</span> oldval = *lock;</div><div class="line">    <span class="keyword">if</span> (oldval == <span class="number">0</span>) &#123;</div><div class="line">      <span class="keyword">if</span> (*lock == <span class="number">0</span>) *lock = <span class="number">1</span>;</div><div class="line">      <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// delay</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</div><div class="line">      *foo = (*foo * <span class="number">33</span>) + <span class="number">17</span>;</div><div class="line">    &#125;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">simple_spin_unlock</span><span class="params">(<span class="keyword">simple_spinlock_t</span> *lock)</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">if</span> (*lock == <span class="number">1</span>) *lock = <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/Chap1.编程技法/2.spinlock的实现" data-title="spinlock实现分析" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
