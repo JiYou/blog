@@ -77,7 +77,7 @@
 						<li>Links</li>
 						
 						
-						<li>About</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -102,6 +102,8 @@
 				        
 							<li><a href="/blog/categories/Kernel">Kernel</a></li>
 				        
+							<li><a href="/blog/categories/mit.6.824">mit.6.824</a></li>
+				        
 						</ul>
 					</nav>
 					<nav class="header-nav">
@@ -122,7 +124,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-824/" style="font-size: 10px;">MIT 6.824</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a> <a href="/blog/tags/分布式/" style="font-size: 10px;">分布式</a>
 					</div>
 				</section>
 				
@@ -194,6 +196,8 @@
 		        
 					<li><a href="/blog/categories/Kernel">Kernel</a></li>
 		        
+					<li><a href="/blog/categories/mit.6.824">mit.6.824</a></li>
+		        
 		        <div class="clearfix"></div>
 				</ul>
 			</nav>
@@ -215,6 +219,194 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-paxos/libevent-begin-1" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/12/08/paxos/libevent-begin-1/" class="article-date">
+  	<time datetime="2016-12-08T13:43:33.000Z" itemprop="datePublished">2016-12-08</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/12/08/paxos/libevent-begin-1/">libevent初步使用</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>因为最近在看libpaxos的代码，而这部分代码里面用了很多libevent的代码。所以这里需要大概学习一下libevent。</p>
+<h1 id="使用步骤"><a href="#使用步骤" class="headerlink" title="使用步骤"></a>使用步骤</h1><p>这里大概总结一下libevent的使用步骤</p>
+<h2 id="开始监听"><a href="#开始监听" class="headerlink" title="开始监听"></a>开始监听</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">listen(listener, MAX_SOCKET_CONNECTION)</div></pre></td></tr></table></figure>
+<h2 id="设置eventBase"><a href="#设置eventBase" class="headerlink" title="设置eventBase"></a>设置eventBase</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">base = event_base_new();</div><div class="line">listen_event = event_new(base,</div><div class="line">						     listener,</div><div class="line">						     EV_WRITE|EV_READ|EV_PERSIST,</div><div class="line">						     do_accept,  <span class="comment">// &lt;-- 这里设置回调函数</span></div><div class="line">						     (<span class="keyword">void</span>*)base);</div><div class="line">event_add(listen_event, <span class="literal">NULL</span>);</div></pre></td></tr></table></figure>
+<h2 id="开始处理消息"><a href="#开始处理消息" class="headerlink" title="开始处理消息"></a>开始处理消息</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">event_base_dispatch(base);</div></pre></td></tr></table></figure>
+<h2 id="回调函数的设置"><a href="#回调函数的设置" class="headerlink" title="回调函数的设置"></a>回调函数的设置</h2><p>这里实际上是在做接收到新链接之后的响应函数。也就是说，每个链接进来，都会走到这里。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(<span class="keyword">evutil_socket_t</span> listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span> </span>&#123;</div><div class="line">    <span class="comment">// short event is not used here.</span></div><div class="line">    <span class="keyword">struct</span> event_base *base = (<span class="keyword">struct</span> event_base*) arg;</div><div class="line">    <span class="keyword">evutil_socket_t</span> fd;</div><div class="line">    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;</div><div class="line">    <span class="keyword">socklen_t</span> slen = <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_in);</div><div class="line">    <span class="keyword">char</span> *error_msg = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">struct</span> bufferevent *bev = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 这里开始等待客户连接上来。</span></div><div class="line">    fd = accept(listener, (<span class="keyword">struct</span> sockaddr*)&amp;<span class="built_in">sin</span>, &amp;slen);</div><div class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123;</div><div class="line">        ECHO_ERROR;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Accept: fd = %u\n"</span>, fd);</div><div class="line"></div><div class="line">    <span class="comment">// 当新进来一个用户的时候，这里创建一个新的链接buffer</span></div><div class="line">    <span class="comment">// 这里需要记录下这个客户进来的链接的fd</span></div><div class="line">    bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);</div><div class="line">    assert(<span class="literal">NULL</span> != bev);</div><div class="line"></div><div class="line">    <span class="comment">// 这里针对这个buffer添加回调函数。</span></div><div class="line">    <span class="comment">// 需要注意的是arg这里虽然表示的是base，但是实际上，base与arg</span></div><div class="line">    <span class="comment">// 之间并没有必然的联系，只是arg会作为read_cb/write_cb/error_db</span></div><div class="line">    <span class="comment">// 的最后一个参数。</span></div><div class="line">    bufferevent_setcb(bev, read_cb, write_cb, error_cb, arg);</div><div class="line">    <span class="comment">// 针对这个buffer开启的几种消息类型。</span></div><div class="line">    bufferevent_enable(bev, EV_READ|EV_WRITE|EV_PERSIST);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="回调函数"><a href="#回调函数" class="headerlink" title="回调函数"></a>回调函数</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span> </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span> </span>&#123;&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span> </span>&#123;&#125;</div></pre></td></tr></table></figure>
+<h2 id="回收资源"><a href="#回收资源" class="headerlink" title="回收资源"></a>回收资源</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line">close(listener);</div><div class="line">event_base_free(base);</div></pre></td></tr></table></figure>
+<h1 id="完整源码"><a href="#完整源码" class="headerlink" title="完整源码"></a>完整源码</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;errno.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;assert.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;event2/util.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;event2/event.h&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;event2/bufferevent.h&gt;</span></span></div><div class="line"></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LISTEN_PORT 80</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_SOCKET_CONNECTION 32</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> MAX_LINE 256</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> ECHO_ERROR  do &#123;                              \</span></div><div class="line">                        error_msg = strerror(errno);  \</div><div class="line">                        perror(error_msg);            \</div><div class="line">                    &#125; while (0)</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">read_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span> </span>&#123;</div><div class="line">    <span class="keyword">char</span> lines[MAX_LINE + <span class="number">1</span>];</div><div class="line">    <span class="keyword">int</span> n = <span class="number">0</span>;</div><div class="line">    <span class="keyword">evutil_socket_t</span> fd = bufferevent_getfd(bev);</div><div class="line"></div><div class="line">    <span class="keyword">while</span> ((n = bufferevent_read(bev, lines, MAX_LINE)) &gt; <span class="number">0</span>) &#123;</div><div class="line">        lines[n] = <span class="number">0</span>;</div><div class="line">        <span class="built_in">printf</span>(<span class="string">"fd = %u read line: %s\n"</span>, fd, lines);</div><div class="line">        bufferevent_write(bev, lines, n);</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">write_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">void</span> *arg)</span> </span>&#123;&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">error_cb</span><span class="params">(<span class="keyword">struct</span> bufferevent *bev, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span> </span>&#123;</div><div class="line">    <span class="keyword">evutil_socket_t</span> fd = bufferevent_getfd(bev);</div><div class="line">    assert(<span class="number">-1</span> != fd);</div><div class="line">    <span class="keyword">if</span> (event &amp; BEV_EVENT_TIMEOUT) &#123;</div><div class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Time out\n"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_EOF) &#123;</div><div class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Connection closed\n"</span>);</div><div class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (event &amp; BEV_EVENT_ERROR) &#123;</div><div class="line">        <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error happened\n"</span>);</div><div class="line">    &#125;</div><div class="line">    bufferevent_free(bev);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">do_accept</span><span class="params">(<span class="keyword">evutil_socket_t</span> listener, <span class="keyword">short</span> event, <span class="keyword">void</span> *arg)</span> </span>&#123;</div><div class="line">    <span class="comment">// short event is not used here.</span></div><div class="line">    <span class="keyword">struct</span> event_base *base = (<span class="keyword">struct</span> event_base*) arg;</div><div class="line">    <span class="keyword">evutil_socket_t</span> fd;</div><div class="line">    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;</div><div class="line">    <span class="keyword">socklen_t</span> slen = <span class="keyword">sizeof</span>(<span class="keyword">struct</span> sockaddr_in);</div><div class="line">    <span class="keyword">char</span> *error_msg = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">struct</span> bufferevent *bev = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    <span class="comment">// 这里开始等待客户连接上来。</span></div><div class="line">    fd = accept(listener, (<span class="keyword">struct</span> sockaddr*)&amp;<span class="built_in">sin</span>, &amp;slen);</div><div class="line">    <span class="keyword">if</span> (fd &lt; <span class="number">0</span>) &#123;</div><div class="line">        ECHO_ERROR;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Accept: fd = %u\n"</span>, fd);</div><div class="line"></div><div class="line">    <span class="comment">// 当新进来一个用户的时候，这里创建一个新的链接buffer</span></div><div class="line">    <span class="comment">// 这里需要记录下这个客户进来的链接的fd</span></div><div class="line">    bev = bufferevent_socket_new(base, fd, BEV_OPT_CLOSE_ON_FREE);</div><div class="line">    assert(<span class="literal">NULL</span> != bev);</div><div class="line"></div><div class="line">    <span class="comment">// 这里针对这个buffer添加回调函数。</span></div><div class="line">    <span class="comment">// 需要注意的是arg这里虽然表示的是base，但是实际上，base与arg</span></div><div class="line">    <span class="comment">// 之间并没有必然的联系，只是arg会作为read_cb/write_cb/error_db</span></div><div class="line">    <span class="comment">// 的最后一个参数。</span></div><div class="line">    bufferevent_setcb(bev, read_cb, write_cb, error_cb, arg);</div><div class="line">    <span class="comment">// 针对这个buffer开启的几种消息类型。</span></div><div class="line">    bufferevent_enable(bev, EV_READ|EV_WRITE|EV_PERSIST);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">int</span> argc, <span class="keyword">char</span> **argv)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *error_msg = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">struct</span> sockaddr_in <span class="built_in">sin</span>;</div><div class="line">    <span class="keyword">struct</span> event_base *base = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">struct</span> event *listen_event = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">evutil_socket_t</span> listener;</div><div class="line"></div><div class="line">    <span class="comment">// Arguments:</span></div><div class="line">    <span class="comment">// AF_INET     : AF_INET IPv4 Internet protocols</span></div><div class="line">    <span class="comment">// SOCK_STREAM :Provides sequenced, reliable, two-way,</span></div><div class="line">    <span class="comment">//              connection-based byte streams.</span></div><div class="line">    <span class="comment">// SOCK_NONBLOCK = 0</span></div><div class="line">    listener = socket(AF_INET, SOCK_STREAM, <span class="number">0</span>);</div><div class="line">    <span class="keyword">if</span> (<span class="number">-1</span> == listener) &#123;</div><div class="line">        ECHO_ERROR;</div><div class="line">        <span class="keyword">goto</span> <span class="number">_</span>error_exit;</div><div class="line">    &#125;</div><div class="line">    assert(listener &gt; <span class="number">0</span>);</div><div class="line">    assert(<span class="number">-1</span> != evutil_make_listen_socket_reuseable(listener));</div><div class="line"></div><div class="line">    <span class="comment">// Begin to create the socket.</span></div><div class="line">    <span class="built_in">sin</span>.sin_family = AF_INET;</div><div class="line">    <span class="built_in">sin</span>.sin_addr.s_addr = <span class="number">0</span>;</div><div class="line">    <span class="built_in">sin</span>.sin_port = htons(LISTEN_PORT);</div><div class="line">    <span class="keyword">if</span> (bind(listener, (<span class="keyword">struct</span> sockaddr *)&amp;<span class="built_in">sin</span>, <span class="keyword">sizeof</span>(<span class="built_in">sin</span>)) &lt; <span class="number">0</span>) &#123;</div><div class="line">        ECHO_ERROR;</div><div class="line">        <span class="keyword">goto</span> <span class="number">_</span>error_exit;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (listen(listener, MAX_SOCKET_CONNECTION) &lt; <span class="number">0</span>) &#123;</div><div class="line">        ECHO_ERROR;</div><div class="line">        <span class="keyword">goto</span> <span class="number">_</span>error_exit;</div><div class="line">    &#125;</div><div class="line">    assert(<span class="number">-1</span> != evutil_make_socket_nonblocking(listener));</div><div class="line">    <span class="built_in">printf</span>(<span class="string">"Begin to listen on %d\n"</span>, LISTEN_PORT);</div><div class="line"></div><div class="line">    <span class="comment">// begin to setup event.</span></div><div class="line">    base = event_base_new();</div><div class="line">    assert(<span class="literal">NULL</span> != base);</div><div class="line"></div><div class="line">    listen_event = event_new(base, listener, EV_WRITE|EV_READ|EV_PERSIST, do_accept, (<span class="keyword">void</span>*)base);</div><div class="line">    assert(<span class="literal">NULL</span> != listen_event);</div><div class="line">    <span class="comment">// 参数：event，超时时间,NULL表示无超时设置</span></div><div class="line">    event_add(listen_event, <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">    event_base_dispatch(base);</div><div class="line"></div><div class="line">    <span class="comment">// 2 stands for can not read/write</span></div><div class="line">    close(listener);</div><div class="line">    event_base_free(base);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line"></div><div class="line"><span class="number">_</span>error_exit:</div><div class="line">    close(listener);</div><div class="line">    <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Ceph/">Ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/libevent/">libevent</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/libevent/">libevent</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-paxos/libevent-begin-1" data-title="libevent初步使用" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-how2read.code/seq-comment" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/11/22/how2read.code/seq-comment/" class="article-date">
+  	<time datetime="2016-11-22T15:23:48.000Z" itemprop="datePublished">2016-11-22</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/11/22/how2read.code/seq-comment/">seq comment</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="缘起"><a href="#缘起" class="headerlink" title="缘起"></a>缘起</h1><p>电子文档：第55页</p>
+<p>在看《反璞归真－Unix技术内幕》一书的时候，对下面这段话当时不是特别理解，这里特别加一下注解。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">参数说明:</div><div class="line">nt 是程序段(文本段)大小(块数,每块 64 字节);</div><div class="line">nd 是数据段(初始化和 未初始化)大小;</div><div class="line">ns 是栈段大小;</div><div class="line">sep 指示程序段和数据段/栈段是否必须连续,1 表示可以分 开,0 表示必须连续。</div><div class="line"></div><div class="line">这是针对 PDP 11/70 芯片所做的处理,PDP 11/70 芯片中有 16 个活动页寄存器</div><div class="line">所以程序段和数据段/栈段可以分开,各用 8个寄存器映射;</div><div class="line">而 PDP 11/40 只有8个 活动页寄存器</div><div class="line">所以程序段和数据段/栈段必须连续。</div></pre></td></tr></table></figure>
+<h1 id="注解"><a href="#注解" class="headerlink" title="注解"></a>注解</h1><p>对这一段，我的理解是：<code>PDP-11/40</code>只有8个APR，如果再把程序段与数据区域分开。这里指的分开应该是指<code>APR</code>是不是分开的，比如某几个只给程序段使用，某几个只给数据区域使用。而不是表示地址或者物理地址是否是连续的。</p>
+<p>不能分开的原因在于：如果<code>PDP-11/40</code>只有8组APR，如果分开，比如对半分。那么4个给程序段，4个给数据段。这么分容易出现的情况就是，比如：</p>
+<ul>
+<li>程序段用不了4个APR，但是数据区域却需要5个APR。就是一边有多余，一边还不足。这个时候不能满足要求。</li>
+</ul>
+<p>所以这8组APR必段是连在一起用。才能保证程序有64KB的空间。否则分开则不能保证有64KB的空间使用。</p>
+<p>而PDP-11/70有16组，直接分成两半，就可以保证程序有64KB的空间可以使用。因为8组APR就可以指明64KB了。</p>
+<p># </p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * 设置软件活动页段寄存器来实现 * 所传入的 3 个参数大小的伪文本(程序)段、 * 数据段和栈段大小。 * 参数 sep 指示文本和数据/栈段是否分离.</div><div class="line"> */</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * Set up software prototype segmentation</div><div class="line"> * registers to implement the 3 pseudo</div><div class="line"> * text,data,stack segment sizes passed</div><div class="line"> * as arguments.</div><div class="line"> * The argument sep specifies if the</div><div class="line"> * text and data+stack segments are to</div><div class="line"> * be separated.</div><div class="line"> */</div><div class="line">estabur(nt, nd, ns, sep)</div><div class="line">&#123;</div><div class="line">	<span class="keyword">register</span> a, *ap, *dp;</div><div class="line">	<span class="comment">// 切分是PDP-11/70机型的任务</span></div><div class="line">	<span class="keyword">if</span>(sep) &#123;</div><div class="line">		<span class="comment">// 如果发现机型是PDP-11/40，那么报错。</span></div><div class="line">		<span class="comment">// 注意报错的方式是返回状态错误码。</span></div><div class="line">		<span class="keyword">if</span>(cputype == <span class="number">40</span>)</div><div class="line">			<span class="keyword">goto</span> err;</div><div class="line">		<span class="comment">// 如果是PDP-11/70机型，由于程序段与数据区域各占用8个APR</span></div><div class="line">		<span class="comment">// 所以只需要保证程序段与数据区域不超出8页就OK</span></div><div class="line">		<span class="comment">// nseg函数是：(n+127)&gt;&gt;7；也就是往128的倍数取整。即取8KB的整数倍。</span></div><div class="line">		<span class="keyword">if</span>(nseg(nt) &gt; <span class="number">8</span> || nseg(nd)+nseg(ns) &gt; <span class="number">8</span>)</div><div class="line">			<span class="keyword">goto</span> err;</div><div class="line">	&#125; <span class="keyword">else</span></div><div class="line">		<span class="comment">// 如果不切分，比如PDP-11/40，总共只有8个APR，那么</span></div><div class="line">		<span class="comment">// 程序段与数据区域总的页数不能超过8页。</span></div><div class="line">		<span class="keyword">if</span>(nseg(nt)+nseg(nd)+nseg(ns) &gt; <span class="number">8</span>)</div><div class="line">			<span class="keyword">goto</span> err;</div><div class="line">	<span class="comment">// 如果这个程序需要的总的内存加起来比机器总的内存还要大，那么报错。</span></div><div class="line">	<span class="comment">// 注意，这里加了USIZE。</span></div><div class="line">	<span class="comment">// 那么为什么前面不加？</span></div><div class="line">	<span class="comment">// 答：USIZE也就是1KB＝16*64。无论是放在nd还是ns中，都是只是增加了16。</span></div><div class="line">	<span class="comment">//    那么如果要让前面的代码失败，无非是需要满足：</span></div><div class="line">	<span class="comment">//   cond1. nseg(nt)+nseg(nd)+nseg(ns) &lt;= 8 成立 即 nseg(nt)+nseg(nd)+nseg(ns) &lt;= 7</span></div><div class="line">	<span class="comment">//   cond2. nseg(nt)+nseg(nd + 16)+nseg(ns) &gt; 8 成立</span></div><div class="line">	<span class="comment">//    或者是</span></div><div class="line">	<span class="comment">//    nseg(nt)+nseg(nd)+nseg(ns + 16) &gt; 8 成立，但是这个条件实际上与上面那个是等价的。</span></div><div class="line">	<span class="comment">// 如果要条件cond1, cond2满足，</span></div><div class="line">	<span class="comment">// </span></div><div class="line">	<span class="comment">// 当cond1. nseg(nt)+nseg(nd)+nseg(ns) == 7。</span></div><div class="line">	<span class="comment">// 因为16与128对相比，最多也就是增加1个128（因为往上取整嘛）。如果cond1 == 6。cond2就不可能成立。</span></div><div class="line">	<span class="comment">// 实际上cond1 == 7的时候，也不会让cond2成立。因为16块也最多只增加一个128块（往上取整）。</span></div><div class="line">	<span class="comment">// </span></div><div class="line">	<span class="comment">// 当cond1 == 8的时候。cond2实际上是有可能成立的。</span></div><div class="line">	<span class="comment">// 但是，此时应该是必然触发：if (nt + nd + ns + USIZE &gt; maxmem)</span></div><div class="line">	<span class="keyword">if</span>(nt+nd+ns+USIZE &gt; maxmem)</div><div class="line">		<span class="keyword">goto</span> err;</div><div class="line"></div><div class="line">	</div><div class="line">	a = <span class="number">0</span>;</div><div class="line">	ap = &amp;u.u_uisa[<span class="number">0</span>];</div><div class="line">	dp = &amp;u.u_uisd[<span class="number">0</span>];</div><div class="line">	<span class="comment">// 这里指向</span></div><div class="line">	<span class="keyword">while</span>(nt &gt;= <span class="number">128</span>) &#123;</div><div class="line">		*dp++ = (<span class="number">127</span>&lt;&lt;<span class="number">8</span>) | RO;</div><div class="line">		*ap++ = a;</div><div class="line">		a =+ <span class="number">128</span>;</div><div class="line">		nt =- <span class="number">128</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(nt) &#123;</div><div class="line">		*dp++ = ((nt<span class="number">-1</span>)&lt;&lt;<span class="number">8</span>) | RO;</div><div class="line">		*ap++ = a;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(sep)</div><div class="line">	<span class="keyword">while</span>(ap &lt; &amp;u.u_uisa[<span class="number">8</span>]) &#123;</div><div class="line">		*ap++ = <span class="number">0</span>;</div><div class="line">		*dp++ = <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	a = USIZE;</div><div class="line">	<span class="keyword">while</span>(nd &gt;= <span class="number">128</span>) &#123;</div><div class="line">		*dp++ = (<span class="number">127</span>&lt;&lt;<span class="number">8</span>) | RW;</div><div class="line">		*ap++ = a;</div><div class="line">		a =+ <span class="number">128</span>;</div><div class="line">		nd =- <span class="number">128</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(nd) &#123;</div><div class="line">		*dp++ = ((nd<span class="number">-1</span>)&lt;&lt;<span class="number">8</span>) | RW;</div><div class="line">		*ap++ = a;</div><div class="line">		a =+ nd;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">while</span>(ap &lt; &amp;u.u_uisa[<span class="number">8</span>]) &#123;</div><div class="line">		*dp++ = <span class="number">0</span>;</div><div class="line">		*ap++ = <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(sep)</div><div class="line">	<span class="keyword">while</span>(ap &lt; &amp;u.u_uisa[<span class="number">16</span>]) &#123;</div><div class="line">		*dp++ = <span class="number">0</span>;</div><div class="line">		*ap++ = <span class="number">0</span>;</div><div class="line">	&#125;</div><div class="line">	a =+ ns;</div><div class="line">	<span class="keyword">while</span>(ns &gt;= <span class="number">128</span>) &#123;</div><div class="line">		a =- <span class="number">128</span>;</div><div class="line">		ns =- <span class="number">128</span>;</div><div class="line">		*--dp = (<span class="number">127</span>&lt;&lt;<span class="number">8</span>) | RW;</div><div class="line">		*--ap = a;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(ns) &#123;</div><div class="line">		*--dp = ((<span class="number">128</span>-ns)&lt;&lt;<span class="number">8</span>) | RW | ED;</div><div class="line">		*--ap = a<span class="number">-128</span>;</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span>(!sep) &#123;</div><div class="line">		ap = &amp;u.u_uisa[<span class="number">0</span>];</div><div class="line">		dp = &amp;u.u_uisa[<span class="number">8</span>];</div><div class="line">		<span class="keyword">while</span>(ap &lt; &amp;u.u_uisa[<span class="number">8</span>])</div><div class="line">			*dp++ = *ap++;</div><div class="line">		ap = &amp;u.u_uisd[<span class="number">0</span>];</div><div class="line">		dp = &amp;u.u_uisd[<span class="number">8</span>];</div><div class="line">		<span class="keyword">while</span>(ap &lt; &amp;u.u_uisd[<span class="number">8</span>])</div><div class="line">			*dp++ = *ap++;</div><div class="line">	&#125;</div><div class="line">	sureg();</div><div class="line">	<span class="keyword">return</span>(<span class="number">0</span>);</div><div class="line"></div><div class="line">err:</div><div class="line">	u.u_error = ENOMEM;</div><div class="line">	<span class="keyword">return</span>(<span class="number">-1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Unix-V6/">Unix V6</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/UnixV6/">UnixV6</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-how2read.code/seq-comment" data-title="seq comment" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-unixv6/The-7th-Page" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -1483,193 +1675,6 @@ $10 = {val = 0}</code></li>
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-mit.6.828/MIT-6-828-JOS课程1：HW-Shell" data-title="MIT 6.828 JOS课程1：HW Shell" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/ceph-rbd-process" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/09/30/ceph/ceph-rbd-process/" class="article-date">
-  	<time datetime="2016-09-30T07:02:55.000Z" itemprop="datePublished">2016-09-30</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/30/ceph/ceph-rbd-process/">Ceph 调试 RBD读写流程-1</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h1><p>当按照文章建立好debug的环境后，就可以开始进行debug工作了。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">gdb --dir=/var/lib/docker/ceph -tui --args /usr/bin/qemu-system-x86_64 -name h1 -m 126 -drive file=/cloud/h1/ubuntu-h1.qcow2,<span class="keyword">if</span>=none,id=drive-virtio-disk0,format=qcow2 -vnc 0.0.0.0:0 -device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x6,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1 -drive <span class="string">"file=rbd:rbd/new-libvirt-image:id=admin:key=AQC0AO5XWb3VIRAAruUnyz0D8vxrMCnU/zERRQ==:auth_supported=cephx\;none:mon_host=172.17.0.2\:6789,if=none,id=drive-virtio-disk1"</span> -device <span class="string">"virtio-blk-pci,scsi=off,bus=pci.0,addr=0x7,drive=drive-virtio-disk1,id=virtio-disk1"</span></div></pre></td></tr></table></figure>
-<p>启动之后，击回车，然后设置两个断点。</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">break</span> main</div><div class="line"><span class="built_in">break</span> rbd.c:621</div></pre></td></tr></table></figure>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/30/ceph/ceph-rbd-process/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/ceph-rbd-process" data-title="Ceph 调试 RBD读写流程-1" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/ceph-debug" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2016/09/29/ceph/ceph-debug/" class="article-date">
-  	<time datetime="2016-09-29T12:39:31.000Z" itemprop="datePublished">2016-09-29</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/29/ceph/ceph-debug/">Qemu RBD调试Ceph</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>这里主要是介绍如何使用<code>qemu/rbd</code>调试ceph关于rbd模块的代码。调试过程如下：</p>
-<ul>
-<li>vm:ubuntu 14.04</li>
-<li>docker</li>
-</ul>
-<h1 id="安装计划"><a href="#安装计划" class="headerlink" title="安装计划"></a>安装计划</h1><p>这里说一下安装计划，由于考虑到只是开发环境，为了简单，只使用一台虚拟机。</p>
-<ul>
-<li>虚拟机里面安装<code>docker</code>。</li>
-<li>ceph安装在一个docker中。</li>
-<li>虚拟机在编译安装qemu/ceph。</li>
-</ul>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/29/ceph/ceph-debug/#more">more >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/ceph-debug" data-title="Qemu RBD调试Ceph" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

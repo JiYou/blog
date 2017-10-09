@@ -77,7 +77,7 @@
 						<li>Links</li>
 						
 						
-						<li>About</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -102,6 +102,8 @@
 				        
 							<li><a href="/blog/categories/Kernel">Kernel</a></li>
 				        
+							<li><a href="/blog/categories/mit.6.824">mit.6.824</a></li>
+				        
 						</ul>
 					</nav>
 					<nav class="header-nav">
@@ -122,7 +124,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a>
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-824/" style="font-size: 10px;">MIT 6.824</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a> <a href="/blog/tags/分布式/" style="font-size: 10px;">分布式</a>
 					</div>
 				</section>
 				
@@ -194,6 +196,8 @@
 		        
 					<li><a href="/blog/categories/Kernel">Kernel</a></li>
 		        
+					<li><a href="/blog/categories/mit.6.824">mit.6.824</a></li>
+		        
 		        <div class="clearfix"></div>
 				</ul>
 			</nav>
@@ -215,6 +219,193 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-ceph/ceph-rbd-process" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/30/ceph/ceph-rbd-process/" class="article-date">
+  	<time datetime="2016-09-30T07:02:55.000Z" itemprop="datePublished">2016-09-30</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/09/30/ceph/ceph-rbd-process/">Ceph 调试 RBD读写流程-1</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="GDB"><a href="#GDB" class="headerlink" title="GDB"></a>GDB</h1><p>当按照文章建立好debug的环境后，就可以开始进行debug工作了。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">gdb --dir=/var/lib/docker/ceph -tui --args /usr/bin/qemu-system-x86_64 -name h1 -m 126 -drive file=/cloud/h1/ubuntu-h1.qcow2,<span class="keyword">if</span>=none,id=drive-virtio-disk0,format=qcow2 -vnc 0.0.0.0:0 -device virtio-blk-pci,scsi=off,bus=pci.0,addr=0x6,drive=drive-virtio-disk0,id=virtio-disk0,bootindex=1 -drive <span class="string">"file=rbd:rbd/new-libvirt-image:id=admin:key=AQC0AO5XWb3VIRAAruUnyz0D8vxrMCnU/zERRQ==:auth_supported=cephx\;none:mon_host=172.17.0.2\:6789,if=none,id=drive-virtio-disk1"</span> -device <span class="string">"virtio-blk-pci,scsi=off,bus=pci.0,addr=0x7,drive=drive-virtio-disk1,id=virtio-disk1"</span></div></pre></td></tr></table></figure>
+<p>启动之后，击回车，然后设置两个断点。</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line"><span class="built_in">break</span> main</div><div class="line"><span class="built_in">break</span> rbd.c:621</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/blog/2016/09/30/ceph/ceph-rbd-process/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/ceph-rbd-process" data-title="Ceph 调试 RBD读写流程-1" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-ceph/ceph-debug" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/29/ceph/ceph-debug/" class="article-date">
+  	<time datetime="2016-09-29T12:39:31.000Z" itemprop="datePublished">2016-09-29</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/09/29/ceph/ceph-debug/">Qemu RBD调试Ceph</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>这里主要是介绍如何使用<code>qemu/rbd</code>调试ceph关于rbd模块的代码。调试过程如下：</p>
+<ul>
+<li>vm:ubuntu 14.04</li>
+<li>docker</li>
+</ul>
+<h1 id="安装计划"><a href="#安装计划" class="headerlink" title="安装计划"></a>安装计划</h1><p>这里说一下安装计划，由于考虑到只是开发环境，为了简单，只使用一台虚拟机。</p>
+<ul>
+<li>虚拟机里面安装<code>docker</code>。</li>
+<li>ceph安装在一个docker中。</li>
+<li>虚拟机在编译安装qemu/ceph。</li>
+</ul>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Gdb/">Gdb</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Qemu/">Qemu</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+      
+        <p class="article-more-link">
+          <a  href="/blog/2016/09/29/ceph/ceph-debug/#more">more >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/ceph-debug" data-title="Qemu RBD调试Ceph" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-OpenStack/install-openstack" class="article article-type-post" itemscope itemprop="blogPost">
   
@@ -489,6 +680,90 @@
 
 
   
+    <article id="post-mit.6.824/lec.1" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2016/09/16/mit.6.824/lec.1/" class="article-date">
+  	<time datetime="2016-09-15T23:28:32.000Z" itemprop="datePublished">2016-09-16</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2016/09/16/mit.6.824/lec.1/">Lec1 Introduction</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="课程简介"><a href="#课程简介" class="headerlink" title="课程简介"></a>课程简介</h1><p>这里需要画一个脑图来进行说明。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-824/">MIT 6.824</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/分布式/">分布式</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/mit-6-824/">mit.6.824</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-mit.6.824/lec.1" data-title="Lec1 Introduction" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
     <article id="post-mit.6.828/jos-lab1-a" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -595,7 +870,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2016/09/16/blog/hello-world/">Mac上搭建Hexo+Github博客</a>
+      <a class="article-title" href="/blog/2016/09/16/blog/hello-world/">窗边的小豆豆有感</a>
     </h1>
   
 
@@ -604,17 +879,14 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>这篇博客主要是介绍如何在Mac上搭建<code>Hexo+Github</code>博客。</p>
-<p><strong>其实最重要的还是认真读文档</strong></p>
-<ul>
-<li><a href="https://hexo.io/zh-cn/docs/">https://hexo.io/zh-cn/docs/</a></li>
-</ul>
-<p>使用Hexo的好处。</p>
-<ul>
-<li>可以使用Markdown来写作。</li>
-<li>格式非常好看。</li>
-<li>支持博客的分类以及评论。</li>
-</ul>
+        <h1 id="原文"><a href="#原文" class="headerlink" title="原文"></a>原文</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">校长先生说</div><div class="line"></div><div class="line">这里是你们的图书馆，这里摆着的书，谁都可以读，读哪一本都行。不要说什么“几年级的学生该读哪些”这样的话，只要喜欢，什么时候来图书馆都可以。</div></pre></td></tr></table></figure>
+<p>最大的感触应该就是｀不要说什么“”几年级的学生该读哪些”这样的话｀。</p>
+<h1 id="现代教育"><a href="#现代教育" class="headerlink" title="现代教育"></a>现代教育</h1><p>知识为什么会划分年级和界限？如果有的学生学习能力就是很快？某些学科就是能够很快学完，比如一个一年级的学生，他的数学能够在一个月的时间就能够很熟练地掌握。那么是否可以在接下来的时间里面学习二年级的课程，而不是在一年级接下来的时间里面浪费剩下的时间。</p>
+<p>当前教育可能存在的一个问题是，是为社会的资本服务的。当学生毕业以后，其去向的相当部分实际上是为了参与到社会上的公司里面去上班。而对于一个工业社会而言，大批量生产与制造的标准化是一个非常重要的关键所在。</p>
+<p>那么，教育的目的是不是也是为了向这种大批量生产与制造的企业需求服务？而并不是考虑到每一个学生做为人的独立性与健全性。因此，教育的批量制造也是工业化教育的一种体现。在这种需求大背景下，指望培养出具有独立性的，有个性的，充分认识自我的人而言，可能并不是社会企业资本所需要的。</p>
+<h1 id="教育的真义"><a href="#教育的真义" class="headerlink" title="教育的真义"></a>教育的真义</h1><p>教育的真正意义可能并不是为了批量生产与制造。充分地认识与发展每个一个学生的个性，充分尊重孩子的心理路程。</p>
+<p>因为，每一个人的一生可能都是在寻找自我，充分地认识自我才是成功的关键。差异化才是不可替代。而同质化则意味着，雇主可以花同样的成本，随意地更换部件，如此而已。</p>
+
       
     </div>
     
@@ -627,10 +899,6 @@
 	</div>
 
 
-      
-        <p class="article-more-link">
-          <a  href="/blog/2016/09/16/blog/hello-world/#more">more >></a>
-        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -647,7 +915,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-blog/hello-world" data-title="Mac上搭建Hexo+Github博客" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-blog/hello-world" data-title="窗边的小豆豆有感" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
