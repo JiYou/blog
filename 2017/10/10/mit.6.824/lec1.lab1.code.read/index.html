@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Lec1.lab1代码阅读-Worker的注册 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="在这里需要回答的一个问题是，worker如何向master注册自己的。是的，就是这么一个非常细小的问题。
+参数首先看一下消息参数定义如下：
+// RegisterArgs is the argument passed when a worker registers with the master.type RegisterArgs struct &amp;#123;    Worker string //">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lec1.lab1代码阅读-Worker的注册">
+<meta property="og:url" content="https://jiyou.github.io/blog/2017/10/10/mit.6.824/lec1.lab1.code.read/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="在这里需要回答的一个问题是，worker如何向master注册自己的。是的，就是这么一个非常细小的问题。
+参数首先看一下消息参数定义如下：
+// RegisterArgs is the argument passed when a worker registers with the master.type RegisterArgs struct &amp;#123;    Worker string //">
+<meta property="og:updated_time" content="2017-10-10T13:22:00.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lec1.lab1代码阅读-Worker的注册">
+<meta name="twitter:description" content="在这里需要回答的一个问题是，worker如何向master注册自己的。是的，就是这么一个非常细小的问题。
+参数首先看一下消息参数定义如下：
+// RegisterArgs is the argument passed when a worker registers with the master.type RegisterArgs struct &amp;#123;    Worker string //">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/PDP11">PDP11</a></li>
+				        
+							<li><a href="/blog/tags/Linux">Linux</a></li>
+				        
+							<li><a href="/blog/tags/Kernel">Kernel</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-824">mit.6.824</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.57px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 15.71px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.43px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 11.43px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 15.71px;">MIT 6.828</a> <a href="/blog/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.86px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.14px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.29px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/blog/" style="font-size: 10px;">blog</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/mit-6-824/" style="font-size: 11.43px;">mit.6.824</a> <a href="/blog/tags/pdp11/" style="font-size: 12.86px;">pdp11</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a> <a href="/blog/tags/分布式/" style="font-size: 11.43px;">分布式</a> <a href="/blog/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/blog/tags/随笔/" style="font-size: 10px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/PDP11">PDP11</a></li>
+		        
+					<li><a href="/blog/tags/Linux">Linux</a></li>
+		        
+					<li><a href="/blog/tags/Kernel">Kernel</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-824">mit.6.824</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-mit.6.824/lec1.lab1.code.read" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2017/10/10/mit.6.824/lec1.lab1.code.read/" class="article-date">
+  	<time datetime="2017-10-10T05:28:32.000Z" itemprop="datePublished">2017-10-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Lec1.lab1代码阅读-Worker的注册
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MapReduce/">MapReduce</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/mit-6-824/">mit.6.824</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/分布式/">分布式</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/mit-6-824/">mit.6.824</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>在这里需要回答的一个问题是，worker如何向master注册自己的。是的，就是这么一个非常细小的问题。</p>
+<h1 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h1><p>首先看一下消息参数定义如下：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// RegisterArgs is the argument passed when a worker registers with the master.</span></div><div class="line"><span class="keyword">type</span> RegisterArgs <span class="keyword">struct</span> &#123;</div><div class="line">    Worker <span class="keyword">string</span> <span class="comment">// the worker's UNIX-domain socket name, i.e. its RPC address</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里需要注意的是，由于整个实验是建立在单机环境上的。所以进程间在通信的时候，采用的是<code>UNIX-domain socket</code>。而这种<code>socket</code>是需要相应的名称的。所以这里<code>Worker string</code>就是指定了这个socket的名称。</p>
+<h1 id="Worker的启动"><a href="#Worker的启动" class="headerlink" title="Worker的启动"></a>Worker的启动</h1><p>启动的代码如下：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// RunWorker sets up a connection with the master, registers its address, and</span></div><div class="line"><span class="comment">// waits for tasks to be scheduled.</span></div><div class="line"><span class="comment">// RunWorker会与master建立一个链接，把自己的地址注册上去。然后开始等待任务被调度过来执行。</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">RunWorker</span><span class="params">(</span></span></div><div class="line">    MasterAddress <span class="keyword">string</span>, // master的地址</div><div class="line">    me <span class="keyword">string</span>,            // 当前worker的名字</div><div class="line">    MapFunc <span class="keyword">func</span>(<span class="keyword">string</span>, <span class="keyword">string</span>) []<span class="title">KeyValue</span>,     // 传进来的<span class="title">map</span>函数</div><div class="line">    <span class="title">ReduceFunc</span> <span class="title">func</span><span class="params">(<span class="keyword">string</span>, []<span class="keyword">string</span>)</span> <span class="title">string</span>,    // 传进来的<span class="title">reduce</span>函数。</div><div class="line">    <span class="title">nRPC</span> <span class="title">int</span>,</div><div class="line">) &#123;</div><div class="line">    debug(<span class="string">"RunWorker %s\n"</span>, me)</div><div class="line">    <span class="comment">// 这里生成一个新的worker</span></div><div class="line">    wk := <span class="built_in">new</span>(Worker)</div><div class="line"></div><div class="line">    <span class="comment">// 根据传进来的参数me设置Worker的名字</span></div><div class="line">    wk.name = me</div><div class="line">    <span class="comment">// 指定worker的MapFunc，也就是设置定操作的时候的函数指针</span></div><div class="line">    wk.Map = MapFunc</div><div class="line">    <span class="comment">// 设置worker的Reduce函数指针</span></div><div class="line">    wk.Reduce = ReduceFunc</div><div class="line"></div><div class="line">    <span class="comment">// nRPC是指这个worker最多能接受nRPC个rpc connection。再多就会挂掉，退出。</span></div><div class="line">    <span class="comment">// 所以后面每当nRPC自减的时候，就是表示有新的链接连进来了。</span></div><div class="line">    wk.nRPC = nRPC</div><div class="line"></div><div class="line">    <span class="comment">// 对于worker而言，也是需要接收来自master/reduce-worker的消息的。所以这里也需要建立一个</span></div><div class="line">    <span class="comment">// rpc-server。</span></div><div class="line"></div><div class="line">    rpcs := rpc.NewServer()</div><div class="line">    <span class="comment">// 注意这里的rpcs.Register应该不是说向master注册自己，应该是把worker注册成一个服务提供方。</span></div><div class="line">    rpcs.Register(wk)</div><div class="line"></div><div class="line">    <span class="comment">// worker自己目录下都会有一个以自己命令的目录</span></div><div class="line">    <span class="comment">// 这个是以前mapreduce这么做的。如果这个目录存在，如果向这个目录中的文件写数据，有可能会</span></div><div class="line">    <span class="comment">// 破坏目录的一致性。所以MapReduce发现这个目录存在的时候，都会直接退出。</span></div><div class="line">    <span class="comment">// 这里是在服务启动的时候，肯定先把这个以自己命名的文件删除掉。</span></div><div class="line">    os.Remove(me) <span class="comment">// only needed for "unix"</span></div><div class="line">    <span class="comment">// net.Listen这里应该是开始监听unix socket消息。</span></div><div class="line">    l, e := net.Listen(<span class="string">"unix"</span>, me)</div><div class="line">    <span class="keyword">if</span> e != <span class="literal">nil</span> &#123;</div><div class="line">        log.Fatal(<span class="string">"RunWorker: worker "</span>, me, <span class="string">" error: "</span>, e)</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// worker的l设置为前面建立起来的UNIX-domain Listen。</span></div><div class="line">    wk.l = l</div><div class="line">    <span class="comment">// 向master注册自己</span></div><div class="line">    wk.register(MasterAddress)</div><div class="line"></div><div class="line">    <span class="comment">// DON'T MODIFY CODE BELOW</span></div><div class="line">    <span class="keyword">for</span> &#123;</div><div class="line">        wk.Lock()</div><div class="line">        <span class="comment">// 如果发现自己的这个connection里面资源已经用光了，那么</span></div><div class="line">        <span class="comment">// 直接退出</span></div><div class="line">        <span class="keyword">if</span> wk.nRPC == <span class="number">0</span> &#123;</div><div class="line">            wk.Unlock()</div><div class="line">            <span class="keyword">break</span></div><div class="line">        &#125;</div><div class="line">        wk.Unlock()</div><div class="line">        <span class="comment">// 这里接收到了新链接</span></div><div class="line">        conn, err := wk.l.Accept()</div><div class="line">        <span class="keyword">if</span> err == <span class="literal">nil</span> &#123;</div><div class="line">            wk.Lock()</div><div class="line">            wk.nRPC--</div><div class="line">            wk.Unlock()</div><div class="line">            <span class="comment">// 利用新链接启动新的rpc Serverconn</span></div><div class="line">            <span class="keyword">go</span> rpcs.ServeConn(conn)</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="keyword">break</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 退出的时候的清理工作</span></div><div class="line">    wk.l.Close()</div><div class="line">    debug(<span class="string">"RunWorker %s exit\n"</span>, me)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>虽然代码很长，实际上，核心就是</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1. 生成worker，并且设置名字</div><div class="line">2. 生成UNIX-domain socket Server</div><div class="line">3. 生成rpc-server</div><div class="line">4. 注册自己到master里面</div></pre></td></tr></table></figure>
+<h1 id="Register"><a href="#Register" class="headerlink" title="Register"></a>Register</h1><p>注册的时候，具体函数是：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Tell the master we exist and ready to work</span></div><div class="line"><span class="comment">// Worker.register()函数，即向master注册自己</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wk *Worker)</span> <span class="title">register</span><span class="params">(master <span class="keyword">string</span>)</span></span> &#123;</div><div class="line">    args := <span class="built_in">new</span>(RegisterArgs) <span class="comment">// 生成新的RPC参数</span></div><div class="line">    args.Worker = wk.name     <span class="comment">// args的worker名字直接取work.name</span></div><div class="line">    ok := call(master, <span class="string">"Master.Register"</span>, args, <span class="built_in">new</span>(<span class="keyword">struct</span>&#123;&#125;))  </div><div class="line">    <span class="comment">// 发起远程调用, call这里是自己写的</span></div><div class="line">    <span class="keyword">if</span> ok == <span class="literal">false</span> &#123;</div><div class="line">        fmt.Printf(<span class="string">"Register: RPC %s register error\n"</span>, master)</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以，注册的参数很简单，就是从<code>Worker</code>里面取出相应的参数。然后放到<code>args</code>里面。然后再发起远程调用。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line">call(master, <span class="string">"Master.Register"</span>, args, <span class="built_in">new</span>(<span class="keyword">struct</span>&#123;&#125;))</div></pre></td></tr></table></figure>
+<h1 id="Call调用"><a href="#Call调用" class="headerlink" title="Call调用"></a>Call调用</h1><figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// call() sends an RPC to the rpcname handler on server srv</span></div><div class="line"><span class="comment">// with arguments args, waits for the reply, and leaves the</span></div><div class="line"><span class="comment">// reply in reply. the reply argument should be the address</span></div><div class="line"><span class="comment">// of a reply structure.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// call()发送一个RPC给rpcname handler（实际上就是）server上的一个函数</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// call() returns true if the server responded, and false</span></div><div class="line"><span class="comment">// if call() was not able to contact the server. in particular,</span></div><div class="line"><span class="comment">// reply's contents are valid if and only if call() returned true.</span></div><div class="line"><span class="comment">// call()如果server有响应，那么返回true。如果false则表示不能连接到</span></div><div class="line"><span class="comment">// server。当且难当call()返回true的时候，返回的内容才是有效的。</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// you should assume that call() will time out and return an</span></div><div class="line"><span class="comment">// error after a while if it doesn't get a reply from the server.</span></div><div class="line"><span class="comment">// 应该假设的是，call()可能会timeout，并且返回错误。这种情况发生的表现是</span></div><div class="line"><span class="comment">// 经过一段时间之的一，并不能从server那边获得响应</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// please use call() to send all RPCs, in master.go, mapreduce.go,</span></div><div class="line"><span class="comment">// and worker.go.  please don't change this function.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// 在本框架里面，请务必务使用call()来发送rpc消息。无论是master.go</span></div><div class="line"><span class="comment">// 还是mapreduce.go还是worker.go。并且不要更改这个函数。</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">call</span><span class="params">(srv <span class="keyword">string</span>, // server的地址，也就是服务提供方的地址。</span></span></div><div class="line">  rpcname <span class="keyword">string</span>,     // 被调用的函数的地址</div><div class="line">	args <span class="keyword">interface</span>&#123;&#125;,   // 传过来的参数</div><div class="line">  reply <span class="keyword">interface</span>&#123;&#125;   // reply是传进去的参数？返回的时候修改reply?</div><div class="line">  ) <span class="title">bool</span> &#123;            <span class="comment">// 注意注释中的说明，也就是说当返回false的时候表明出错了。</span></div><div class="line"></div><div class="line">	c, errx := rpc.Dial(<span class="string">"unix"</span>, srv)   <span class="comment">// 这里连接server</span></div><div class="line">	<span class="keyword">if</span> errx != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="keyword">return</span> <span class="literal">false</span></div><div class="line">	&#125;</div><div class="line">	<span class="keyword">defer</span> c.Close()</div><div class="line"></div><div class="line">	err := c.Call(rpcname, args, reply)   <span class="comment">// 开始调用rpcname函数。</span></div><div class="line">	<span class="keyword">if</span> err == <span class="literal">nil</span> &#123;  <span class="comment">// 如果没有出错</span></div><div class="line">		<span class="keyword">return</span> <span class="literal">true</span></div><div class="line">	&#125;</div><div class="line"></div><div class="line">	fmt.Println(err)  <span class="comment">// 如果出错，那么返回false.</span></div><div class="line">	<span class="keyword">return</span> <span class="literal">false</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看出，<code>call()</code>函数也是很简单的，如果看成本地调用，就是</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">srv.rpcname()</div></pre></td></tr></table></figure>
+<p>这个函数被调用了。只不过这里真正在实现的时候是通过<code>UNIX-domain socket</code>来实现的。</p>
+<h1 id="服务端"><a href="#服务端" class="headerlink" title="服务端"></a>服务端</h1><p>那么当这个消息过通<code>UNIX-domain</code>传送到了服务端之后，服务端的处理是如何的呢？</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// Register is an RPC method that is called by workers after they have started</span></div><div class="line"><span class="comment">// up to report that they are ready to receive tasks.</span></div><div class="line"><span class="comment">// Register是一个RPC方法。这个方法可以被worker调用。</span></div><div class="line"><span class="comment">// 每当worker启动，并且已经做好准备接收任务的时候，就</span></div><div class="line"><span class="comment">// 会开始调用这个RPC方法来汇报</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mr *Master)</span> <span class="title">Register</span><span class="params">(args *RegisterArgs, _ *<span class="keyword">struct</span>&#123;&#125;)</span> <span class="title">error</span></span> &#123;</div><div class="line">    mr.Lock()</div><div class="line">    <span class="keyword">defer</span> mr.Unlock()</div><div class="line">    debug(<span class="string">"Register: worker %s\n"</span>, args.Worker)</div><div class="line"></div><div class="line">    <span class="comment">// 这里比较简单，只是直接放到master的workers列表中。</span></div><div class="line">    mr.workers = <span class="built_in">append</span>(mr.workers, args.Worker)</div><div class="line"></div><div class="line">    <span class="comment">// tell forwardRegistrations() that there's a new workers[] entry.</span></div><div class="line">    mr.newCond.Broadcast()</div><div class="line"></div><div class="line">    <span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当接收到新的<code>worker</code>来注册的消息之后，注意这里的锁操作。由于可能是有多个<code>worker</code>同时被注册进来。而workers需要保证线程安全，所以这里是上锁了。<br>当上锁完成之后，直接把相应的workname放到列表中。</p>
+<p>需要注意的是，这里注册完成之后，还会发出事情通知。通知谁呢？这里就是通知<code>scheduled()</code>线程了。</p>
+<h1 id="如何通知"><a href="#如何通知" class="headerlink" title="如何通知"></a>如何通知</h1><figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// helper function that sends information about all existing</span></div><div class="line"><span class="comment">// and newly registered workers to channel ch. schedule()</span></div><div class="line"><span class="comment">// reads ch to learn about workers.</span></div><div class="line"><span class="comment">// 辅助函数: 把</span></div><div class="line"><span class="comment">// 1. 所有已经存</span></div><div class="line"><span class="comment">// 2. 新注册进来的workers</span></div><div class="line"><span class="comment">// 这两者的信息发送给ch</span></div><div class="line"><span class="comment">// schedule()函数通过读ch获得关于workers的各种信息。</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mr *Master)</span> <span class="title">forwardRegistrations</span><span class="params">(ch <span class="keyword">chan</span> <span class="keyword">string</span>)</span></span> &#123;</div><div class="line">    <span class="comment">// i表示有多少个workers已经放到ch里面了。</span></div><div class="line">    i := <span class="number">0</span></div><div class="line"></div><div class="line">    <span class="keyword">for</span> &#123;</div><div class="line">        mr.Lock()</div><div class="line">        <span class="comment">// 如果append之后，这个长度超过了已经通知过的数目</span></div><div class="line">        <span class="keyword">if</span> <span class="built_in">len</span>(mr.workers) &gt; i &#123;</div><div class="line">            <span class="comment">// there's a worker that we haven't told schedule() about.</span></div><div class="line">            <span class="comment">// 那么取出这个没有通知过的worker</span></div><div class="line">            <span class="comment">// 然后把这个worker的信息放在ch中去。</span></div><div class="line">            w := mr.workers[i]</div><div class="line">            <span class="keyword">go</span> <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123; ch &lt;- w &#125;() <span class="comment">// send without holding the lock.</span></div><div class="line">            i = i + <span class="number">1</span></div><div class="line">            <span class="comment">// 已经通知的数目加1</span></div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">// wait for Register() to add an entry to workers[]</span></div><div class="line">            <span class="comment">// in response to an RPC from a new worker.</span></div><div class="line">            <span class="comment">// 如果已经通知的数目是相等的，那么这里需要一直等</span></div><div class="line">            <span class="comment">// 等新的事件来触发</span></div><div class="line">            mr.newCond.Wait()</div><div class="line">        &#125;</div><div class="line">        mr.Unlock()</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>总结一下这段代码，基本功能就是：当没有新的<code>worker</code>加进来的时候，会等通知。<br>当有新的<code>worker</code>加进来的时候，直接把新进来的worker的名字通过管道发送给另外一个线程。也就是调度线程。</p>
+<h1 id="调度线程的处理"><a href="#调度线程的处理" class="headerlink" title="调度线程的处理"></a>调度线程的处理</h1><p>当Register函数接收到消息之后，立马发出通知到管道中。然后调度线程应该是要能接收到这个消息的。看一下接收这个新worker的代码是如何处理的。</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Distributed schedules map and reduce tasks on workers that register with the</span></div><div class="line"><span class="comment">// master over RPC.</span></div><div class="line"><span class="comment">// 分布式调度器，调度map/reduce任务给workers。但是需要这些workers都是</span></div><div class="line"><span class="comment">// 已经通过rpc注册过的。</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">Distributed</span><span class="params">(jobName <span class="keyword">string</span>, files []<span class="keyword">string</span>, nreduce <span class="keyword">int</span>, master <span class="keyword">string</span>)</span> <span class="params">(mr *Master)</span></span> &#123;</div><div class="line">    <span class="comment">// 这里生成一个新的master</span></div><div class="line">    mr = newMaster(master)</div><div class="line">    mr.startRPCServer() <span class="comment">// master开启rpc服务</span></div><div class="line">    <span class="comment">// 这里启动一个run线程</span></div><div class="line">    <span class="keyword">go</span> mr.run(jobName, files, nreduce,</div><div class="line">        <span class="comment">// 这里是一个匿名函数</span></div><div class="line">        <span class="comment">// 整个这个函数是作为schedule函数给run函数的。</span></div><div class="line">        <span class="function"><span class="keyword">func</span><span class="params">(phase jobPhase)</span></span> &#123;</div><div class="line">            <span class="comment">// 生成一个管道</span></div><div class="line">            ch := <span class="built_in">make</span>(<span class="keyword">chan</span> <span class="keyword">string</span>)</div><div class="line">            <span class="comment">// 生成一个线程，一直循环。然后不停地向schedule发送新的</span></div><div class="line">            <span class="comment">// worker注册进来的消息。</span></div><div class="line">            <span class="keyword">go</span> mr.forwardRegistrations(ch)</div><div class="line">            <span class="comment">// 调度函数</span></div><div class="line">            schedule(mr.jobName, mr.files, mr.nReduce, phase, ch)</div><div class="line">        &#125;,</div><div class="line">        <span class="comment">// 结束函数</span></div><div class="line">        <span class="function"><span class="keyword">func</span><span class="params">()</span></span> &#123;</div><div class="line">            mr.stats = mr.killWorkers()</div><div class="line">            mr.stopRPCServer()</div><div class="line">        &#125;)</div><div class="line">    <span class="keyword">return</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>看一下master的run函数是如何跑的</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// run executes a mapreduce job on the given number of mappers and reducers.</span></div><div class="line"><span class="comment">// run函数运行一个mapreduce任务。主要是通过设置的mappers和reducers</span></div><div class="line"><span class="comment">// First, it divides up the input file among the given number of mappers, and</span></div><div class="line"><span class="comment">// schedules each task on workers as they become available.</span></div><div class="line"><span class="comment">// 首先，它把输入文件通过给定数量的mappers来进行切分。并且把map func调度</span></div><div class="line"><span class="comment">// 到可用到的workers上。</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Each map task bins</span></div><div class="line"><span class="comment">// its output in a number of bins equal to the given number of reduce tasks.</span></div><div class="line"><span class="comment">// 每个map任务把自己的输出（切分成nreduce份，然后扔给nreduce任务）</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// Once all the mappers have finished, workers are assigned reduce tasks.</span></div><div class="line"><span class="comment">// 一旦所有的mappers完成之后，那么workers会接收到reduce tasks。</span></div><div class="line"><span class="comment">// When all tasks have been completed, the reducer outputs are merged,</span></div><div class="line"><span class="comment">// 当所有的任务都完成之后，reducer产生的输出会被merge。</span></div><div class="line"><span class="comment">// statistics are collected, and the master is shut down.</span></div><div class="line"><span class="comment">// 统计信息会被收集上来。然后master就关机。</span></div><div class="line"><span class="comment">// Note that this implementation assumes a shared file system.</span></div><div class="line"><span class="comment">// 需要注意的是，这段实施假设的是一个共享文件系统。</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(mr *Master)</span> <span class="title">run</span><span class="params">(jobName <span class="keyword">string</span>, files []<span class="keyword">string</span>, nreduce <span class="keyword">int</span>,</span></span></div><div class="line">	schedule <span class="keyword">func</span>(phase jobPhase),</div><div class="line">	<span class="title">finish</span> <span class="title">func</span><span class="params">()</span>,</div><div class="line">) &#123;</div><div class="line">	mr.jobName = jobName</div><div class="line">	mr.files = files</div><div class="line">	mr.nReduce = nreduce</div><div class="line"></div><div class="line">	fmt.Printf(<span class="string">"%s: Starting Map/Reduce task %s\n"</span>, mr.address, mr.jobName)</div><div class="line"></div><div class="line">	schedule(mapPhase)</div><div class="line">	schedule(reducePhase)</div><div class="line">	finish()</div><div class="line">	mr.merge()</div><div class="line"></div><div class="line">	fmt.Printf(<span class="string">"%s: Map/Reduce task completed\n"</span>, mr.address)</div><div class="line"></div><div class="line">	mr.doneChannel &lt;- <span class="literal">true</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>从这里可以看出来。<code>schedule</code>函数调用了两次。应该是每次都会生成一个管道。并且都会生成一个新的forwardRegistrations()线程。以通知<code>schedule</code>线程。</p>
+<p>那么接下来看一下<code>schedule()</code>线程拿到这个管道之后做了些什么？</p>
+<h1 id="scheule拿到新来的Worker"><a href="#scheule拿到新来的Worker" class="headerlink" title="scheule拿到新来的Worker"></a>scheule拿到新来的Worker</h1><figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// schedule() starts and waits for all tasks in the given phase (Map</span></div><div class="line"><span class="comment">// or Reduce). the mapFiles argument holds the names of the files that</span></div><div class="line"><span class="comment">// are the inputs to the map phase, one per map task. nReduce is the</span></div><div class="line"><span class="comment">// number of reduce tasks. the registerChan argument yields a stream</span></div><div class="line"><span class="comment">// of registered workers; each item is the worker's RPC address,</span></div><div class="line"><span class="comment">// suitable for passing to call(). registerChan will yield all</span></div><div class="line"><span class="comment">// existing registered workers (if any) and new ones as they register.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="title">schedule</span><span class="params">(jobName <span class="keyword">string</span>, mapFiles []<span class="keyword">string</span>, nReduce <span class="keyword">int</span>, phase jobPhase, registerChan <span class="keyword">chan</span> <span class="keyword">string</span>)</span></span> &#123;</div><div class="line">	<span class="keyword">var</span> ntasks <span class="keyword">int</span></div><div class="line">	<span class="keyword">var</span> n_other <span class="keyword">int</span> <span class="comment">// number of inputs (for reduce) or outputs (for map)</span></div><div class="line">	<span class="keyword">switch</span> phase &#123;</div><div class="line">	<span class="keyword">case</span> mapPhase:</div><div class="line">		ntasks = <span class="built_in">len</span>(mapFiles)</div><div class="line">		n_other = nReduce</div><div class="line">	<span class="keyword">case</span> reducePhase:</div><div class="line">		ntasks = nReduce</div><div class="line">		n_other = <span class="built_in">len</span>(mapFiles)</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	fmt.Printf(<span class="string">"Schedule: %v %v tasks (%d I/Os)\n"</span>, ntasks, phase, n_other)</div><div class="line"></div><div class="line">	<span class="comment">// All ntasks tasks have to be scheduled on workers, and only once all of</span></div><div class="line">	<span class="comment">// them have been completed successfully should the function return.</span></div><div class="line">  <span class="comment">// 需要注意的是，这里ntasks都需要被scheduled到worker上。当且仅当所有的worker都结束的时候这个函数才会返回。</span></div><div class="line">	<span class="comment">// Remember that workers may fail, and that any given worker may finish</span></div><div class="line">	<span class="comment">// multiple tasks.</span></div><div class="line">	<span class="comment">//</span></div><div class="line">	<span class="comment">// TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO</span></div><div class="line">	<span class="comment">//</span></div><div class="line">	fmt.Printf(<span class="string">"Schedule: %v phase done\n"</span>, phase)</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>结果发现这里并没有处理<code>registerChan</code>管道。实际上是这里要自己加代码来实现了。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2017/10/09/blog/hello-world/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">窗边的小豆豆有感</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-mit.6.824/lec1.lab1.code.read" data-title="Lec1.lab1代码阅读-Worker的注册" data-url="https://jiyou.github.io/blog/blog/2017/10/10/mit.6.824/lec1.lab1.code.read/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
