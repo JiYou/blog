@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>Lec1.lab1代码阅读-doMap | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="说明这里主要是想搞懂下面这一段话，然后去读相应的代码。这里采用的方法是把一长段的英文切分成一个一个的句子。然后翻译成汉语。
+咬文嚼字The master considers each input file to be one map task, and calls doMap() [common_map.go] at least once for each map task.
+master是认为每">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Lec1.lab1代码阅读-doMap">
+<meta property="og:url" content="https://jiyou.github.io/blog/2017/10/10/mit.6.824/lec1.lab1.read.code.domap/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="说明这里主要是想搞懂下面这一段话，然后去读相应的代码。这里采用的方法是把一长段的英文切分成一个一个的句子。然后翻译成汉语。
+咬文嚼字The master considers each input file to be one map task, and calls doMap() [common_map.go] at least once for each map task.
+master是认为每">
+<meta property="og:updated_time" content="2017-10-10T14:06:38.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Lec1.lab1代码阅读-doMap">
+<meta name="twitter:description" content="说明这里主要是想搞懂下面这一段话，然后去读相应的代码。这里采用的方法是把一长段的英文切分成一个一个的句子。然后翻译成汉语。
+咬文嚼字The master considers each input file to be one map task, and calls doMap() [common_map.go] at least once for each map task.
+master是认为每">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/PDP11">PDP11</a></li>
+				        
+							<li><a href="/blog/tags/Linux">Linux</a></li>
+				        
+							<li><a href="/blog/tags/Kernel">Kernel</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-824">mit.6.824</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="#" title="github">github</a>
+					        
+								<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+					        
+								<a class="rss" target="_blank" href="#" title="rss">rss</a>
+					        
+								<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/Centos7/" style="font-size: 10px;">Centos7</a> <a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.89px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 16.67px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.11px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 16.67px;">MIT 6.828</a> <a href="/blog/tags/MapReduce/" style="font-size: 11.11px;">MapReduce</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.22px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.78px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.44px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/ansible/" style="font-size: 11.11px;">ansible</a> <a href="/blog/tags/blog/" style="font-size: 10px;">blog</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/expect/" style="font-size: 12.22px;">expect</a> <a href="/blog/tags/go/" style="font-size: 11.11px;">go</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/mit-6-824/" style="font-size: 12.22px;">mit.6.824</a> <a href="/blog/tags/monitor/" style="font-size: 10px;">monitor</a> <a href="/blog/tags/node-exporter/" style="font-size: 10px;">node-exporter</a> <a href="/blog/tags/pdp11/" style="font-size: 12.22px;">pdp11</a> <a href="/blog/tags/prometheus/" style="font-size: 11.11px;">prometheus</a> <a href="/blog/tags/pushgateway/" style="font-size: 10px;">pushgateway</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a> <a href="/blog/tags/分布式/" style="font-size: 12.22px;">分布式</a> <a href="/blog/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/blog/tags/运维/" style="font-size: 13.33px;">运维</a> <a href="/blog/tags/随笔/" style="font-size: 10px;">随笔</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/PDP11">PDP11</a></li>
+		        
+					<li><a href="/blog/tags/Linux">Linux</a></li>
+		        
+					<li><a href="/blog/tags/Kernel">Kernel</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-824">mit.6.824</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="#" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="#" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="#" title="rss">rss</a>
+			        
+						<a class="zhihu" target="_blank" href="#" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-mit.6.824/lec1.lab1.read.code.domap" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2017/10/10/mit.6.824/lec1.lab1.read.code.domap/" class="article-date">
+  	<time datetime="2017-10-10T05:28:32.000Z" itemprop="datePublished">2017-10-10</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Lec1.lab1代码阅读-doMap
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MapReduce/">MapReduce</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/mit-6-824/">mit.6.824</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/分布式/">分布式</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/mit-6-824/">mit.6.824</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>这里主要是想搞懂下面这一段话，然后去读相应的代码。这里采用的方法是把一长段的英文切分成一个一个的句子。然后翻译成汉语。</p>
+<h1 id="咬文嚼字"><a href="#咬文嚼字" class="headerlink" title="咬文嚼字"></a>咬文嚼字</h1><p>The master considers each input file to be one map task, and calls doMap() [common_map.go] at least once for each map task.</p>
+<p><code>master</code>是认为每个输入文件是一个<code>map</code>任务。对于每个<code>map</code>任务，至少会调用一次<code>doMap()</code>函数。这个函数位于<code>common_map.go</code>。</p>
+<p>It does so either directly (when using Sequential()) or by issuing the DoTask RPC to a worker [worker.go].</p>
+<p><code>master</code>要么是直接调用。比如当使用<code>Sequential()</code>方法的时候。或者是通过DoTask() RPC的方式来触发worker。</p>
+<ul>
+<li>问题1: 前面讲的是doMap函数每个map任务至少调用一次。然后下文就开始说<code>It does so</code>。那么这个<code>so</code>指的是去调用<code>doMap</code>么？但是下文看起来是调用<code>DoTask</code>这个函数。那么猜测就是<code>DoTask</code>函数会调用<code>doMap()</code>。</li>
+</ul>
+<p>直接看代码：</p>
+<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// DoTask is called by the master when a new task is being scheduled on this</span></div><div class="line"><span class="comment">// worker.</span></div><div class="line"><span class="comment">// DoTask会被master调用。当一个新的任务被调度到这个worker的时候。</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wk *Worker)</span> <span class="title">DoTask</span><span class="params">(arg *DoTaskArgs, _ *<span class="keyword">struct</span>&#123;&#125;)</span> <span class="title">error</span></span> &#123;</div><div class="line">  ...</div><div class="line">	<span class="keyword">switch</span> arg.Phase &#123;</div><div class="line">	<span class="keyword">case</span> mapPhase:</div><div class="line">		doMap(arg.JobName, arg.TaskNumber, arg.File, arg.NumOtherPhase, wk.Map) <span class="comment">// &lt;-- 这里调用了!!</span></div><div class="line">	<span class="keyword">case</span> reducePhase:</div><div class="line">		doReduce(arg.JobName, arg.TaskNumber, mergeName(arg.JobName, arg.TaskNumber), arg.NumOtherPhase, wk.Reduce)</div><div class="line">	&#125;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以，原文的说法是没有问题的。也就是通过<code>DoTask</code>函数来间接调用<code>doMap</code>来完成任务。</p>
+<p>Each call to doMap() reads the appropriate file, calls the map function on that file’s contents, and writes the resulting key/value pairs to nReduce intermediate files.</p>
+<p>每个对<code>doMap</code>的调用都会去读合适的文件，调用map函数处理那个文件的内容。并且把结果按照<code>key/value</code>对切分成<code>nReduce</code>个中间文件。</p>
+<p>doMap() hashes each key to pick the intermediate file and thus the reduce task that will process the key.</p>
+<p><code>doMap</code>函数会通过<code>hash</code>每个key，然后选中这些生成的中间文件。然后<code>reduce</code>作务会处理这些<code>key</code>。</p>
+<p>There will be nMap x nReduce files after all map tasks are done.</p>
+<p>当所有的<code>map</code>任务处理完成之后，最终会有<code>nMap * nReduce</code>个文件。</p>
+<p> Each file name contains a prefix, the map task number, and the reduce task number.</p>
+<p>每个文件名包含</p>
+<ul>
+<li>前缀</li>
+<li>map任务号</li>
+<li><p>reduce任务号</p>
+<p>If there are two map tasks and three reduce tasks, the map tasks will create these six intermediate files:</p>
+</li>
+</ul>
+<p>假设这这时有两个<code>map</code>任务，以及3个reduce任务。<code>map</code>任务会创建6个中间文件。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mrtmp.xxx-0-0</div><div class="line">mrtmp.xxx-0-1</div><div class="line">mrtmp.xxx-0-2</div><div class="line">mrtmp.xxx-1-0</div><div class="line">mrtmp.xxx-1-1</div><div class="line">mrtmp.xxx-1-2</div></pre></td></tr></table></figure>
+<p>Each worker must be able to read files written by any other worker, as well as the input files. Real deployments use distributed storage systems such as GFS to allow this access even though workers run on different machines. In this lab you’ll run all the workers on the same machine, and use the local file system.</p>
+<p>每个worker都必须可能去读取其他worker生成的文件，并且做为输入文件。真实的部署利用分布式文件系统，比如GFS来允许这种共享访问。即使worker运行在不同的机器上。在这个实验里面，由于是所有的worker都是在单机上运行，所以在实验的时候，采用的是本地文件系统。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里虽然扯了很多，实际上总体来说，就是几个意思：</p>
+<ul>
+<li>DoTask函数会由<code>master</code>来触发。</li>
+<li><code>doMap</code>函数很重要。</li>
+<li><code>map</code>任务会生成<code>number_of_map_task * number_of_reduce_task</code>个中间文件。</li>
+<li>这里的说明，主要是针对<code>doMap</code>也就是map任务而言。</li>
+</ul>
+<h1 id="DoTask"><a href="#DoTask" class="headerlink" title="DoTask"></a>DoTask</h1><p>所以这里接下来就开始解析<code>DoTask</code>函数。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2017/10/11/ceph/rtb/create.go.project/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          (no title)
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2017/10/10/mit.6.824/lec1.lab1.code.read/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Lec1.lab1代码阅读-Worker的注册</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-mit.6.824/lec1.lab1.read.code.domap" data-title="Lec1.lab1代码阅读-doMap" data-url="https://jiyou.github.io/blog/blog/2017/10/10/mit.6.824/lec1.lab1.read.code.domap/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2017 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
