@@ -104,7 +104,7 @@
 				        
 							<li><a href="/blog/tags/MIT-6-824">mit.6.824</a></li>
 				        
-							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+							<li><a href="/blog/tags/mit.6.828">mit.6.828</a></li>
 				        
 							<li><a href="/blog/tags/blog">blog</a></li>
 				        
@@ -128,7 +128,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/Centos7/" style="font-size: 10px;">Centos7</a> <a href="/blog/tags/Ceph/" style="font-size: 10px;">Ceph</a> <a href="/blog/tags/Docker/" style="font-size: 10px;">Docker</a> <a href="/blog/tags/Gdb/" style="font-size: 18.89px;">Gdb</a> <a href="/blog/tags/JOS/" style="font-size: 16.67px;">JOS</a> <a href="/blog/tags/Kernel/" style="font-size: 11.11px;">Kernel</a> <a href="/blog/tags/Linux/" style="font-size: 15.56px;">Linux</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 16.67px;">MIT 6.828</a> <a href="/blog/tags/MapReduce/" style="font-size: 11.11px;">MapReduce</a> <a href="/blog/tags/Nova/" style="font-size: 10px;">Nova</a> <a href="/blog/tags/OS/" style="font-size: 10px;">OS</a> <a href="/blog/tags/OpenStack/" style="font-size: 12.22px;">OpenStack</a> <a href="/blog/tags/Paxos/" style="font-size: 10px;">Paxos</a> <a href="/blog/tags/Qemu/" style="font-size: 17.78px;">Qemu</a> <a href="/blog/tags/Unix-V6/" style="font-size: 14.44px;">Unix V6</a> <a href="/blog/tags/Woboq/" style="font-size: 10px;">Woboq</a> <a href="/blog/tags/ansible/" style="font-size: 11.11px;">ansible</a> <a href="/blog/tags/blog/" style="font-size: 10px;">blog</a> <a href="/blog/tags/bluestore/" style="font-size: 10px;">bluestore</a> <a href="/blog/tags/ceph/" style="font-size: 20px;">ceph</a> <a href="/blog/tags/expect/" style="font-size: 12.22px;">expect</a> <a href="/blog/tags/go/" style="font-size: 11.11px;">go</a> <a href="/blog/tags/libevent/" style="font-size: 10px;">libevent</a> <a href="/blog/tags/mit-6-824/" style="font-size: 12.22px;">mit.6.824</a> <a href="/blog/tags/monitor/" style="font-size: 10px;">monitor</a> <a href="/blog/tags/node-exporter/" style="font-size: 10px;">node-exporter</a> <a href="/blog/tags/pdp11/" style="font-size: 12.22px;">pdp11</a> <a href="/blog/tags/prometheus/" style="font-size: 11.11px;">prometheus</a> <a href="/blog/tags/pushgateway/" style="font-size: 10px;">pushgateway</a> <a href="/blog/tags/xv6/" style="font-size: 10px;">xv6</a> <a href="/blog/tags/中断/" style="font-size: 10px;">中断</a> <a href="/blog/tags/分布式/" style="font-size: 12.22px;">分布式</a> <a href="/blog/tags/读书笔记/" style="font-size: 10px;">读书笔记</a> <a href="/blog/tags/运维/" style="font-size: 13.33px;">运维</a> <a href="/blog/tags/随笔/" style="font-size: 10px;">随笔</a>
+						<a href="/blog/tags/JOS/" style="font-size: 10px;">JOS</a> <a href="/blog/tags/MIT-6-828/" style="font-size: 10px;">MIT 6.828</a>
 					</div>
 				</section>
 				
@@ -202,7 +202,7 @@
 		        
 					<li><a href="/blog/tags/MIT-6-824">mit.6.824</a></li>
 		        
-					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+					<li><a href="/blog/tags/mit.6.828">mit.6.828</a></li>
 		        
 					<li><a href="/blog/tags/blog">blog</a></li>
 		        
@@ -228,11 +228,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-go/1.zobmie.process" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-mit.6.828/jos-lab1" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2017/10/11/go/1.zobmie.process/" class="article-date">
-  	<time datetime="2017-10-11T12:28:32.000Z" itemprop="datePublished">2017-10-11</time>
+      <a href="/blog/2016/09/15/mit.6.828/jos-lab1/" class="article-date">
+  	<time datetime="2016-09-15T14:48:53.000Z" itemprop="datePublished">2016-09-15</time>
 </a>
     </div>
   
@@ -245,7 +245,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/11/go/1.zobmie.process/">go的僵尸进程</a>
+      <a class="article-title" href="/blog/2016/09/15/mit.6.828/jos-lab1/">MIT 6.828 JOS课程1：搭建实验环境</a>
     </h1>
   
 
@@ -254,795 +254,19 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>在写<code>node-exporter</code>的时候，发现产生了很多僵尸进程。这里需要说明一下产生的原因。</p>
-<p>首先看一下正确的做法。<br><figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(c *megaCliCollector)</span> <span class="title">updateAdapter</span><span class="params">()</span> <span class="title">error</span></span> &#123;</div><div class="line">	cmd := exec.Command(c.cli, <span class="string">"-AdpAllInfo"</span>, <span class="string">"-aALL"</span>)</div><div class="line">	pipe, err := cmd.StdoutPipe()</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="keyword">return</span> err</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">if</span> err := cmd.Start(); err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="keyword">return</span> err</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	stats, err := parseMegaCliAdapter(pipe)</div><div class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="keyword">return</span> err</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">if</span> err := cmd.Wait(); err != <span class="literal">nil</span> &#123;</div><div class="line">		<span class="keyword">return</span> err</div><div class="line">	&#125;</div><div class="line"></div><div class="line">	<span class="keyword">for</span> k, v := <span class="keyword">range</span> stats[<span class="string">"Device Present"</span>] &#123;</div><div class="line">		value, err := strconv.ParseFloat(v, <span class="number">64</span>)</div><div class="line">		<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</div><div class="line">			<span class="keyword">return</span> err</div><div class="line">		&#125;</div><div class="line">		c.drivePresence.WithLabelValues(k).Set(value)</div><div class="line">	&#125;</div><div class="line">	<span class="keyword">return</span> <span class="literal">nil</span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<p>大致需要注意的地方实际上就是以下几点；</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 生成命令cmd := exec.Command(c.cli, <span class="string">"-AdpAllInfo"</span>, <span class="string">"-aALL"</span>)</div><div class="line"><span class="number">2.</span> pipe, err := cmd.StdoutPipe()</div><div class="line"><span class="number">3.</span> err := cmd.Start();</div><div class="line"><span class="number">4.</span> 从pipe中获取输出</div><div class="line"><span class="number">5.</span> cmd.Wait()回收资源</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/go/">go</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-go/1.zobmie.process" data-title="go的僵尸进程" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/monitor/2.pool.metrics" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/ceph/monitor/2.pool.metrics/" class="article-date">
-  	<time datetime="2017-10-11T07:03:55.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="关于Pool的Metrics"><a href="#关于Pool的Metrics" class="headerlink" title="关于Pool的Metrics"></a>关于Pool的Metrics</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">~# cat /tmp/res | grep pool | egrep &apos;TYPE|HELP&apos;</div><div class="line"># HELP ceph_cache_evict_io_bytes Rate of bytes being evicted from the cache pool per second</div><div class="line"># HELP ceph_cache_flush_io_bytes Rate of bytes being flushed from the cache pool per second</div><div class="line"># HELP ceph_pool_available_bytes Free space for this ceph pool</div><div class="line"># TYPE ceph_pool_available_bytes gauge</div><div class="line"># HELP ceph_pool_dirty_objects_total Total no. of dirty objects in a cache-tier pool</div><div class="line"># TYPE ceph_pool_dirty_objects_total gauge</div><div class="line"># HELP ceph_pool_objects_total Total no. of objects allocated within the pool</div><div class="line"># TYPE ceph_pool_objects_total gauge</div><div class="line"># HELP ceph_pool_provisioned_bytes Capacity of the pool that is provisioned to end user</div><div class="line"># TYPE ceph_pool_provisioned_bytes gauge</div><div class="line"># HELP ceph_pool_raw_used_bytes Raw capacity of the pool that is currently under use, this factors in the size</div><div class="line"># TYPE ceph_pool_raw_used_bytes gauge</div><div class="line"># HELP ceph_pool_read_bytes_rate Read throughput per second for the pool</div><div class="line"># TYPE ceph_pool_read_bytes_rate gauge</div><div class="line"># HELP ceph_pool_read_bytes_total Total read throughput for the pool</div><div class="line"># TYPE ceph_pool_read_bytes_total gauge</div><div class="line"># HELP ceph_pool_read_iops_rate Read IOPS Rate per second for the pool</div><div class="line"># TYPE ceph_pool_read_iops_rate gauge</div><div class="line"># HELP ceph_pool_read_total Total read i/o calls for the pool</div><div class="line"># TYPE ceph_pool_read_total gauge</div><div class="line"># HELP ceph_pool_used_bytes Capacity of the pool that is currently under use</div><div class="line"># TYPE ceph_pool_used_bytes gauge</div><div class="line"># HELP ceph_pool_write_bytes_rate Write throughput per second for the pool</div><div class="line"># TYPE ceph_pool_write_bytes_rate gauge</div><div class="line"># HELP ceph_pool_write_bytes_total Total write throughput for the pool</div><div class="line"># TYPE ceph_pool_write_bytes_total gauge</div><div class="line"># HELP ceph_pool_write_iops_rate Write IOPS Rate per second for the pool</div><div class="line"># TYPE ceph_pool_write_iops_rate gauge</div><div class="line"># HELP ceph_pool_write_total Total write i/o calls for the pool</div><div class="line"># TYPE ceph_pool_write_total gauge</div></pre></td></tr></table></figure>
-<p>这里面的metrics很多。需要进行分组，这里分成如下几部分。</p>
-<h2 id="IO相关"><a href="#IO相关" class="headerlink" title="IO相关"></a>IO相关</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"># HELP ceph_pool_read_bytes_rate Read throughput per second for the pool</div><div class="line"># TYPE ceph_pool_read_bytes_rate gauge</div><div class="line"># HELP ceph_pool_read_bytes_total Total read throughput for the pool</div><div class="line"># TYPE ceph_pool_read_bytes_total gauge</div><div class="line"># HELP ceph_pool_read_iops_rate Read IOPS Rate per second for the pool</div><div class="line"># TYPE ceph_pool_read_iops_rate gauge</div><div class="line"># HELP ceph_pool_read_total Total read i/o calls for the pool</div><div class="line"># TYPE ceph_pool_read_total gauge</div><div class="line"># HELP ceph_pool_write_bytes_rate Write throughput per second for the pool</div><div class="line"># TYPE ceph_pool_write_bytes_rate gauge</div><div class="line"># HELP ceph_pool_write_bytes_total Total write throughput for the pool</div><div class="line"># TYPE ceph_pool_write_bytes_total gauge</div><div class="line"># HELP ceph_pool_write_iops_rate Write IOPS Rate per second for the pool</div><div class="line"># TYPE ceph_pool_write_iops_rate gauge</div><div class="line"># HELP ceph_pool_write_total Total write i/o calls for the pool</div><div class="line"># TYPE ceph_pool_write_total gauge</div></pre></td></tr></table></figure>
-<p>这里直接有两种切分方法，一种是照读写来切分。一种是按bytes/iops来进行切分。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/monitor/2.pool.metrics" data-title="" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-LinuxOps/1.centos.ssh.nopasswd" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/LinuxOps/1.centos.ssh.nopasswd/" class="article-date">
-  	<time datetime="2017-10-11T03:19:00.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/11/LinuxOps/1.centos.ssh.nopasswd/">CentOS SSH NoPassWD</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">PubkeyAuthentication yes</div><div class="line">AuthorizedKeyFile  .ssh/authorized_keys</div><div class="line">PasswordAuthentication no</div><div class="line">ChallengeResponseAuthentication no</div></pre></td></tr></table></figure>
-<h1 id="示例"><a href="#示例" class="headerlink" title="示例"></a>示例</h1><p><code>/etc/ssh/ssh_config</code>配置如下</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Host *</div><div class="line">	GSSAPIAuthentication yes</div><div class="line">	ForwardX11Trusted yes</div><div class="line">	SendEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES</div><div class="line">	SendEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT</div><div class="line">	SendEnv LC_IDENTIFICATION LC_ALL LANGUAGE</div><div class="line">	SendEnv XMODIFIERS</div></pre></td></tr></table></figure>
-<p>而<code>/etc/ssh/sshd_config</code>配置如下：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Protocol 2</div><div class="line">HostKey /etc/ssh/ssh_host_rsa_key</div><div class="line">HostKey /etc/ssh/ssh_host_ecdsa_key</div><div class="line">HostKey /etc/ssh/ssh_host_ed25519_key</div><div class="line">SyslogFacility AUTHPRIV</div><div class="line">LogLevel INFO</div><div class="line">PermitRootLogin without-password</div><div class="line">MaxAuthTries 4</div><div class="line">PubkeyAuthentication yes</div><div class="line">AuthorizedKeysFile	.ssh/authorized_keys</div><div class="line">HostbasedAuthentication no</div><div class="line">IgnoreRhosts yes</div><div class="line">PasswordAuthentication yes</div><div class="line">PermitEmptyPasswords no</div><div class="line">ChallengeResponseAuthentication no</div><div class="line">GSSAPIAuthentication yes</div><div class="line">GSSAPICleanupCredentials no</div><div class="line">UsePAM yes</div><div class="line">X11Forwarding no</div><div class="line">PermitUserEnvironment no</div><div class="line">ClientAliveInterval 300</div><div class="line">ClientAliveCountMax 0</div><div class="line">AcceptEnv LANG LC_CTYPE LC_NUMERIC LC_TIME LC_COLLATE LC_MONETARY LC_MESSAGES</div><div class="line">AcceptEnv LC_PAPER LC_NAME LC_ADDRESS LC_TELEPHONE LC_MEASUREMENT</div><div class="line">AcceptEnv LC_IDENTIFICATION LC_ALL LANGUAGE</div><div class="line">AcceptEnv XMODIFIERS</div><div class="line">Subsystem	sftp	/usr/libexec/openssh/sftp-server</div><div class="line">Ciphers aes256-ctr</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/运维/">运维</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/blog/">blog</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-LinuxOps/1.centos.ssh.nopasswd" data-title="CentOS SSH NoPassWD" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-LinuxOps/3.Centos7.node.exporter" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/LinuxOps/3.Centos7.node.exporter/" class="article-date">
-  	<time datetime="2017-10-11T03:19:00.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/11/LinuxOps/3.Centos7.node.exporter/">Centos7安装Node Exporter</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>准备安装脚本</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">systemctl stop node-exporter.service</div><div class="line">cd /opt/</div><div class="line">wget https://github.com/prometheus/node_exporter/releases/download/v0.15.0/node_exporter-0.15.0.linux-amd64.tar.gz</div><div class="line"></div><div class="line">tar zxf node_exporter-0.15.0.linux-amd64.tar.gz</div><div class="line"></div><div class="line">cat &lt;&lt;&quot;EOF&quot; &gt;/usr/lib/systemd/system/node-exporter.service</div><div class="line">[Unit]</div><div class="line">Description=NodeExporter</div><div class="line"></div><div class="line">[Service]</div><div class="line">TimeoutStartSec=0</div><div class="line">User=sqlrpt</div><div class="line">ExecStart=/bin/bash -c &quot;/opt/node_exporter-0.15.0.linux-amd64/node_exporter -web.listen-address=\&quot;:9800\&quot;&quot;</div><div class="line">Restart=always</div><div class="line">RestartSec=2</div><div class="line">LimitNOFILE=65535</div><div class="line"></div><div class="line">[Install]</div><div class="line">WantedBy=multi-user.target</div><div class="line">EOF</div><div class="line"></div><div class="line">systemctl daemon-reload</div><div class="line">systemctl start node-exporter.service</div></pre></td></tr></table></figure>
-<p>ansible cal -m copy -a “src=./install-node-exporter.sh dest=/tmp/ mode=777”<br>ansible cal -m shell -a “/tmp/install-node-exporter.sh”</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Centos7/">Centos7</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/node-exporter/">node-exporter</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/运维/">运维</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/blog/">blog</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-LinuxOps/3.Centos7.node.exporter" data-title="Centos7安装Node Exporter" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-LinuxOps/4.pushgateway" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/LinuxOps/4.pushgateway/" class="article-date">
-  	<time datetime="2017-10-11T03:19:00.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/11/LinuxOps/4.pushgateway/">pushgateway</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>下面的测试都是在dev环境上测试的。</p>
-<h1 id="安装Docker"><a href="#安装Docker" class="headerlink" title="安装Docker"></a>安装Docker</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">wget -qO- https://get.docker.com | sh</div></pre></td></tr></table></figure>
-<h1 id="安装pushgateway"><a href="#安装pushgateway" class="headerlink" title="安装pushgateway"></a>安装pushgateway</h1><p>这里直接使用docker来进行安装</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">docker pull prom/pushgateway</div><div class="line">docker run -idt --name pushgateway -p 9091:9091 prom/pushgateway</div></pre></td></tr></table></figure>
-<h1 id="测试推送数据"><a href="#测试推送数据" class="headerlink" title="测试推送数据"></a>测试推送数据</h1><p>pushgateway 地址:<br><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">http://pushgateway-a-1341320.slc07.dev.ebayc3.com:9091</div></pre></td></tr></table></figure></p>
-<p>展示页面：</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">http://pushgateway-a-1341320.slc07.dev.ebayc3.com:9091/metrics</div></pre></td></tr></table></figure>
-<p>可以看你的item有没有被推上去。上面有很多是系统自带的</p>
-<p>[4:17]<br>Example of push a value:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">echo &quot;some_metric 3.14&quot; | curl --data-binary @- http://pushgateway-a-1341320.slc07.dev.ebayc3.com:9091/metrics/jobs/some_job</div></pre></td></tr></table></figure>
-<p>[4:18]<br>Example 2:</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">cat &lt;&lt;EOF | curl --data-binary @-http://pushgateway-a-1341320.slc07.dev.ebayc3.com:9091/metrics/jobs/some_job/instances/some_instance</div><div class="line"># TYPE some_metric counter</div><div class="line">some_metric&#123;label=&quot;val1&quot;&#125; 42</div><div class="line"># This one even has a timestamp (but beware, see below).</div><div class="line">some_metric&#123;label=&quot;val2&quot;&#125; 34 1398355504000</div><div class="line"># TYPE another_metric gauge</div><div class="line"># HELP another_metric Just an example.</div><div class="line">another_metric 2398.283</div><div class="line">EOF</div></pre></td></tr></table></figure>
-<h1 id="定时删除无用的metrics"><a href="#定时删除无用的metrics" class="headerlink" title="定时删除无用的metrics"></a>定时删除无用的metrics</h1><p>在<code>/etc/cron.hourly</code>需要添加一个脚本，在这个脚本里面每隔一个小时就删除旧有的数据。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">root@pushgateway-a-1341320:/etc/cron.hourly# cat delete-pushgateway.sh</div><div class="line">#!/bin/bash</div><div class="line"></div><div class="line">#curl -s -X DELETE http://localhost:9091/metrics/job/some_job/instance/172.17.0.1</div><div class="line">#push_time_seconds&#123;instance=&quot;172.17.0.1&quot;,job=&quot;some_job&quot;&#125; 1.506671751324118e+09</div><div class="line">#some_metric&#123;instance=&quot;172.17.0.1&quot;,job=&quot;some_job&quot;&#125; 3.14</div><div class="line">for n in `curl -s -X GET http://localhost:9091/metrics | grep instance`; do</div><div class="line">	# Get center part</div><div class="line">	line=`echo $n | awk -F &quot;&#123;&quot; &apos;&#123;print $2&#125;&apos; | awk -F &quot;&#125;&quot; &apos;&#123;print $1&#125;&apos;`</div><div class="line">	echo &quot;line = $line&quot;</div><div class="line"></div><div class="line">	# begin to get job</div><div class="line">	job=`echo $line | tr &quot;,&quot; &quot;\n&quot; | grep &quot;^job=&quot;`</div><div class="line">	job=`echo $job | awk -F &quot;\&quot;&quot; &apos;&#123;print $2&#125;&apos;`</div><div class="line">	echo &quot;job = $job&quot;</div><div class="line"></div><div class="line">	inst=`echo $line | tr &quot;,&quot; &quot;\n&quot; | grep &quot;instance=&quot;`</div><div class="line">	inst=`echo $inst | awk -F &quot;\&quot;&quot; &apos;&#123;print $2&#125;&apos;`</div><div class="line">	echo &quot;instance = $inst&quot;</div><div class="line"></div><div class="line">	echo &quot;http://localhost:9091/metrics/job/$&#123;job&#125;/instance/$&#123;inst&#125;&quot;</div><div class="line">	curl -s -X DELETE http://localhost:9091/metrics/job/$&#123;job&#125;/instance/$&#123;inst&#125;</div><div class="line">done</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ansible/">ansible</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/expect/">expect</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/pushgateway/">pushgateway</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/运维/">运维</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/blog/">blog</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-LinuxOps/4.pushgateway" data-title="pushgateway" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-LinuxOps/1.prometheus.target.from.ansible.hosts" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/LinuxOps/1.prometheus.target.from.ansible.hosts/" class="article-date">
-  	<time datetime="2017-10-11T03:19:00.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/11/LinuxOps/1.prometheus.target.from.ansible.hosts/">从ansible主机列表生成prometheus需要的文件</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>下面这个脚本主要是通过ansible的<code>hosts</code>主机文件生成<code>prometheus</code>配置文件中的<code>targets</code>列表。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">import json</div><div class="line"></div><div class="line">temp = &quot;&quot;&quot;</div><div class="line">  # The job name is added as a label `job=&lt;job_name&gt;` to any timeseries scraped from this config.</div><div class="line">  - job_name: &apos;%s&apos;</div><div class="line"></div><div class="line">    # metrics_path defaults to &apos;/metrics&apos;</div><div class="line">    # scheme defaults to &apos;http&apos;.</div><div class="line">    static_configs:</div><div class="line">      - targets: [%s]</div><div class="line">&quot;&quot;&quot;</div><div class="line"></div><div class="line">with open(&apos;hosts&apos;, &apos;r&apos;) as f:</div><div class="line">    lines = f.readlines()</div><div class="line">    sec_name = None</div><div class="line">    d = &#123;&#125;</div><div class="line">    for line in lines:</div><div class="line">        line = line.strip()</div><div class="line">        if len(line) == 0:</div><div class="line">            continue</div><div class="line"></div><div class="line">        if line.find(&apos;[&apos;) != -1:</div><div class="line">            line = line.replace(&apos;[&apos;, &apos; &apos;)</div><div class="line">            line = line.replace(&apos;]&apos;, &apos; &apos;)</div><div class="line">            line = line.strip()</div><div class="line">            sec_name = line</div><div class="line">            d[sec_name] = []</div><div class="line"></div><div class="line">        else:</div><div class="line">            d[sec_name].append(line)</div><div class="line"></div><div class="line"></div><div class="line">    # use dict to generate output of prometheus.</div><div class="line"></div><div class="line">    print json.dumps(d, indent=2)</div><div class="line"></div><div class="line">    for k,host_list in d.iteritems():</div><div class="line">        ret = &apos;&apos;</div><div class="line">        for h in host_list:</div><div class="line">            h = &quot;&apos;%s:9100&apos;&quot; % h</div><div class="line">            if len(ret) == 0:</div><div class="line">                ret = h</div><div class="line">            else:</div><div class="line">                ret = ret + &quot;,&quot; + h</div><div class="line">        print temp % (k, ret)</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ansible/">ansible</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/expect/">expect</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/prometheus/">prometheus</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/运维/">运维</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/blog/">blog</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-LinuxOps/1.prometheus.target.from.ansible.hosts" data-title="从ansible主机列表生成prometheus需要的文件" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-LinuxOps/2.exp.no.password" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/LinuxOps/2.exp.no.password/" class="article-date">
-  	<time datetime="2017-10-11T03:19:00.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/11/LinuxOps/2.exp.no.password/">有用的expect脚本</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="免密码拷贝文件"><a href="#免密码拷贝文件" class="headerlink" title="免密码拷贝文件"></a>免密码拷贝文件</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/usr/bin/expect</div><div class="line">set host [lindex $argv 0]</div><div class="line">set timeout 20</div><div class="line">spawn scp -pr /Users/youji/.dev.pub youji@$host:/tmp/key.pub</div><div class="line"></div><div class="line">expect &#123;</div><div class="line">    &quot;*password:&quot; &#123; send &quot;hahahahaha\r&quot; &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">expect eof</div></pre></td></tr></table></figure>
-<p>这里会将<code>.dev.pub</code>拷贝到/tmp/目录的<code>key.pub</code>。</p>
-<p>注意，拷贝文件的时候，不能用通配符，需要指定每一个文件</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/usr/bin/expect</div><div class="line">set host [lindex $argv 0]</div><div class="line">set timeout 20</div><div class="line">spawn scp -pr /tmp/ssh_config /tmp/sshd_config youji@$host:/tmp/</div><div class="line"></div><div class="line">expect &#123;</div><div class="line">    &quot;*password:&quot; &#123; send &quot;hahahhahahha\r&quot; &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">expect eof</div></pre></td></tr></table></figure>
-<h1 id="免密码切换到root"><a href="#免密码切换到root" class="headerlink" title="免密码切换到root"></a>免密码切换到root</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#!/usr/bin/expect</div><div class="line">set host [lindex $argv 0]</div><div class="line">set timeout 20</div><div class="line">spawn ssh youji@$host</div><div class="line"></div><div class="line">expect &#123;</div><div class="line">    &quot;*password:&quot; &#123; send &quot;hahahhahahhaha\r&quot; &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">expect &#123;</div><div class="line">    &quot;*:&quot; &#123; send &quot;sudo -s\r&quot; &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">expect &#123;</div><div class="line">    &quot;*password*:&quot; &#123; send &quot;hahahhahahahah\r&quot; &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">expect &quot;#*&quot;</div><div class="line">send &quot;pwd\r&quot;</div><div class="line"></div><div class="line"># 这里写入需要执行的每一条命令</div><div class="line">send &quot;yes | cp -rf /tmp/ssh*_config /etc/ssh/\r&quot;</div><div class="line">send &quot;systemctl restart sshd\r&quot;</div><div class="line">send &quot;cat /tmp/key.pub &gt;&gt; /root/.ssh/authorized_keys\r&quot;</div><div class="line">send &quot;chmod 600 /root/.ssh/authorized_keys\r&quot;</div><div class="line"></div><div class="line">send  &quot;exit\rexit\r\r&quot;</div><div class="line">expect eof</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/expect/">expect</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/运维/">运维</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/blog/">blog</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-LinuxOps/2.exp.no.password" data-title="有用的expect脚本" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/monitor/1.cache.pool" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/ceph/monitor/1.cache.pool/" class="article-date">
-  	<time datetime="2017-10-11T02:00:00.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/11/ceph/monitor/1.cache.pool/">Cache Pool Metrics</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>在<code>ceph-exporter</code>看到了两个关于<code>Cache Pool</code>的监控指标。</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"># HELP ceph_cache_evict_io_bytes Rate of bytes being evicted from the cache pool per second</div><div class="line"># TYPE ceph_cache_evict_io_bytes gauge</div></pre></td></tr></table></figure>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"># HELP ceph_pool_dirty_objects_total Total no. of dirty objects in a cache-tier pool</div><div class="line"># TYPE ceph_pool_dirty_objects_total gauge</div></pre></td></tr></table></figure>
-<p>如果没有设置<code>Cache Pool</code>的话，那么这些metrics是不会有值的。</p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/go/">go</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/monitor/">monitor</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/monitor/1.cache.pool" data-title="Cache Pool Metrics" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/rtb/create.go.project" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/11/ceph/rtb/create.go.project/" class="article-date">
-  	<time datetime="2017-10-11T01:13:45.000Z" itemprop="datePublished">2017-10-11</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/rtb/create.go.project" data-title="" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-mit.6.824/lec1.lab1.read.code.domap" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2017/10/10/mit.6.824/lec1.lab1.read.code.domap/" class="article-date">
-  	<time datetime="2017-10-10T05:28:32.000Z" itemprop="datePublished">2017-10-10</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2017/10/10/mit.6.824/lec1.lab1.read.code.domap/">Lec1.lab1代码阅读-doMap</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h1><p>这里主要是想搞懂下面这一段话，然后去读相应的代码。这里采用的方法是把一长段的英文切分成一个一个的句子。然后翻译成汉语。</p>
-<h1 id="咬文嚼字"><a href="#咬文嚼字" class="headerlink" title="咬文嚼字"></a>咬文嚼字</h1><p>The master considers each input file to be one map task, and calls doMap() [common_map.go] at least once for each map task.</p>
-<p><code>master</code>是认为每个输入文件是一个<code>map</code>任务。对于每个<code>map</code>任务，至少会调用一次<code>doMap()</code>函数。这个函数位于<code>common_map.go</code>。</p>
-<p>It does so either directly (when using Sequential()) or by issuing the DoTask RPC to a worker [worker.go].</p>
-<p><code>master</code>要么是直接调用。比如当使用<code>Sequential()</code>方法的时候。或者是通过DoTask() RPC的方式来触发worker。</p>
-<ul>
-<li>问题1: 前面讲的是doMap函数每个map任务至少调用一次。然后下文就开始说<code>It does so</code>。那么这个<code>so</code>指的是去调用<code>doMap</code>么？但是下文看起来是调用<code>DoTask</code>这个函数。那么猜测就是<code>DoTask</code>函数会调用<code>doMap()</code>。</li>
+        <h1 id="课程进度"><a href="#课程进度" class="headerlink" title="课程进度"></a>课程进度</h1><ul>
+<li><a href="https://pdos.csail.mit.edu/6.828/2016/schedule.html">https://pdos.csail.mit.edu/6.828/2016/schedule.html</a></li>
 </ul>
-<p>直接看代码：</p>
-<figure class="highlight go"><table><tr><td class="code"><pre><div class="line"><span class="comment">// DoTask is called by the master when a new task is being scheduled on this</span></div><div class="line"><span class="comment">// worker.</span></div><div class="line"><span class="comment">// DoTask会被master调用。当一个新的任务被调度到这个worker的时候。</span></div><div class="line"><span class="function"><span class="keyword">func</span> <span class="params">(wk *Worker)</span> <span class="title">DoTask</span><span class="params">(arg *DoTaskArgs, _ *<span class="keyword">struct</span>&#123;&#125;)</span> <span class="title">error</span></span> &#123;</div><div class="line">  ...</div><div class="line">	<span class="keyword">switch</span> arg.Phase &#123;</div><div class="line">	<span class="keyword">case</span> mapPhase:</div><div class="line">		doMap(arg.JobName, arg.TaskNumber, arg.File, arg.NumOtherPhase, wk.Map) <span class="comment">// &lt;-- 这里调用了!!</span></div><div class="line">	<span class="keyword">case</span> reducePhase:</div><div class="line">		doReduce(arg.JobName, arg.TaskNumber, mergeName(arg.JobName, arg.TaskNumber), arg.NumOtherPhase, wk.Reduce)</div><div class="line">	&#125;</div><div class="line">  ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>所以，原文的说法是没有问题的。也就是通过<code>DoTask</code>函数来间接调用<code>doMap</code>来完成任务。</p>
-<p>Each call to doMap() reads the appropriate file, calls the map function on that file’s contents, and writes the resulting key/value pairs to nReduce intermediate files.</p>
-<p>每个对<code>doMap</code>的调用都会去读合适的文件，调用map函数处理那个文件的内容。并且把结果按照<code>key/value</code>对切分成<code>nReduce</code>个中间文件。</p>
-<p>doMap() hashes each key to pick the intermediate file and thus the reduce task that will process the key.</p>
-<p><code>doMap</code>函数会通过<code>hash</code>每个key，然后选中这些生成的中间文件。然后<code>reduce</code>作务会处理这些<code>key</code>。</p>
-<p>There will be nMap x nReduce files after all map tasks are done.</p>
-<p>当所有的<code>map</code>任务处理完成之后，最终会有<code>nMap * nReduce</code>个文件。</p>
-<p> Each file name contains a prefix, the map task number, and the reduce task number.</p>
-<p>每个文件名包含</p>
-<ul>
-<li>前缀</li>
-<li>map任务号</li>
-<li><p>reduce任务号</p>
-<p>If there are two map tasks and three reduce tasks, the map tasks will create these six intermediate files:</p>
-</li>
+<h1 id="三次作业"><a href="#三次作业" class="headerlink" title="三次作业"></a>三次作业</h1><ul>
+<li>Assignment: HW: Boot xv6</li>
+<li>Assignment: HW: shell</li>
+<li>Assignment: Lab 1: C, Assembly, Tools, and Bootstrapping</li>
 </ul>
-<p>假设这这时有两个<code>map</code>任务，以及3个reduce任务。<code>map</code>任务会创建6个中间文件。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">mrtmp.xxx-0-0</div><div class="line">mrtmp.xxx-0-1</div><div class="line">mrtmp.xxx-0-2</div><div class="line">mrtmp.xxx-1-0</div><div class="line">mrtmp.xxx-1-1</div><div class="line">mrtmp.xxx-1-2</div></pre></td></tr></table></figure>
-<p>Each worker must be able to read files written by any other worker, as well as the input files. Real deployments use distributed storage systems such as GFS to allow this access even though workers run on different machines. In this lab you’ll run all the workers on the same machine, and use the local file system.</p>
-<p>每个worker都必须可能去读取其他worker生成的文件，并且做为输入文件。真实的部署利用分布式文件系统，比如GFS来允许这种共享访问。即使worker运行在不同的机器上。在这个实验里面，由于是所有的worker都是在单机上运行，所以在实验的时候，采用的是本地文件系统。</p>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>这里虽然扯了很多，实际上总体来说，就是几个意思：</p>
+<h1 id="Boot-xv6"><a href="#Boot-xv6" class="headerlink" title="Boot xv6"></a>Boot xv6</h1><p>这里只介绍第一次作业的情况，后面章节再介绍第一课的后面的作业。</p>
 <ul>
-<li>DoTask函数会由<code>master</code>来触发。</li>
-<li><code>doMap</code>函数很重要。</li>
-<li><code>map</code>任务会生成<code>number_of_map_task * number_of_reduce_task</code>个中间文件。</li>
-<li>这里的说明，主要是针对<code>doMap</code>也就是map任务而言。</li>
+<li>实验环境<code>Ubuntu:14.04</code></li>
+<li>xv6 &amp; qemu</li>
 </ul>
-<h1 id="DoTask"><a href="#DoTask" class="headerlink" title="DoTask"></a>DoTask</h1><p>所以这里接下来就开始解析<code>DoTask</code>函数。</p>
-
       
     </div>
     
@@ -1050,15 +274,19 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MapReduce/">MapReduce</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/mit-6-824/">mit.6.824</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/分布式/">分布式</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/JOS/">JOS</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/MIT-6-828/">MIT 6.828</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/mit-6-824/">mit.6.824</a>
+	<a class="article-category-link" href="/blog/categories/xv6/">xv6</a>
 	</div>
 
 
+      
+        <p class="article-more-link">
+          <a  href="/blog/2016/09/15/mit.6.828/jos-lab1/#more">more >></a>
+        </p>
       
       <div class="clearfix"></div>
     </div>
@@ -1075,7 +303,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-mit.6.824/lec1.lab1.read.code.domap" data-title="Lec1.lab1代码阅读-doMap" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-mit.6.828/jos-lab1" data-title="MIT 6.828 JOS课程1：搭建实验环境" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -1099,17 +327,13 @@
 
 
   
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/blog/page/5/">5</a><a class="extend next" rel="next" href="/blog/page/2/">Next &raquo;</a>
-    </nav>
   
 </div>
       <footer id="footer">
   <div class="outer">
     <div id="footer-info">
     	<div class="footer-left">
-    		&copy; 2017 You Ji
+    		&copy; 2018 You Ji
     	</div>
       	<div class="footer-right">
       		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
