@@ -4,17 +4,44 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>缘生故如幻</title>
+  <title>MIT 6.828 Lab1 | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="记录一些有意思的事。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="缘生故如幻">
-<meta property="og:url" content="https://jiyou.github.io/blog/index.html">
+  <meta name="description" content="原地址：
+lab1开坑。无视我的渣渣翻译。
+简介实验主要是分为三个部分。
+
+第一部分主要是需要熟悉x86的汇编语言，QEMU x86模拟器，以及PC上电之后的启动流程。
+第二部分是验证6.828内核的boot loader，这里部分需要看的代码主要是位于boot目录。
+第三部分主要是开始实施JOS操作系统。也就是MIT 6.828的内核部分。
+
+软件的设置首先我的环境是沿用了Linux-2.6.2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT 6.828 Lab1">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/04/15/mit.6.828/jos-lab1/index.html">
 <meta property="og:site_name" content="缘生故如幻">
-<meta property="og:description" content="记录一些有意思的事。">
+<meta property="og:description" content="原地址：
+lab1开坑。无视我的渣渣翻译。
+简介实验主要是分为三个部分。
+
+第一部分主要是需要熟悉x86的汇编语言，QEMU x86模拟器，以及PC上电之后的启动流程。
+第二部分是验证6.828内核的boot loader，这里部分需要看的代码主要是位于boot目录。
+第三部分主要是开始实施JOS操作系统。也就是MIT 6.828的内核部分。
+
+软件的设置首先我的环境是沿用了Linux-2.6.2">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/mit.6.828/call.stack.jpeg">
+<meta property="og:updated_time" content="2018-04-17T12:04:02.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="缘生故如幻">
-<meta name="twitter:description" content="记录一些有意思的事。">
+<meta name="twitter:title" content="MIT 6.828 Lab1">
+<meta name="twitter:description" content="原地址：
+lab1开坑。无视我的渣渣翻译。
+简介实验主要是分为三个部分。
+
+第一部分主要是需要熟悉x86的汇编语言，QEMU x86模拟器，以及PC上电之后的启动流程。
+第二部分是验证6.828内核的boot loader，这里部分需要看的代码主要是位于boot目录。
+第三部分主要是开始实施JOS操作系统。也就是MIT 6.828的内核部分。
+
+软件的设置首先我的环境是沿用了Linux-2.6.2">
+<meta name="twitter:image" content="https://jiyou.github.io/blog/blog/img/mit.6.828/call.stack.jpeg">
   
     <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
   
@@ -198,9 +225,7 @@
 	</div>
 </nav>
 
-      <div class="body-wrap">
-  
-    <article id="post-mit.6.828/jos-lab1" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-mit.6.828/jos-lab1" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/blog/2018/04/15/mit.6.828/jos-lab1/" class="article-date">
@@ -216,12 +241,27 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/04/15/mit.6.828/jos-lab1/">MIT 6.828 Lab1</a>
+    <h1 class="article-title" itemprop="name">
+      MIT 6.828 Lab1
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/mit-6-828/">mit.6.828</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/mit-6-828/">mit.6.828</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -555,26 +595,30 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/mit-6-828/">mit.6.828</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/mit-6-828/">mit.6.828</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
   
+    
+  
 </article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
 
@@ -584,7 +628,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-mit.6.828/jos-lab1" data-title="MIT 6.828 Lab1" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-mit.6.828/jos-lab1" data-title="MIT 6.828 Lab1" data-url="https://jiyou.github.io/blog/blog/2018/04/15/mit.6.828/jos-lab1/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -606,9 +650,6 @@
 
 
 
-
-  
-  
 </div>
       <footer id="footer">
   <div class="outer">
@@ -632,8 +673,8 @@
 		fancybox: true,
 		mathjax: true,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
