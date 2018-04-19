@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>MIT 6.828 Lab2 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="Exercise 1In the file kern/pmap.c, you must implement code for the following functions (probably in the order given).
+boot_alloc()mem_init() (only up to the call to check_page_free_list(1))page_init()">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MIT 6.828 Lab2">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/04/19/mit.6.828/jos-lab2/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="Exercise 1In the file kern/pmap.c, you must implement code for the following functions (probably in the order given).
+boot_alloc()mem_init() (only up to the call to check_page_free_list(1))page_init()">
+<meta property="og:image" content="http://lzz5235.github.io/assets/pic/235.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/large/7f793092gw1etosykok6uj216o1kwdq0.jpg">
+<meta property="og:updated_time" content="2018-04-19T14:35:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="MIT 6.828 Lab2">
+<meta name="twitter:description" content="Exercise 1In the file kern/pmap.c, you must implement code for the following functions (probably in the order given).
+boot_alloc()mem_init() (only up to the call to check_page_free_list(1))page_init()">
+<meta name="twitter:image" content="http://lzz5235.github.io/assets/pic/235.png">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-mit.6.828/jos-lab2" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/04/19/mit.6.828/jos-lab2/" class="article-date">
+  	<time datetime="2018-04-19T14:28:32.000Z" itemprop="datePublished">2018-04-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      MIT 6.828 Lab2
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/mit-6-828/">mit.6.828</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/mit-6-828/">mit.6.828</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="Exercise-1"><a href="#Exercise-1" class="headerlink" title="Exercise 1"></a>Exercise 1</h1><p>In the file kern/pmap.c, you must implement code for the following functions (probably in the order given).</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">boot_alloc()</div><div class="line">mem_init() (only up to the call to check_page_free_list(<span class="number">1</span>))</div><div class="line">page_init()</div><div class="line">page_alloc()</div><div class="line">page_free()</div></pre></td></tr></table></figure>
+<p><code>check_page_free_list()</code> and <code>check_page_alloc()</code> test your physical page allocator. You should boot JOS and see whether <code>check_page_alloc()</code> reports success. Fix your code so that it passes. You may find it helpful to add your own assert()s to verify that your assumptions are correct.</p>
+<p>总的来说，就是需要实现</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">boot_alloc()</div><div class="line">mem_init() <span class="comment">// 只需要实现到check_page_free_list(1)这里。</span></div><div class="line">page_init()</div><div class="line">page_alloc()</div><div class="line">page_free()</div></pre></td></tr></table></figure>
+<h1 id="bootloader读入内核代码之后的分布"><a href="#bootloader读入内核代码之后的分布" class="headerlink" title="bootloader读入内核代码之后的分布"></a>bootloader读入内核代码之后的分布</h1><p><a href="http://lzz5235.github.io/2014/03/04/jos.html" target="_blank" rel="external">内存分布</a></p>
+<p>这里主要是引用一下这个图：</p>
+<p><img src="http://lzz5235.github.io/assets/pic/235.png" alt=""></p>
+<p>可以发现，在刚读取完成内核代码到内存之后。形成的结构如上图所示。</p>
+<h1 id="开启分页"><a href="#开启分页" class="headerlink" title="开启分页"></a>开启分页</h1><p>分页的机制在《x86汇编语言－从实模式到保护模式》里面介绍得比较清楚。这里就不多说，只引用<a href="http://neilsh.me/2015/07/02/os_setup_and_virtual_memory_setup/" target="_blank" rel="external">一张图</a>：</p>
+<p><img src="http://ww1.sinaimg.cn/large/7f793092gw1etosykok6uj216o1kwdq0.jpg" alt=""></p>
+<h2 id="UVPT"><a href="#UVPT" class="headerlink" title="UVPT"></a>UVPT</h2><p>UVPT: 需要看 <a href="https://pdos.csail.mit.edu/6.828/2014/lec/l-josmem.html" target="_blank" rel="external">https://pdos.csail.mit.edu/6.828/2014/lec/l-josmem.html</a></p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">UVPT = 0x3BD &lt;&lt; 22</div></pre></td></tr></table></figure>
+<h3 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h3><p>如果一个虚拟地址等于<code>0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0</code>。<br>使用<code>kern_pgdir</code>的时候，这个虚拟地址MCU处理之后就是<code>kern_pgdir</code>。</p>
+<p>所以 <code>*(0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0) == kern_pgdir</code>。<br>那么，假设有如下代码：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> *p = <span class="number">0x3BD</span>  &lt;&lt; <span class="number">22</span> | <span class="number">0x3BD</span> &lt;&lt; <span class="number">12</span> | <span class="number">0</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span>; i++) &#123;</div><div class="line">    p[i]; <span class="comment">// 这里实际上就是在遍历kern_pgdir[i];    </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以<code>0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0~4096</code>byte地址，就是映射到了<code>char kern_pgdir[4096]</code><br>这个数组。</p>
+<h3 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h3><p>那么假设虚拟地址是<code>0x3BD  &lt;&lt; 22 | 0~1024 | 0</code>这个时候情况又是如何？比如用户程序访问<code>0x3BD &lt;&lt; 22</code>这个地址。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1. CR3 = kern_pgdir</div><div class="line">2. 高10位值为0x3BD, 页目录项为kern_pgdir[0x3BD]</div><div class="line">   kern_pgdir[PDX(UVPT)] = PADDR(kern_pgdir) | PTE_U | PTE_P;</div><div class="line">   不用说，又回到了kern_pgdir</div><div class="line">3. 中间10位为0，那么页表为kern_pgdir[0x3BD]指向的物理地址的第0项。</div><div class="line">   由于kern_pgdir[0x3BD]指向的是kern_pgdir，所以这里页表为kern_pgdir[0]。</div><div class="line">   kern_pgdir[0]用户程序是可以访问的。在Case 1里面已经验证过了。</div><div class="line">4. 虚拟地址就是kern_pgdir[0]指向的物理地址的第0项。不过这个物理地址，用户程序不一定可以访问。</div></pre></td></tr></table></figure>
+<p>所以总结一下就是<code>0x3BD &lt;&lt; 22 | 0 ~ 1024 | xxxx</code>。这个时候，前面<code>20</code>位的地址一解释。指向的地址就是一个<br>页表地址<code>kern_pgdir[i]</code>。如果再加上<code>offset = xxxx</code>。实际上这个地址，虚拟地址不一定可以访问。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0~4096</code>byte地址，就是映射到了<code>char kern_pgdir[4096]</code><br><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> *p = <span class="number">0x3BD</span>  &lt;&lt; <span class="number">22</span> | <span class="number">0x3BD</span> &lt;&lt; <span class="number">12</span> | <span class="number">0</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span>; i++) &#123;</div><div class="line">    p[i]; <span class="comment">// 这里实际上就是在遍历uint32_t kern_pgdir[i];    </span></div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p><code>UVPT ~ UVPT + 4MB</code>这个虚拟地址应该会有至少一个页目录项。一个页目录项刚好点4MB。结合Case 2。可以发现，<br>用户程序通过kern_pgdir这个数组里面的内容，就知道这4MB空间里面的页表的内容。比如是否有物理地址映射？<br>是否已经分配内存。比如：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">int *p = 0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0;</div><div class="line">for (i = 0; i &lt; 1024; i++) &#123;</div><div class="line">    if (*(p+i) &amp; 0x01) &#123;</div><div class="line">        // 二级页表存在</div><div class="line">    &#125; else &#123;</div><div class="line">        // 二级页表不存在</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="boot-alloc"><a href="#boot-alloc" class="headerlink" title="boot_alloc"></a>boot_alloc</h2><p>这个函数首先来，<code>end</code>变量是定义在<code>kernel.ld</code>文件里面的。指向了内核地址的尾巴。<br>也就是在向内核要虚拟地址的时候，可以从这里开始要。</p>
+<p><strong>注意</strong>这里要到的地址是虚拟地址。不是物理地址。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// This simple physical memory allocator is used only while JOS is setting</div><div class="line">// up its virtual memory system.  page_alloc() is the real allocator.</div><div class="line">//</div><div class="line">// If n&gt;0, allocates enough pages of contiguous physical memory to hold &apos;n&apos;</div><div class="line">// bytes.  Doesn&apos;t initialize the memory.  Returns a kernel virtual address.</div><div class="line">//</div><div class="line">// If n==0, returns the address of the next free page without allocating</div><div class="line">// anything.</div><div class="line">//</div><div class="line">// If we&apos;re out of memory, boot_alloc should panic.</div><div class="line">// This function may ONLY be used during initialization,</div><div class="line">// before the page_free_list list has been set up.</div><div class="line">static void *</div><div class="line">boot_alloc(uint32_t n)</div><div class="line">&#123;</div><div class="line">    static char *nextfree;    // virtual address of next byte of free memory</div><div class="line">    char *result;</div><div class="line"></div><div class="line">    // Initialize nextfree if this is the first time.</div><div class="line">    // &apos;end&apos; is a magic symbol automatically generated by the linker,</div><div class="line">    // which points to the end of the kernel&apos;s bss segment:</div><div class="line">    // the first virtual address that the linker did *not* assign</div><div class="line">    // to any kernel code or global variables.</div><div class="line">    if (!nextfree) &#123;</div><div class="line">        extern char end[];</div><div class="line">        nextfree = ROUNDUP((char *) end, PGSIZE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // Allocate a chunk large enough to hold &apos;n&apos; bytes, then update</div><div class="line">    // nextfree.  Make sure nextfree is kept aligned</div><div class="line">    // to a multiple of PGSIZE.</div><div class="line">    //</div><div class="line">    // LAB 2: Your code here.</div><div class="line">    if (0 == n) &#123;</div><div class="line">        return nextfree;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    n = ROUNDUP(n, PGSIZE);</div><div class="line">    result = nextfree;</div><div class="line">    nextfree += n;</div><div class="line">    return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="mem-init"><a href="#mem-init" class="headerlink" title="mem_init"></a>mem_init</h2><p>这个函数里面分为页管理链表分配空间。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line">n = <span class="keyword">sizeof</span>(<span class="keyword">struct</span> PageInfo) * npages;</div><div class="line">pages = (<span class="keyword">struct</span> PageInfo*)boot_alloc(n);</div><div class="line"><span class="built_in">memset</span>(pagees, <span class="number">0</span>, n);</div></pre></td></tr></table></figure>
+<p>注意看注释，要求全部初始化为0的。</p>
+<h2 id="page-init"><a href="#page-init" class="headerlink" title="page_init"></a>page_init</h2><p>这里要做的事情很简单，就是把空闲的内存通过双向链表串起来。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">void</div><div class="line">page_init(void)</div><div class="line">&#123;</div><div class="line">    // The example code here marks all physical pages as free.</div><div class="line">    // However this is not truly the case.  What memory is free?</div><div class="line">    //  1) Mark physical page 0 as in use.</div><div class="line">    //     This way we preserve the real-mode IDT and BIOS structures</div><div class="line">    //     in case we ever need them.  (Currently we don&apos;t, but...)</div><div class="line">    //  2) The rest of base memory, [PGSIZE, npages_basemem * PGSIZE)</div><div class="line">    //     is free.</div><div class="line">    //  3) Then comes the IO hole [IOPHYSMEM, EXTPHYSMEM), which must</div><div class="line">    //     never be allocated.</div><div class="line">    //  4) Then extended memory [EXTPHYSMEM, ...).</div><div class="line">    //     Some of it is in use, some is free. Where is the kernel</div><div class="line">    //     in physical memory?  Which pages are already in use for</div><div class="line">    //     page tables and other data structures?</div><div class="line">    //</div><div class="line">    // Change the code to reflect this.</div><div class="line">    // NB: DO NOT actually touch the physical memory corresponding to</div><div class="line">    // free pages!</div><div class="line">    size_t i;</div><div class="line">    // 这里采用的思路是：凡是不能被分配的内存页，都不加到链表里面。</div><div class="line">    // 只处理可以被使用的内存页。</div><div class="line">    assert(!page_free_list);</div><div class="line">    // 1. page 0是要被用来做实模式的IDT BIOS数据结构，尽管从来不会用，以后也不会用</div><div class="line">    //    这不是浪费么。不管了。</div><div class="line">    // 2. 接下来的[PGSIZE, npages_basemem * PGSIZE)是可用的。</div><div class="line">    for (i = 1; i &lt; npages_basemem; i++) &#123;</div><div class="line">        pages[i].pp_ref = 0;</div><div class="line">        pages[i].pp_link = page_free_list;</div><div class="line">        page_free_list = &amp;pages[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    // 3. IO空洞，绝对不能使用。</div><div class="line">    //    链表直接跳过。不管。</div><div class="line"></div><div class="line">    // 4. 直接找到kernel内存的尾巴</div><div class="line">    //    注意这里取了PADDR之后要除PGSIZE.</div><div class="line">    for (i = PADDR(boot_alloc(0))/PGSIZE; i &lt; npages; i++) &#123;        </div><div class="line">        pages[i].pp_ref = 0;</div><div class="line">        pages[i].pp_link = page_free_list;</div><div class="line">        page_free_list = &amp;pages[i];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="page-alloc"><a href="#page-alloc" class="headerlink" title="page_alloc"></a>page_alloc</h2><p>page_alloc的功能就是从链表中分配一页。这里需要完全照着注释来实现。比如<code>pp_link</code>要设置为空。<code>pp_ref</code>不要去修改。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">struct</span> PageInfo *</span></div><div class="line"><span class="title">page_alloc</span><span class="params">(<span class="keyword">int</span> alloc_flags)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">struct</span> PageInfo *ret = page_free_list;</div><div class="line">    <span class="keyword">if</span> (!page_free_list) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    page_free_list = ret-&gt;pp_link;</div><div class="line">    ret-&gt;pp_link = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (alloc_flags &amp; ALLOC_ZERO) &#123;</div><div class="line">        <span class="built_in">memset</span>(page2kva(ret), <span class="number">0</span>, PGSIZE);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="page-free"><a href="#page-free" class="headerlink" title="page_free"></a>page_free</h2><p>这里会把一个<code>pp_ref</code>为0的页表放回到链表中。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">page_free</span><span class="params">(<span class="keyword">struct</span> PageInfo *pp)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="comment">// Hint: You may want to panic if pp-&gt;pp_ref is nonzero or</span></div><div class="line">    <span class="comment">// pp-&gt;pp_link is not NULL.</span></div><div class="line">    assert(!pp-&gt;pp_ref);</div><div class="line">    assert(!pp-&gt;pp_link);</div><div class="line"></div><div class="line">    pp-&gt;pp_link = page_free_list;</div><div class="line">    page_free_list = pp;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="Excersize-3"><a href="#Excersize-3" class="headerlink" title="Excersize 3"></a>Excersize 3</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">　　xp/Nx paddr -- 查看paddr物理地址处开始的，N个字的16进制的表示结果。</div><div class="line">　　info registers -- 展示所有内部寄存器的状态。</div><div class="line">　　info mem -- 展示所有已经被页表映射的虚拟地址空间，以及它们的访问优先级。</div><div class="line">　　info pg -- 展示当前页表的结构。</div></pre></td></tr></table></figure>
+<h1 id="Excersize-4"><a href="#Excersize-4" class="headerlink" title="Excersize 4"></a>Excersize 4</h1><h2 id="pgdir-walk"><a href="#pgdir-walk" class="headerlink" title="pgdir_walk"></a>pgdir_walk</h2><p><code>pgdir_walk</code>只是在给定的页表中查一下虚拟地址的<strong>页目录项</strong>。并不需要页目录项与虚拟地址绑定。如果存在页目录项，那么只需要直接返回相应的页目录项。<br>就是在写<code>if/else</code>的时候要考虑各种情况。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">pte_t</span> *</div><div class="line">pgdir_walk(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">const</span> <span class="keyword">void</span> *va, <span class="keyword">int</span> create)</div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    assert(pgdir);</div><div class="line">    <span class="keyword">pde_t</span> *pde = &amp;pgdir[PDX(va)];</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!(*pde &amp; PTE_P)) &#123;</div><div class="line">        <span class="keyword">if</span> (!create) <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">        <span class="keyword">struct</span> PageInfo *page = page_alloc(ALLOC_ZERO);</div><div class="line">        <span class="keyword">if</span> (!page) <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">        page-&gt;pp_ref++;</div><div class="line">        assert(page-&gt;pp_ref == <span class="number">1</span>);</div><div class="line">        assert(page-&gt;pp_link == <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">        *pde = page2pa(page) | PTE_P | PTE_U | PTE_W;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 获取页表项</span></div><div class="line">    <span class="keyword">return</span> (<span class="keyword">pte_t</span>*)(KADDR(PTE_ADDR(*pde))) + PTX(va);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="boot-map-region"><a href="#boot-map-region" class="headerlink" title="boot_map_region"></a>boot_map_region</h2><p>把一个虚拟内存映射一个物理内存。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">boot_map_region</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">uintptr_t</span> va, <span class="keyword">size_t</span> size, <span class="keyword">physaddr_t</span> pa, <span class="keyword">int</span> perm)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; size; i += PGSIZE) &#123;</div><div class="line">        <span class="keyword">pte_t</span> *pte = pgdir_walk(pgdir, (<span class="keyword">const</span> <span class="keyword">void</span> *)va, <span class="literal">true</span>);</div><div class="line">        *pte = pa | perm | PTE_P;</div><div class="line">        va += PGSIZE;</div><div class="line">        pa += PGSIZE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意这里的设置。</p>
+<h2 id="page-insert"><a href="#page-insert" class="headerlink" title="page_insert"></a>page_insert</h2><p>写这个函数的时候，要特别仔细地把注释读一下。<code>boot_map_region</code>在映射的时候。<br>并没有考虑到页表的占用释放回收什么的（直接把这个空间里面的物理内存映射到了<code>kern_pgdir</code>里面），这是因为<code>boot_map_region</code>这个函数操作的都是已经在kernel里面申请好的内存。并且页表的管理是从<code>boot_alloc(0)</code>之后才开始管理的。所以内核里面的页在添加到的<code>kernel_pgdir</code>的时候并不会用<code>PageInfo</code>来进行管理。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">page_insert</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">struct</span> PageInfo *pp, <span class="keyword">void</span> *va, <span class="keyword">int</span> perm)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">pte_t</span> *pte = pgdir_walk(pgdir, va, <span class="literal">true</span>);</div><div class="line">    <span class="keyword">if</span> (!pte)</div><div class="line">        <span class="keyword">return</span> -E_NO_MEM;</div><div class="line"></div><div class="line">    pp-&gt;pp_ref++;</div><div class="line">    <span class="keyword">if</span> (*pte &amp; PTE_P)</div><div class="line">        page_remove(pgdir, va);</div><div class="line">    *pte = page2pa(pp) | perm | PTE_P;</div><div class="line">    tlb_invalidate(pgdir, va);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="page-lookup"><a href="#page-lookup" class="headerlink" title="page_lookup"></a>page_lookup</h2><p>这个函数的功能就是给定一个虚拟地址。然后根据这个虚拟地址来找到相应的物理地址。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">struct</span> PageInfo *</span></div><div class="line"><span class="title">page_lookup</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">void</span> *va, <span class="keyword">pte_t</span> **pte_store)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">pte_t</span> *pte = pgdir_walk(pgdir, va, <span class="literal">false</span>);</div><div class="line">    <span class="keyword">if</span> (!pte || !(*pte &amp; PTE_P)) <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">if</span> (pte_store) *pte_store = pte;</div><div class="line">    <span class="keyword">return</span> pa2page(PTE_ADDR(*pte));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="page-remove"><a href="#page-remove" class="headerlink" title="page_remove"></a>page_remove</h2><p><code>page_remove</code>这个函数的功能主要是取消虚拟地址与物理地址的关联。<br>这里需要注意的是。释放了虚拟内存与物理内存的映射之后。并没有直接把相应的物理内存直接放到链表里面。这主要是因为，可能存在多个虚拟内存映射到同一个物理内页面的情况。虽然这个虚拟内存不在与这个物理内存发生联系了。但是其他的虚拟地址还是有可能继续与这个物理内存关联并且还在使用的。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">page_remove</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">void</span> *va)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">pte_t</span> *pte = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">struct</span> PageInfo *pp = page_lookup(pgdir, va, &amp;pte);</div><div class="line">    <span class="keyword">if</span> (!pp) <span class="keyword">return</span>;</div><div class="line">    *pte = <span class="number">0</span>;</div><div class="line">    page_decref(pp);</div><div class="line">    tlb_invalidate(pgdir, va);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="Excersize-5"><a href="#Excersize-5" class="headerlink" title="Excersize 5"></a>Excersize 5</h2><p>mem_init()</p>
+<p>这里主要是要把内核里面一些区域设置到页目录中去。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line"><span class="comment">// 注意这里用的是PTSIZE</span></div><div class="line"><span class="comment">// 一种保守的作法是把pages align到页大小之后再进行映射。</span></div><div class="line">boot_map_region(kern_pgdir, UPAGES, PTSIZE, PADDR(pages), PTE_U);</div><div class="line"></div><div class="line"><span class="comment">//////////////////////////////////////////////////////////////////////</span></div><div class="line"><span class="comment">// Use the physical memory that 'bootstack' refers to as the kernel</span></div><div class="line"><span class="comment">// stack.  The kernel stack grows down from virtual address KSTACKTOP.</span></div><div class="line"><span class="comment">// We consider the entire range from [KSTACKTOP-PTSIZE, KSTACKTOP)</span></div><div class="line"><span class="comment">// to be the kernel stack, but break this into two pieces:</span></div><div class="line"><span class="comment">//     * [KSTACKTOP-KSTKSIZE, KSTACKTOP) -- backed by physical memory</span></div><div class="line"><span class="comment">//     * [KSTACKTOP-PTSIZE, KSTACKTOP-KSTKSIZE) -- not backed; so if</span></div><div class="line"><span class="comment">//       the kernel overflows its stack, it will fault rather than</span></div><div class="line"><span class="comment">//       overwrite memory.  Known as a "guard page".</span></div><div class="line"><span class="comment">//     Permissions: kernel RW, user NONE</span></div><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line">boot_map_region(kern_pgdir, KSTACKTOP-KSTKSIZE, KSTKSIZE, PADDR(bootstack), PTE_W);    </div><div class="line"></div><div class="line"><span class="comment">//////////////////////////////////////////////////////////////////////</span></div><div class="line"><span class="comment">// Map all of physical memory at KERNBASE.</span></div><div class="line"><span class="comment">// Ie.  the VA range [KERNBASE, 2^32) should map to</span></div><div class="line"><span class="comment">//      the PA range [0, 2^32 - KERNBASE)</span></div><div class="line"><span class="comment">// We might not have 2^32 - KERNBASE bytes of physical memory, but</span></div><div class="line"><span class="comment">// we just set up the mapping anyway.</span></div><div class="line"><span class="comment">// Permissions: kernel RW, user NONE</span></div><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line"><span class="comment">// KERNBASE    0x F0000000</span></div><div class="line"><span class="comment">// 2^32 =      0x 1000 0000</span></div><div class="line"><span class="comment">// 256MB</span></div><div class="line">boot_map_region(kern_pgdir, KERNBASE, <span class="number">0x10000000</span>, <span class="number">0</span>, PTE_W);</div></pre></td></tr></table></figure>
+<p>接下来还有一系列小问题。比如</p>
+<h3 id="kern-pgdir里面的内容是什么？"><a href="#kern-pgdir里面的内容是什么？" class="headerlink" title="kern_pgdir里面的内容是什么？"></a>kern_pgdir里面的内容是什么？</h3><p>这个问题其实只需要看一下<code>mem_init</code>里面的<code>boot_map_region</code>就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">What entries (rows) in the page directory have been filled in at this point? What addresses do they map and where do they point? In other words, fill out this table as much as possible:</div><div class="line">Entry    Base Virtual Address    Points to (logically):</div><div class="line">1023    ?    Page table for top 4MB of phys memory</div><div class="line">1022    ?    ?</div><div class="line">.    ?    ?</div><div class="line">.    ?    ?</div><div class="line">.    ?    ?</div><div class="line">2    0x00800000    ?</div><div class="line">1    0x00400000    ?</div><div class="line">0    0x00000000    [see next question]</div></pre></td></tr></table></figure>
+<h3 id="内存保护"><a href="#内存保护" class="headerlink" title="内存保护"></a>内存保护</h3><p>We have placed the kernel and user environment in the same address space. Why will user programs not be able to read or write the kernel’s memory? What specific mechanisms protect the kernel memory?</p>
+<p>这个问题是因为页表里面有各种保护机制。</p>
+<h3 id="最大能支持的内存是多少？"><a href="#最大能支持的内存是多少？" class="headerlink" title="最大能支持的内存是多少？"></a>最大能支持的内存是多少？</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">* ULIM, MMIOBASE --&gt;  +------------------------------+ 0xef800000</div><div class="line"> *                     |  Cur. Page Table (User R-)   | R-/R-  PTSIZE</div><div class="line"> *    UVPT      ----&gt;  +------------------------------+ 0xef400000</div><div class="line"> *                     |          RO PAGES            | R-/R-  PTSIZE</div><div class="line"> *    UPAGES    ----&gt;  +------------------------------+ 0xef000000</div></pre></td></tr></table></figure>
+<p>这里UPAGES对应的就是<code>pages</code>这个链表。程序空间在利用虚拟地址访问<code>pages</code>的时候。一旦大于<code>4MB</code>，比如越界到了<code>UVPT</code>这个空间。由于这部分虚拟地址是放到了<code>kern_pgdir</code>里面。所以这个时候超出的部分就不能访问了。也就意味着：物理空间上，<code>pages</code>占用多大空间都没有问题。但是虚拟地址空间在访问<code>UPAGES</code>的时候就是不能访问全。因此，能支持的内存大小就变成了2GB。</p>
+<h3 id="How-much-space-overhead-is-there-for-managing-memory-if-we-actually-had-the-maximum-amount-of-physical-memory-How-is-this-overhead-broken-down"><a href="#How-much-space-overhead-is-there-for-managing-memory-if-we-actually-had-the-maximum-amount-of-physical-memory-How-is-this-overhead-broken-down" class="headerlink" title="How much space overhead is there for managing memory, if we actually had the maximum amount of physical memory? How is this overhead broken down?"></a>How much space overhead is there for managing memory, if we actually had the maximum amount of physical memory? How is this overhead broken down?</h3><p>这里是说现在管理内存的开销是多少？其实直接看虚拟地址就可以明白了。一个页目录表占用4MB。而<code>UPAGES</code>占用了4MB。所以合在一起就是8MB。如果要减小开销。</p>
+<h3 id="内存访问的问题"><a href="#内存访问的问题" class="headerlink" title="内存访问的问题"></a>内存访问的问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Q1. Revisit the page table setup in kern/entry.S and kern/entrypgdir.c. Immediately after we turn on paging, EIP is still a low number (a little over 1MB). At what point do we transition to running at an EIP above KERNBASE?</div><div class="line"></div><div class="line">Q2. What makes it possible for us to continue executing at a low EIP between when we enable paging and when we begin running at an EIP above KERNBASE? Why is this transition necessary?</div></pre></td></tr></table></figure>
+<p>Q1. 当还在利用<code>kern/entry.S</code>和<code>kern/entrypgdir.c</code>的时候。一打开分页的时候，EIP还在一个低端的物理地址上。是通过什么方式让EIP跑到<code>KERNBASE</code>之上的内核虚拟地址空间运行的？</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">    mov    $relocated, %eax</div><div class="line">    jmp    *%eax</div><div class="line">relocated:</div><div class="line"></div><div class="line">    # Clear the frame pointer register (EBP)</div><div class="line">    # so that once we get into debugging C code,</div><div class="line">    # stack backtraces will be terminated properly.</div><div class="line">    movl    $0x0,%ebp            # nuke frame pointer</div></pre></td></tr></table></figure>
+<p>Q2. 问的是说，实际上当打开分页的时候，EIP还是在低地址运行。然后再通过跳转跑到高端地址。打开分页的时候，EIP指向下一条指令。即｀move $relocated, %eax`的内存地址。为什么访问这个内存地址不会失败?</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">kern/entrypgdir.c 中将 0 ~ 4MB 和 KERNBASE ~ KERNBASE + 4 MB 的虚拟地址都映射到了 0 ~ 4MB 的物理地址上，因此无论 EIP 在高位和低位都能执行。必需这么做是因为如果只映射高位地址，那么在开启分页机制的下一条语句就会crash。</div></pre></td></tr></table></figure>
+<p>``</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2018/04/15/mit.6.828/jos-lab1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">MIT 6.828 Lab1</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-mit.6.828/jos-lab2" data-title="MIT 6.828 Lab2" data-url="https://jiyou.github.io/blog/blog/2018/04/19/mit.6.828/jos-lab2/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
