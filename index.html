@@ -96,6 +96,8 @@
 				        
 							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
 				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
 							<li><a href="/blog/tags/blog">blog</a></li>
 				        
 						</ul>
@@ -114,7 +116,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a>
+						<a href="/blog/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 20px;">mit.6.828</a> <a href="/blog/tags/算法/" style="font-size: 10px;">算法</a>
 					</div>
 				</section>
 				
@@ -180,6 +182,8 @@
 		        
 					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
 		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
 					<li><a href="/blog/tags/blog">blog</a></li>
 		        
 		        <div class="clearfix"></div>
@@ -199,6 +203,128 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-leetcode/4" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/05/01/leetcode/4/" class="article-date">
+  	<time datetime="2018-05-01T14:28:32.000Z" itemprop="datePublished">2018-05-01</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/05/01/leetcode/4/">LeetCode.4. Median of Two Sorted Arrays</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="题目要求"><a href="#题目要求" class="headerlink" title="题目要求"></a>题目要求</h1><p>There are two sorted arrays nums1 and nums2 of size m and n respectively.</p>
+<p>Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).</p>
+<p>Example 1:<br>nums1 = [1, 3]<br>nums2 = [2]</p>
+<p>The median is 2.0<br>Example 2:<br>nums1 = [1, 2]<br>nums2 = [3, 4]</p>
+<p>The median is (2 + 3)/2 = 2.5</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>整体思路是：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">假设有一段数据，需要找到符合要求的那个元素</div><div class="line"><span class="number">1.</span> 把数据分成两半. 有可能不是长度相等的两半</div><div class="line"><span class="number">2.</span> 扔掉肯定不符合要求的那一半</div><div class="line"><span class="number">3.</span> 回到第<span class="number">1</span>步</div></pre></td></tr></table></figure>
+<p>这里面算法复杂度的关键就是在第1步里面<code>拆分成两半</code>的处理。<br>如果拆分的过程中是需要遍历每个元素。那么整个数据的处理复杂度为<code>O(n)</code>。<br>这里典型的思路就是<code>寻找第k小的数</code>。</p>
+<p>如果拆分的过程中不需要遍历每个元素，可以通过快速的手段即可把整个数组<br>拆分成两部分，那么整个算法的复杂度就是<code>O(lgn)</code>。这里面典型的就是<code>二分查找</code>。</p>
+<h2 id="寻找第k小的数"><a href="#寻找第k小的数" class="headerlink" title="寻找第k小的数"></a>寻找第k小的数</h2><p>首先介绍一下寻找第k小数的思路。这个思路与快排非常相似。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 找一个数:一般取数组的中间元素。</div><div class="line"><span class="number">2.</span> 通过这个数把数组切分成两半。左边数组a1[]比这个元素小，右边数组a2[]比这个元素大。</div><div class="line"><span class="number">3.</span> 如果k &lt;= len(a1[]), 那么k肯定只能在a1[]里面找。用a1[]来进行递归-&gt;回第<span class="number">1</span>步</div><div class="line"><span class="number">4.</span> 如果k &gt; len(a1[])，那么k肯定只能在a2[]里面找。用a2[]来进行递归-&gt;回第<span class="number">1</span>步</div></pre></td></tr></table></figure>
+<p>详细代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 找到第k小的数，这里可以在POJ:</span></div><div class="line"><span class="comment">// http://poj.org/problem?id=2388</span></div><div class="line"><span class="comment">// 只不过POJ 2388是用来寻找一个有序数组中间(n/2)的那个元素。</span></div><div class="line"><span class="comment">// 利用kth变种之后，就是寻找第n/2+1小的元素。</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">kth</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> b, <span class="keyword">int</span> e, <span class="keyword">int</span> k)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> ((b+<span class="number">1</span>) == e) <span class="keyword">return</span> a[b];</div><div class="line">    <span class="keyword">int</span> i = b - <span class="number">1</span>;</div><div class="line">    <span class="keyword">int</span> j = e;</div><div class="line">    <span class="keyword">int</span> x = a[b+((e-b)&gt;&gt;<span class="number">1</span>)];</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</div><div class="line">        <span class="keyword">while</span> (a[++i]&lt;x); <span class="keyword">while</span> (a[--j] &gt; x);</div><div class="line">        <span class="keyword">if</span> (i &lt; j) &#123;<span class="keyword">int</span> t = a[i]; a[i] = a[j]; a[j] = t;&#125;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">if</span> (k &lt;= (i-b)) <span class="keyword">return</span> kth(a, b, i, k);</div><div class="line">    <span class="keyword">else</span> <span class="keyword">return</span> kth(a, i, e, k-(i-b));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>有了这段代码之后，也可以用来寻找第k大的元素。<br><a href="https://leetcode.com/problems/kth-largest-element-in-an-array/description/" target="_blank" rel="external">LeetCode 寻找第k大的元素</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 第k小与第n大的关系是</span></div><div class="line"><span class="comment">// 第1小对应于第size大</span></div><div class="line"><span class="comment">// 第size小对应于第1大</span></div><div class="line"><span class="comment">// 所以两者k+n == size+1</span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">findKthLargest</span><span class="params">(<span class="keyword">int</span>* nums, <span class="keyword">int</span> numsSize, <span class="keyword">int</span> k)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> kth(nums, <span class="number">0</span>, numsSize, numsSize + <span class="number">1</span> - k);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>即然讲到这里，也可以把快速排序的代码整理出来。快排的题目<br><a href="https://leetcode.com/problems/sort-colors/description/" target="_blank" rel="external">LeetCode排序</a></p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> b, <span class="keyword">int</span> e)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (b &gt;= e || (b+<span class="number">1</span>) == e) <span class="keyword">return</span>;</div><div class="line">    <span class="keyword">int</span> i = b <span class="number">-1</span>;</div><div class="line">    <span class="keyword">int</span> j = e;</div><div class="line">    <span class="keyword">int</span> x = a[b+((e-b)&gt;&gt;<span class="number">1</span>)];</div><div class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</div><div class="line">        <span class="keyword">while</span> (a[++i]&lt;x); <span class="keyword">while</span> (a[--j] &gt; x);</div><div class="line">        <span class="keyword">if</span> (i &lt; j) &#123;<span class="keyword">int</span> t = a[i]; a[i] = a[j]; a[j] = t;&#125;</div><div class="line">    &#125;</div><div class="line">    quick_sort(a, b, i);</div><div class="line">    quick_sort(a, i, e);</div><div class="line">&#125;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">sortColors</span><span class="params">(<span class="keyword">int</span>* nums, <span class="keyword">int</span> numsSize)</span> </span>&#123;</div><div class="line">    quick_sort(nums, <span class="number">0</span>, numsSize);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>快排有个点需要注意</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">quick_sort</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> b, <span class="keyword">int</span> e)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (b &gt;= e || (b+<span class="number">1</span>) == e) <span class="keyword">return</span>;</div><div class="line">    <span class="keyword">int</span> i = b <span class="number">-1</span>;</div><div class="line">    <span class="keyword">int</span> j = e;</div><div class="line">    <span class="keyword">int</span> x = a[b+((e-b)&gt;&gt;<span class="number">1</span>)];</div><div class="line">    <span class="keyword">while</span> (i &lt; j) &#123;</div><div class="line">        <span class="keyword">while</span> (a[++i]&lt;x); <span class="keyword">while</span> (a[--j] &gt; x);</div><div class="line">        <span class="keyword">if</span> (i &lt; j) &#123;<span class="keyword">int</span> t = a[i]; a[i] = a[j]; a[j] = t;&#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// Q: 这里i和j是什么关系？</span></div><div class="line">    <span class="comment">//    为什么后面在分界的时候，是以来进行分界的?</span></div><div class="line">    quick_sort(a, b, i);</div><div class="line">    quick_sort(a, i, e);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>当<code>while (i &lt; j)</code>结束之后，i与j的关系有两种</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> i == j</div><div class="line"><span class="number">2.</span> i &gt; j</div></pre></td></tr></table></figure>
+<p>当<code>i == j</code>的时候，直接用</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">quick_sort(a, b, i);</div><div class="line">quick_sort(a, i, e);</div></pre></td></tr></table></figure>
+<p>来排序后面的两个数组是没有问题的。</p>
+<p>但是，当<code>j!=i</code>此时必然有<code>j&lt;i且j+1 == i</code><br>那么如果再用</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">quick_sort(a, b, j);</div><div class="line">quick_sort(a, i, e);</div></pre></td></tr></table></figure>
+<p>来排序就会出错。因为<code>a[j]</code>这个时候没有被计入到排序里面。<br>如果要把<code>a[j]</code>放到前面的数组里面一起排序。就应当把代码写成</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">quick_sort(a, b, j+<span class="number">1</span>);</div><div class="line">quick_sort(a, i, e);</div></pre></td></tr></table></figure>
+<p>而此时<code>j+1 == i</code>。所以逻辑统一之后就是</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">quick_sort(a, b, i);</div><div class="line">quick_sort(a, i, e);</div></pre></td></tr></table></figure>
+<h2 id="二分搜索"><a href="#二分搜索" class="headerlink" title="二分搜索"></a>二分搜索</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span> *<span class="title">binary_search</span><span class="params">(<span class="keyword">int</span> *b, <span class="keyword">int</span> *e, <span class="keyword">int</span> v)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> *m = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">while</span> (b &lt; e) &#123;</div><div class="line">        m = b + ((e-b)&gt;&gt;<span class="number">1</span>);</div><div class="line">        <span class="keyword">if</span> (*m == v) <span class="keyword">return</span> m;</div><div class="line">        <span class="keyword">if</span> (*m &gt; v) e = m;</div><div class="line">        <span class="keyword">else</span> b = m + <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>回到题目本身，由于两个数组都是已经排好序的。找两个数组最中间的那个数。</p>
+<p>由于是两个数组，在讨论的时候，可以认为是在从这两个有序数组中找第k小的元素。<br>如果数组长度为奇数，那么就是第(n/2)+1小的元素。如果长度为偶数，那么就是取<br>第(n/2)小和第(n/2)+1小的平均数。那么主函数可以写成如下样子。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">double</span> <span class="title">findMedianSortedArrays</span><span class="params">(<span class="keyword">int</span>* nums1, <span class="keyword">int</span> nums1Size, <span class="keyword">int</span>* nums2, <span class="keyword">int</span> nums2Size)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> len = nums1Size + nums2Size;</div><div class="line">    <span class="keyword">int</span> midPos = len &gt;&gt; <span class="number">1</span>;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 如果是奇数，找最中间的元素</div><div class="line">     * 比如: 1 + 2 == 3, 3 &gt;&gt; 1 == 1 == midPos; [0,1=midPos,2]也就是要找第midPos+1个</div><div class="line">     * 如果是偶数，这里找到是前面一个元素</div><div class="line">     * 比如： 2+2=4, 4&gt;&gt;1 == 2 == midPos; [0,1,2,3] =&gt;第[1,2=midPos,3,4]个, </div><div class="line">     * 用midPos+1则找到了后面一个</div><div class="line">     */</div><div class="line">    <span class="keyword">double</span> a = findKthItem(nums1, nums1 + nums1Size, nums2, nums2 + nums2Size, midPos + <span class="number">1</span>);</div><div class="line">    <span class="keyword">if</span> (!(len &amp; <span class="number">0x01</span>)) &#123;</div><div class="line">        <span class="comment">/*长度为偶数*/</span></div><div class="line">        <span class="keyword">double</span> b = findKthItem(nums1, nums1 + nums1Size, nums2, nums2 + nums2Size, midPos);</div><div class="line">        <span class="keyword">return</span> (a + b) / <span class="number">2</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> a;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接下来就是看<code>findKthItem</code>的实现了。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 给定两个数组a[], b[], 从数组a[]中找到中位数M。把a[], b[]切分成两部分。</div><div class="line">   a1[] 小于M, a2[]大于等于M</div><div class="line">   b1[] 小于M, b2[]大于等于M</div><div class="line">   两个数组相当于被切分成了两个group.</div><div class="line">   groupA = &#123;a1[], b1[]&#125;</div><div class="line">   groupB = &#123;a2[], b2[]&#125;</div><div class="line"><span class="number">2.</span> 如果k大于len(groupA)，那么要找的元素肯定在groupB. 此时k -= len(groupA)</div><div class="line">   如果k小于等于len(groupA)，那么要找到的元素肯定在groupA.</div><div class="line"><span class="number">3.</span> 回步骤<span class="number">1</span></div></pre></td></tr></table></figure>
+<p>在进行第一步的时候，可以直接找最长的那个数组中位数。因为<br>最差的情况下，可以把最长数组的一半扔掉。如果是取最短的数组的中位数。<br>那么最差情况下，只能扔到最短数组的一半。不太划算。所以一开始可以写代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*</span></div><div class="line"> * 二分搜索</div><div class="line"> * b表示超始位置</div><div class="line"> * e表示结束位置</div><div class="line"> * 搜索范围[b, e)</div><div class="line"> * v表示要找的值</div><div class="line"> * 返回元素指针位置，如果没有找到，返回NULL</div><div class="line"> * pos指向刚好比v大的位置条件是: 如果: notFound(v) &amp;&amp; 且 *b &lt; *v &amp;&amp; *v &lt; *(e-1)</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">int</span> *<span class="title">binarySearch</span><span class="params">(<span class="keyword">int</span> *b, <span class="keyword">int</span> *e, <span class="keyword">int</span> *v, <span class="keyword">int</span> **less)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> *m = *less = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">while</span> (b &lt; e) &#123;</div><div class="line">        m = b + ((e-b) &gt;&gt; <span class="number">1</span>);</div><div class="line">        <span class="keyword">if</span> (*m == *v) <span class="keyword">return</span> m;</div><div class="line">        <span class="keyword">if</span> (*m &gt; *v) e = m;</div><div class="line">        <span class="keyword">else</span> b = m + <span class="number">1</span>; <span class="comment">/*ERROR 1*/</span></div><div class="line">    &#125;</div><div class="line">    <span class="keyword">while</span> (*m &lt; *v &amp;&amp; m &lt; e) ++m; <span class="comment">/*ERROR3 这里必须要找到刚好大于v的地方*/</span></div><div class="line">    *less = m;</div><div class="line">    <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">findKthItem</span><span class="params">(<span class="keyword">int</span> *a, <span class="keyword">int</span> *ae, <span class="keyword">int</span> *b, <span class="keyword">int</span> *be, <span class="keyword">int</span> k)</span> </span>&#123;</div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 如果b数组长于a数组，交换之</div><div class="line">     * 取长数组的中值在短数组的中二分查找，速度更快</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> ((be-b) &gt; (ae-a)) &#123;</div><div class="line">        <span class="keyword">return</span> findKthItem(b, be, a, ae, k);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    assert(<span class="number">0</span> &lt; k &amp;&amp; k &lt;= ((ae-a) + (be-b)));</div><div class="line">    assert(((ae-a) + (be-b)) &gt; <span class="number">0</span>);</div><div class="line"></div><div class="line">    <span class="comment">/*如果B数组为空*/</span></div><div class="line">    <span class="keyword">if</span> (b == be) &#123;</div><div class="line">        <span class="keyword">return</span> a[k<span class="number">-1</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/*如果A数组为空*/</span></div><div class="line">    <span class="keyword">if</span> (a == ae) &#123;</div><div class="line">        <span class="keyword">return</span> b[k<span class="number">-1</span>];</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/*如果k == 1*/</span></div><div class="line">    <span class="keyword">if</span> (<span class="number">1</span> == k) &#123;</div><div class="line">        <span class="keyword">return</span> a[<span class="number">0</span>] &lt; b[<span class="number">0</span>] ? a[<span class="number">0</span>] : b[<span class="number">0</span>];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*如果k刚好是两个数组的长度之和*/</span></div><div class="line">    <span class="keyword">if</span> (k == ((ae-a) + (be-b))) &#123;</div><div class="line">        <span class="keyword">return</span> *(ae<span class="number">-1</span>) &gt; *(be<span class="number">-1</span>) ? *(ae<span class="number">-1</span>) : *(be<span class="number">-1</span>);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*取长数组的中值*/</span></div><div class="line">    <span class="keyword">int</span> *amid = a + ((ae - a)&gt;&gt;<span class="number">1</span>);</div><div class="line">    </div><div class="line">    <span class="comment">/*在b数组中二分A数组的中间元素*/</span></div><div class="line">    <span class="keyword">int</span> *less = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">int</span> *pos = binarySearch(b, be, amid, &amp;less);</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 如果amid不存在于B数组中，但是范围落在里面，照样可以把</div><div class="line">     * B数组切成两半，这个时候的处理情况与找到的处理是一样的</div><div class="line">     * 都是把两个数组切分成了2份。</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> (less &amp;&amp; (*b &lt; *amid &amp;&amp; *amid &lt; b[be-b<span class="number">-1</span>])) &#123;</div><div class="line">        pos = less;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*</span></div><div class="line">     * 如果找到A数组的中间元素, 或者</div><div class="line">     * pos可以把数组B成功切分成为两半：看pos = less</div><div class="line">     */</div><div class="line">    <span class="keyword">if</span> (pos) &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * 这个时候数组被切分为两部分</div><div class="line">         * 数组A [a, amid), [amid, ae)</div><div class="line">         * 数组B [b, pos), [pos, be)</div><div class="line">         * 看一下k所在的范围</div><div class="line">         */</div><div class="line">        <span class="comment">/*前半部分的长度*/</span></div><div class="line">        <span class="keyword">int</span> frontLength = (amid-a) + (pos-b);</div><div class="line">        <span class="comment">/*与k比较有三种结果*/</span></div><div class="line">        <span class="keyword">if</span> (frontLength == k) &#123;</div><div class="line">            <span class="comment">/*</span></div><div class="line">             * 相等:</div><div class="line">             * 元素个数刚好与k相等, 只需要取最后一个元素</div><div class="line">             */</div><div class="line">            <span class="keyword">int</span> aLast = amid - a - <span class="number">1</span>;</div><div class="line">            <span class="keyword">int</span> bLast = pos - b - <span class="number">1</span>;</div><div class="line">            <span class="keyword">return</span> a[aLast] &gt; b[bLast] ? a[aLast] : b[bLast];</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (frontLength &gt; k) &#123;</div><div class="line">            <span class="comment">/*前面长于k*/</span></div><div class="line">            <span class="keyword">return</span> findKthItem(a, amid, b, pos, k);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">/*前面短于k*/</span></div><div class="line">            <span class="keyword">return</span> findKthItem(amid, ae, pos, be, k - frontLength);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        <span class="comment">/*can't reach here*/</span></div><div class="line">        assert(<span class="number">1</span> == <span class="number">0</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">/*</span></div><div class="line">         * 找不到，可能有三种情况，</div><div class="line">         * 1. 比数组B所有元素小</div><div class="line">         * 2. 比数组B所有元素大</div><div class="line">         * 3. 介于数组B之间</div><div class="line">         */</div><div class="line">        <span class="keyword">if</span> (*amid &lt; *b) &#123;</div><div class="line">            <span class="comment">/*</span></div><div class="line">             * 情况1：amid &lt; b数组中所有元素</div><div class="line">             * [a, amid), [amid, ae)</div><div class="line">             *            [b, be)</div><div class="line">             */</div><div class="line">            <span class="keyword">int</span> frontLength = amid - a;</div><div class="line">            <span class="comment">/*也是与k进行比较*/</span></div><div class="line">            <span class="keyword">if</span> (frontLength == k) &#123;</div><div class="line">                <span class="comment">/*返回front last元素*/</span></div><div class="line">                <span class="keyword">int</span> aLast = amid - a - <span class="number">1</span>;</div><div class="line">                <span class="keyword">return</span> a[aLast];</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (frontLength &gt; k) &#123;</div><div class="line">                <span class="keyword">return</span> a[k<span class="number">-1</span>];</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> findKthItem(amid, ae, b, be, k - frontLength);</div><div class="line">            &#125;</div><div class="line">            </div><div class="line">            <span class="comment">/*can't reach here*/</span></div><div class="line">            assert(<span class="number">1</span> == <span class="number">0</span>);</div><div class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (*amid &gt; b[be-b<span class="number">-1</span>]) &#123;</div><div class="line">            <span class="comment">/*</span></div><div class="line">             * 情况2: amid &gt; b数组中所有元素</div><div class="line">             * [a, amid), [amid, ae)</div><div class="line">             * [b, be)</div><div class="line">             */</div><div class="line">            assert(*amid &gt; b[be-b<span class="number">-1</span>]);</div><div class="line">            </div><div class="line">            <span class="keyword">int</span> frontLength = amid - a + be - b;</div><div class="line">            <span class="keyword">if</span> (frontLength == k) &#123;</div><div class="line">                <span class="keyword">int</span> aLast = amid - a - <span class="number">1</span>;</div><div class="line">                <span class="keyword">int</span> bLast = be - b - <span class="number">1</span>;</div><div class="line">                <span class="keyword">return</span> a[aLast] &gt; b[bLast] ? a[aLast] : b[bLast];</div><div class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (frontLength &gt; k) &#123;</div><div class="line">                <span class="keyword">return</span> findKthItem(a, amid, b, be, k);</div><div class="line">            &#125; <span class="keyword">else</span> &#123;</div><div class="line">                <span class="keyword">return</span> amid[k - frontLength - <span class="number">1</span>];</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            <span class="comment">/*can't reach here*/</span></div><div class="line">            assert(<span class="number">1</span> == <span class="number">0</span>);</div><div class="line">        &#125; <span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">/* ERROR2:</span></div><div class="line">             * amid 落在B组数区间中，但是不存在</div><div class="line">             * 数组被切分为[a, amid), [amid, ae)</div><div class="line">             *           [b, less), [less, be)</div><div class="line">             * 这种情况与找到的情况是一样的处理方法，前面已经pos = less</div><div class="line">             */</div><div class="line">            <span class="comment">/*can't reach here*/</span></div><div class="line">            assert(<span class="number">1</span> == <span class="number">0</span>);</div><div class="line">        &#125;</div><div class="line">        </div><div class="line">        <span class="comment">/*can't reach here*/</span></div><div class="line">        assert(<span class="number">1</span> == <span class="number">0</span>);</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*can't reach here*/</span></div><div class="line">    assert(<span class="number">1</span> == <span class="number">0</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>注意各种<code>assert</code>的运用，加强边界判断。最终通过之后，可以把相应的<code>assert</code>去掉。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-leetcode/4" data-title="LeetCode.4. Median of Two Sorted Arrays" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-mit.6.828/jos-lab3" class="article article-type-post" itemscope itemprop="blogPost">
   
