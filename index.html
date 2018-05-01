@@ -204,6 +204,103 @@
 
       <div class="body-wrap">
   
+    <article id="post-leetcode/10" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/05/02/leetcode/10/" class="article-date">
+  	<time datetime="2018-05-02T02:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/05/02/leetcode/10/">LeetCode.10 正则表达式匹配</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个字符串，以及一个正则表达式。<br>判断给定的正则表达式是否可以表示字符串。</p>
+<p>这里并没有让所有的正则表达式的符号都参与进来。<br>只是让’*’, ‘.’这两个符号加进来了。且字符串中只有<code>a~z</code>小写。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">* 吃掉前面的字符，或者无视自己，或者把前面的字符重复x次。</div><div class="line">. 可以匹配任意字符</div></pre></td></tr></table></figure>
+<p>比如</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">a*有好几种解释</div><div class="line"><span class="number">1.</span> 空串后面的*把a吃掉</div><div class="line"><span class="number">2.</span> a, *自身没有起任何作用</div><div class="line"><span class="number">3.</span> aa重复<span class="number">1</span>次</div><div class="line"><span class="number">4.</span> aaa重复<span class="number">2</span>次</div></pre></td></tr></table></figure>
+<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">.* 万能字符串，可以表示任何字符在重复的时候，也可以写成....这样。</div><div class="line">** 后面的*可以选择吃掉前面的字符。前面的字符*可能的一种选项就是忽略自己。</div><div class="line">   1. 空串</div><div class="line">   2. *</div><div class="line">   3. **</div><div class="line">   4. ***</div></pre></td></tr></table></figure>
+<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>这个题的做法是典型的深度优先搜索。不过在处理的时候，可以考虑预处理一下。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> x*x*如果出现在正则表达式里面。实际上是可以简化成x*的。</div><div class="line"><span class="number">2.</span> x*x*x*可以优化成x*</div></pre></td></tr></table></figure>
+<p>预处理的代码如下：</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="keyword">char</span>* s, <span class="keyword">char</span>* p)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> len_p = <span class="built_in">strlen</span>(p);</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">    <span class="keyword">for</span> (i = len_p - <span class="number">1</span>; i &gt; <span class="number">1</span>; --i) &#123;</div><div class="line">        <span class="comment">// 匹配x*x*这种情况, i指向后面的那个x</span></div><div class="line">        <span class="keyword">if</span> (p[i - <span class="number">1</span>] == <span class="string">'*'</span> &amp;&amp; p[i + <span class="number">1</span>] == <span class="string">'*'</span> &amp;&amp; p[i] == p[i - <span class="number">2</span>]) &#123;</div><div class="line">            memmove(p + i, p + i + <span class="number">2</span>, len_p - i - <span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 经过上面的处理，x*x*x*可以被缩减为x*</span></div><div class="line">    <span class="comment">// 这里开始进行match匹配</span></div><div class="line">    <span class="keyword">return</span> match_sub(s, p);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在进行匹配的时候，首先可以考虑没有<code>&#39;*&#39;</code>号的情况。比如。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">abc 与 a.c</div><div class="line">abc 与 bdc</div><div class="line"><span class="string">""</span>  与 pg</div><div class="line"><span class="literal">NULL</span> 与 abc</div></pre></td></tr></table></figure>
+<p>这种都特别容易判断。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> same(a,b) ((a)==(b) || (<span class="meta-string">'.'</span>) == (b))</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">match_sub</span><span class="params">(<span class="keyword">char</span> *s, <span class="keyword">char</span> *p)</span> </span>&#123;</div><div class="line">    <span class="keyword">for</span> (;*p &amp;&amp; *(p + <span class="number">1</span>) != <span class="string">'*'</span>; ++s, ++p)</div><div class="line">        <span class="keyword">if</span> (!s|| !*s || !same(*s, *p))</div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    ...</div><div class="line">    <span class="comment">// 此时*p == 0或p[1] == '*'</span></div><div class="line">    <span class="keyword">if</span> (!*p) <span class="keyword">return</span> <span class="literal">NULL</span> == s || *s == <span class="number">0</span>;</div><div class="line">    <span class="comment">// 此时p[1] 必然为'*'</span></div><div class="line">    </div><div class="line">    <span class="comment">// 如果当前字符相等，此时p[1] == '*'</span></div><div class="line">    <span class="comment">// 那么可以选择</span></div><div class="line">    <span class="comment">// 1. 重复 match_sub(s+1, p)</span></div><div class="line">    <span class="comment">// 2. 利用*吃掉当前字符 match_sub(s, p+2);</span></div><div class="line">    <span class="comment">// 3. a*b, *号可以选择无视自己.那么就是match_sub(s+1, p+2);</span></div><div class="line">    <span class="keyword">if</span> (*s &amp;&amp; same(*s, *p))</div><div class="line">        <span class="keyword">return</span>  match_sub(s + <span class="number">1</span>, p) || match_sub(s, p + <span class="number">2</span>) || match_sub(s+<span class="number">1</span>, p+<span class="number">2</span>);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="keyword">return</span> match_sub(s, p + <span class="number">2</span>);</div><div class="line">    <span class="comment">// 除此之外的其他情况，比如*s == 0 || !same</span></div><div class="line">    <span class="comment">// 那么只能利用*号吃掉当前字符</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-leetcode/10" data-title="LeetCode.10 正则表达式匹配" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
     <article id="post-leetcode/4" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
