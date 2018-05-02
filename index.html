@@ -77,7 +77,7 @@
 						<li>Links</li>
 						
 						
-						<li>Über</li>
+						<li>About</li>
 						
 					</ul>
 				</div>
@@ -116,7 +116,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 20px;">mit.6.828</a> <a href="/blog/tags/算法/" style="font-size: 10px;">算法</a>
+						<a href="/blog/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/算法/" style="font-size: 10px;">算法</a>
 					</div>
 				</section>
 				
@@ -203,6 +203,107 @@
 </nav>
 
       <div class="body-wrap">
+  
+    <article id="post-leetcode/17" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/05/02/leetcode/17/" class="article-date">
+  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/05/02/leetcode/17/">LeetCode.17 九键字母组合</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="题目含义"><a href="#题目含义" class="headerlink" title="题目含义"></a>题目含义</h1><p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" alt=""></p>
+<p>对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Input: &quot;23&quot;</div><div class="line">Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].</div></pre></td></tr></table></figure>
+<p>输出的时候，不需要考虑顺序。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>总的思想还是比较简单的。首先根据每个数字上面的字母数，得到结果总数。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>得到总的结果数之后，可以一次性地把所有需要动态申请的内存都申请完。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*申请结果空间*/</span></div><div class="line"><span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line"><span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line"><span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>);</div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>初始处理，比如给定的数字串是”999”。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 第一个数字为<span class="number">9</span></div><div class="line">   生成相应的字符串</div><div class="line">   ar1 = </div><div class="line">   [</div><div class="line">    <span class="string">"w"</span>,</div><div class="line">    <span class="string">"x"</span>,</div><div class="line">    <span class="string">"y"</span>,</div><div class="line">    <span class="string">"z"</span>,</div><div class="line">   ]</div><div class="line"></div><div class="line"><span class="number">2.</span> 第二个数字为<span class="number">9</span></div><div class="line">   ar2 = []</div><div class="line">   <span class="keyword">for</span> c in <span class="string">"wxyz"</span>:</div><div class="line">       新数组 = ar1 + c;</div><div class="line">       ar2 = [ar2; 新数组]</div><div class="line">   如果把循环展开，就是</div><div class="line">   c = <span class="string">"w"</span></div><div class="line">   新数组 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   ar2 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   </div><div class="line">   第二次循环</div><div class="line">   c = <span class="string">"x"</span></div><div class="line">   新数组 = [<span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>]</div><div class="line">   ar2 = [</div><div class="line">   <span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>,</div><div class="line">   <span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>,</div><div class="line">   ]</div><div class="line">   ...</div><div class="line">   </div><div class="line">   假设ar1长度为N。</div><div class="line">   那么后面每次循环的时候，只需要把</div><div class="line">   这N个字符串拷贝到新的位置。</div><div class="line">        a. 第一次添加的是<span class="number">0</span>~N<span class="number">-1</span></div><div class="line">        b. 第二次处理的字符串是N~<span class="number">2</span>N<span class="number">-1</span></div><div class="line">        c. 第三次处理的是<span class="number">2</span>N~<span class="number">3</span>N<span class="number">-1</span></div><div class="line"><span class="number">3.</span> 递归处理第三个数字</div></pre></td></tr></table></figure>
+<p>这段代码的关键就是在:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line"><span class="comment">// pos指向当前需要处理的是哪个数字</span></div><div class="line"><span class="comment">// 同时也是结果字符串需要填充的字符</span></div><div class="line"><span class="comment">// 串的位置。</span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这段代码利用9-&gt;"wxyz"中的"w"来生成</div><div class="line"> * ar1，并且得到长度len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">size_t</span> pos = str - a;</div><div class="line"><span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">    ret[i][pos] = *dic;</div><div class="line">    assert(<span class="number">0</span> &lt;= i &amp;&amp; i &lt; retLen);</div><div class="line">    assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">    i++;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * curlen就是指len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line"><span class="comment">// *p指向9-&gt;wxyz中的第二个字母x</span></div><div class="line"><span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"><span class="comment">// 从第二个字母开始依次处理每个字母</span></div><div class="line"><span class="keyword">while</span> (*p) &#123;</div><div class="line">    <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">    <span class="comment">// 在处理的时候，把</span></div><div class="line">    <span class="comment">// [0, len(ar1))拷贝到</span></div><div class="line">    <span class="comment">// [i*len(ar1), (i+1)*len(ar1) )</span></div><div class="line">    <span class="comment">// 然后再修改pos位置的字母</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">        <span class="comment">// 注意处理的字符串</span></div><div class="line">        <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">        assert(<span class="number">0</span> &lt;= (npos+i) &amp;&amp; (npos+i) &lt; retLen);</div><div class="line">        assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">        ret[npos+i][pos] = *p;</div><div class="line">    &#125;</div><div class="line">    p++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里并没有使用任何第三方库。直接使用一下递归就可以了。</p>
+<h1 id="完整的代码"><a href="#完整的代码" class="headerlink" title="完整的代码"></a>完整的代码</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/*单字符串快速查找*/</span></div><div class="line"><span class="keyword">char</span>* str_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="string">"abc"</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="string">"def"</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="string">"ghi"</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="string">"jkl"</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="string">"mno"</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="string">"pqrs"</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="string">"tuv"</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="string">"wxyz"</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这里递归进行处理</div><div class="line"> * str指向当前要处理的字符指针</div><div class="line"> * ret已经申请好所有的空间。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">append_char</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *a, <span class="keyword">char</span> *str, <span class="keyword">char</span> **ret)</span> </span>&#123;</div><div class="line">    <span class="comment">/*已经结束*/</span></div><div class="line">    <span class="keyword">if</span> (!str || !(*str)) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*当前字符映射过去的字符串*/</span></div><div class="line">    <span class="keyword">char</span> *dic = str_rec[*str];</div><div class="line">    <span class="keyword">if</span> (!dic || !(*dic)) <span class="keyword">return</span>;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理dic里面的第一个字符*/</span></div><div class="line">    <span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line">    <span class="keyword">size_t</span> pos = str - a;</div><div class="line">    <span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">        ret[i][pos] = *dic;</div><div class="line">        i++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*当前ret的长度*/</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line">    <span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">            <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">            ret[npos+i][pos] = *p;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    append_char(a, str + <span class="number">1</span>, ret);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Return an array of size *returnSize.</div><div class="line"> * Note: The returned array must be malloced, assume caller calls free().</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">char</span>** <span class="title">letterCombinations</span><span class="params">(<span class="keyword">char</span>* digits, <span class="keyword">int</span>* returnSize)</span> </span>&#123;</div><div class="line">    <span class="comment">/*如果为空串*/</span></div><div class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == digits || *digits == <span class="number">0</span>) &#123;</div><div class="line">        *returnSize = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* d_len表示当前数字串的长度，</span></div><div class="line">     * 结果字符串的长度是d_len + 1</div><div class="line">     */</div><div class="line">    <span class="keyword">int</span> d_len = p - digits;</div><div class="line"></div><div class="line">    <span class="comment">/*申请结果空间*/</span></div><div class="line">    <span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line">    <span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line">    <span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">        <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// 这里要多申请一个char</span></div><div class="line">        ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">        <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理第一个字符*/</span></div><div class="line">    <span class="keyword">char</span> *str = str_rec[*digits];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>;  str[i]; i++) &#123;</div><div class="line">        ret[i][<span class="number">0</span>] = str[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    append_char(digits, digits + <span class="number">1</span>, ret);</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>在提交的时候，总是遇到</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">sysmalloc: Assertion `(old_top == (((mbinptr) (((char *) &amp;((av)-&gt;bins[((1) - 1) * 2])) - __builtin_offsetof (struct malloc_chunk, fd)))) &amp;&amp; old_size == 0) || ((unsigned long) (old_size) &gt;= (unsigned long)((((__builtin_offsetof (struct malloc_chunk, fd_nextsize))+((2 *(sizeof(size_t))) - 1)) &amp; ~((2 *(sizeof(size_t))) - 1))) &amp;&amp; ((old_top)-&gt;size &amp; 0x1) &amp;&amp; ((unsigned long) old_end &amp; pagemask) == 0)' failed.</div></pre></td></tr></table></figure>
+<p>说的是内存访问越界。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 这里在申请内存的时候，要多一个char</span></div><div class="line"><span class="comment">// 并且要把申请的内存空间请0.</span></div><div class="line"><span class="comment">// memset(ret[i], 0, d_len);会导致上面那个错. </span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// ERROR: 这里要多申请一个char!!!</span></div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-leetcode/17" data-title="LeetCode.17 九键字母组合" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
   
     <article id="post-leetcode/10" class="article article-type-post" itemscope itemprop="blogPost">
   

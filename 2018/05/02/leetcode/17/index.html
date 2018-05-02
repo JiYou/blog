@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>LeetCode.17 九键字母组合 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="题目含义
+对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。
+Input: &amp;quot;23&amp;quot;Output: [&amp;quot;ad&amp;quot;, &amp;quot;ae&amp;quot;, &amp;quot;af&amp;quot;, &amp;quot;bd&amp;quot;, &amp;quot;be&amp;quot;, &amp;quot;bf&amp;quot;, &amp;quot;cd&amp;quot;, &amp;quot;ce&amp;quot;, &amp;quot">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LeetCode.17 九键字母组合">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/05/02/leetcode/17/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="题目含义
+对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。
+Input: &amp;quot;23&amp;quot;Output: [&amp;quot;ad&amp;quot;, &amp;quot;ae&amp;quot;, &amp;quot;af&amp;quot;, &amp;quot;bd&amp;quot;, &amp;quot;be&amp;quot;, &amp;quot;bf&amp;quot;, &amp;quot;cd&amp;quot;, &amp;quot;ce&amp;quot;, &amp;quot">
+<meta property="og:image" content="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png">
+<meta property="og:updated_time" content="2018-05-02T11:32:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="LeetCode.17 九键字母组合">
+<meta name="twitter:description" content="题目含义
+对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。
+Input: &amp;quot;23&amp;quot;Output: [&amp;quot;ad&amp;quot;, &amp;quot;ae&amp;quot;, &amp;quot;af&amp;quot;, &amp;quot;bd&amp;quot;, &amp;quot;be&amp;quot;, &amp;quot;bf&amp;quot;, &amp;quot;cd&amp;quot;, &amp;quot;ce&amp;quot;, &amp;quot">
+<meta name="twitter:image" content="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/leetcode/" style="font-size: 10px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/算法/" style="font-size: 10px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">奥巴马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">卡卡的美丽传说</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">本泽马的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">吉格斯的博客</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">习大大大不同</a>
+			        
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="http://localhost:4000/">托蒂的博客</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">我是谁，我从哪里来，我到哪里去？我就是我，是颜色不一样的吃货…</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-leetcode/17" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/05/02/leetcode/17/" class="article-date">
+  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      LeetCode.17 九键字母组合
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="题目含义"><a href="#题目含义" class="headerlink" title="题目含义"></a>题目含义</h1><p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" alt=""></p>
+<p>对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Input: &quot;23&quot;</div><div class="line">Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].</div></pre></td></tr></table></figure>
+<p>输出的时候，不需要考虑顺序。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>总的思想还是比较简单的。首先根据每个数字上面的字母数，得到结果总数。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>得到总的结果数之后，可以一次性地把所有需要动态申请的内存都申请完。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*申请结果空间*/</span></div><div class="line"><span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line"><span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line"><span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>);</div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>初始处理，比如给定的数字串是”999”。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 第一个数字为<span class="number">9</span></div><div class="line">   生成相应的字符串</div><div class="line">   ar1 = </div><div class="line">   [</div><div class="line">    <span class="string">"w"</span>,</div><div class="line">    <span class="string">"x"</span>,</div><div class="line">    <span class="string">"y"</span>,</div><div class="line">    <span class="string">"z"</span>,</div><div class="line">   ]</div><div class="line"></div><div class="line"><span class="number">2.</span> 第二个数字为<span class="number">9</span></div><div class="line">   ar2 = []</div><div class="line">   <span class="keyword">for</span> c in <span class="string">"wxyz"</span>:</div><div class="line">       新数组 = ar1 + c;</div><div class="line">       ar2 = [ar2; 新数组]</div><div class="line">   如果把循环展开，就是</div><div class="line">   c = <span class="string">"w"</span></div><div class="line">   新数组 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   ar2 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   </div><div class="line">   第二次循环</div><div class="line">   c = <span class="string">"x"</span></div><div class="line">   新数组 = [<span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>]</div><div class="line">   ar2 = [</div><div class="line">   <span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>,</div><div class="line">   <span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>,</div><div class="line">   ]</div><div class="line">   ...</div><div class="line">   </div><div class="line">   假设ar1长度为N。</div><div class="line">   那么后面每次循环的时候，只需要把</div><div class="line">   这N个字符串拷贝到新的位置。</div><div class="line">        a. 第一次添加的是<span class="number">0</span>~N<span class="number">-1</span></div><div class="line">        b. 第二次处理的字符串是N~<span class="number">2</span>N<span class="number">-1</span></div><div class="line">        c. 第三次处理的是<span class="number">2</span>N~<span class="number">3</span>N<span class="number">-1</span></div><div class="line"><span class="number">3.</span> 递归处理第三个数字</div></pre></td></tr></table></figure>
+<p>这段代码的关键就是在:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line"><span class="comment">// pos指向当前需要处理的是哪个数字</span></div><div class="line"><span class="comment">// 同时也是结果字符串需要填充的字符</span></div><div class="line"><span class="comment">// 串的位置。</span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这段代码利用9-&gt;"wxyz"中的"w"来生成</div><div class="line"> * ar1，并且得到长度len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">size_t</span> pos = str - a;</div><div class="line"><span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">    ret[i][pos] = *dic;</div><div class="line">    assert(<span class="number">0</span> &lt;= i &amp;&amp; i &lt; retLen);</div><div class="line">    assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">    i++;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * curlen就是指len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line"><span class="comment">// *p指向9-&gt;wxyz中的第二个字母x</span></div><div class="line"><span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"><span class="comment">// 从第二个字母开始依次处理每个字母</span></div><div class="line"><span class="keyword">while</span> (*p) &#123;</div><div class="line">    <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">    <span class="comment">// 在处理的时候，把</span></div><div class="line">    <span class="comment">// [0, len(ar1))拷贝到</span></div><div class="line">    <span class="comment">// [i*len(ar1), (i+1)*len(ar1) )</span></div><div class="line">    <span class="comment">// 然后再修改pos位置的字母</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">        <span class="comment">// 注意处理的字符串</span></div><div class="line">        <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">        assert(<span class="number">0</span> &lt;= (npos+i) &amp;&amp; (npos+i) &lt; retLen);</div><div class="line">        assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">        ret[npos+i][pos] = *p;</div><div class="line">    &#125;</div><div class="line">    p++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里并没有使用任何第三方库。直接使用一下递归就可以了。</p>
+<h1 id="完整的代码"><a href="#完整的代码" class="headerlink" title="完整的代码"></a>完整的代码</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/*单字符串快速查找*/</span></div><div class="line"><span class="keyword">char</span>* str_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="string">"abc"</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="string">"def"</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="string">"ghi"</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="string">"jkl"</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="string">"mno"</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="string">"pqrs"</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="string">"tuv"</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="string">"wxyz"</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这里递归进行处理</div><div class="line"> * str指向当前要处理的字符指针</div><div class="line"> * ret已经申请好所有的空间。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">append_char</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *a, <span class="keyword">char</span> *str, <span class="keyword">char</span> **ret)</span> </span>&#123;</div><div class="line">    <span class="comment">/*已经结束*/</span></div><div class="line">    <span class="keyword">if</span> (!str || !(*str)) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*当前字符映射过去的字符串*/</span></div><div class="line">    <span class="keyword">char</span> *dic = str_rec[*str];</div><div class="line">    <span class="keyword">if</span> (!dic || !(*dic)) <span class="keyword">return</span>;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理dic里面的第一个字符*/</span></div><div class="line">    <span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line">    <span class="keyword">size_t</span> pos = str - a;</div><div class="line">    <span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">        ret[i][pos] = *dic;</div><div class="line">        i++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*当前ret的长度*/</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line">    <span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">            <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">            ret[npos+i][pos] = *p;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    append_char(a, str + <span class="number">1</span>, ret);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Return an array of size *returnSize.</div><div class="line"> * Note: The returned array must be malloced, assume caller calls free().</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">char</span>** <span class="title">letterCombinations</span><span class="params">(<span class="keyword">char</span>* digits, <span class="keyword">int</span>* returnSize)</span> </span>&#123;</div><div class="line">    <span class="comment">/*如果为空串*/</span></div><div class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == digits || *digits == <span class="number">0</span>) &#123;</div><div class="line">        *returnSize = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* d_len表示当前数字串的长度，</span></div><div class="line">     * 结果字符串的长度是d_len + 1</div><div class="line">     */</div><div class="line">    <span class="keyword">int</span> d_len = p - digits;</div><div class="line"></div><div class="line">    <span class="comment">/*申请结果空间*/</span></div><div class="line">    <span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line">    <span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line">    <span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">        <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// 这里要多申请一个char</span></div><div class="line">        ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">        <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理第一个字符*/</span></div><div class="line">    <span class="keyword">char</span> *str = str_rec[*digits];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>;  str[i]; i++) &#123;</div><div class="line">        ret[i][<span class="number">0</span>] = str[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    append_char(digits, digits + <span class="number">1</span>, ret);</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>在提交的时候，总是遇到</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">sysmalloc: Assertion `(old_top == (((mbinptr) (((char *) &amp;((av)-&gt;bins[((1) - 1) * 2])) - __builtin_offsetof (struct malloc_chunk, fd)))) &amp;&amp; old_size == 0) || ((unsigned long) (old_size) &gt;= (unsigned long)((((__builtin_offsetof (struct malloc_chunk, fd_nextsize))+((2 *(sizeof(size_t))) - 1)) &amp; ~((2 *(sizeof(size_t))) - 1))) &amp;&amp; ((old_top)-&gt;size &amp; 0x1) &amp;&amp; ((unsigned long) old_end &amp; pagemask) == 0)' failed.</div></pre></td></tr></table></figure>
+<p>说的是内存访问越界。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 这里在申请内存的时候，要多一个char</span></div><div class="line"><span class="comment">// 并且要把申请的内存空间请0.</span></div><div class="line"><span class="comment">// memset(ret[i], 0, d_len);会导致上面那个错. </span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// ERROR: 这里要多申请一个char!!!</span></div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2018/05/02/leetcode/10/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">LeetCode.10 正则表达式匹配</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-leetcode/17" data-title="LeetCode.17 九键字母组合" data-url="https://jiyou.github.io/blog/blog/2018/05/02/leetcode/17/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
