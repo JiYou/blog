@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.2 Chrono Duration | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="首先看一下标准库的使用以及概念。首先是一个概念ratio，ratio表示的是一个概念，就是单位。
+Durations表示的是一段时间。比如10秒钟，2个小时。
+Ratiotemplate &amp;lt;intmax_t N, intmax_t D = 1&amp;gt; class ratio;
+先看D，D表示一秒可以被切分成多少份。N就是表示有多少份。
+ratio&amp;lt;1, 1&amp;gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.2 Chrono Duration">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/04/15/ceph/2.chrono/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="首先看一下标准库的使用以及概念。首先是一个概念ratio，ratio表示的是一个概念，就是单位。
+Durations表示的是一段时间。比如10秒钟，2个小时。
+Ratiotemplate &amp;lt;intmax_t N, intmax_t D = 1&amp;gt; class ratio;
+先看D，D表示一秒可以被切分成多少份。N就是表示有多少份。
+ratio&amp;lt;1, 1&amp;gt;">
+<meta property="og:updated_time" content="2018-07-19T01:34:04.113Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.2 Chrono Duration">
+<meta name="twitter:description" content="首先看一下标准库的使用以及概念。首先是一个概念ratio，ratio表示的是一个概念，就是单位。
+Durations表示的是一段时间。比如10秒钟，2个小时。
+Ratiotemplate &amp;lt;intmax_t N, intmax_t D = 1&amp;gt; class ratio;
+先看D，D表示一秒可以被切分成多少份。N就是表示有多少份。
+ratio&amp;lt;1, 1&amp;gt;">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 15px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-ceph/2.chrono" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/04/15/ceph/2.chrono/" class="article-date">
+  	<time datetime="2018-04-14T21:28:32.000Z" itemprop="datePublished">2018-04-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.2 Chrono Duration
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>首先看一下标准库的使用以及概念。首先是一个概念<code>ratio</code>，<code>ratio</code>表示的是一个概念，就是单位。</p>
+<p>Durations表示的是一段时间。比如10秒钟，2个小时。</p>
+<h1 id="Ratio"><a href="#Ratio" class="headerlink" title="Ratio"></a>Ratio</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">intmax_t</span> N, <span class="keyword">intmax_t</span> D = <span class="number">1</span>&gt; <span class="keyword">class</span> ratio;</div></pre></td></tr></table></figure>
+<p>先看<code>D</code>，<code>D</code>表示一秒可以被切分成多少份。<code>N</code>就是表示有多少份。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1</span>&gt;                      seconds</div></pre></td></tr></table></figure>
+<p>这里就是表示1秒。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000</span>&gt;               microseconds</div></pre></td></tr></table></figure>
+<p>这个就是表示毫秒。</p>
+<p>另外一种简单的观点，就是<code>N/D</code>秒就是<code>ratio</code>的值。</p>
+<p>比如</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">ratio&lt;<span class="number">3600</span>, <span class="number">1</span>&gt;                hours          <span class="number">3600</span>/<span class="number">1</span> = <span class="number">3600</span>秒</div><div class="line">ratio&lt;<span class="number">60</span>, <span class="number">1</span>&gt;                  minutes          <span class="number">60</span>/<span class="number">1</span> = <span class="number">60</span>秒</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1</span>&gt;                   seconds</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000</span>&gt;                microseconds</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000000</span>&gt;             microseconds</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000000000</span>&gt;          nanosecons</div></pre></td></tr></table></figure>
+<p><strong>注意</strong>我们自己可以定义Period，比如<code>ratio&lt;1, -2&gt;</code>表示单位时间是<code>-0.5</code>秒。</p>
+<h1 id="Durations"><a href="#Durations" class="headerlink" title="Durations"></a>Durations</h1><p>这个用来表示一段时间，比如一天，2个小时，10秒钟。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> Rep, <span class="keyword">class</span> Period = ratio&lt;<span class="number">1</span>&gt; &gt; <span class="keyword">class</span> duration;</div></pre></td></tr></table></figure>
+<p>Rep表示一种数值类型，用来表示Period的数量，比如<code>int float double</code><br>Period是ratio类型，用来表示时间度量单位。比如经过了2纳秒。这里Period就是用<code>ratio&lt;1, 1000000000&gt;          nanosecons</code>来表示。</p>
+<h1 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> ToDuration, <span class="keyword">class</span> Rep, <span class="keyword">class</span> Period&gt;</div><div class="line"><span class="function"><span class="keyword">constexpr</span> ToDuration <span class="title">duration_cast</span> <span class="params">(<span class="keyword">const</span> duration&lt;Rep,Period&gt;&amp; dtn)</span></span>;</div></pre></td></tr></table></figure>
+<p>这个函数的作用是把一种duration转换成另外一种durantion的表达。</p>
+<h1 id="常用类型"><a href="#常用类型" class="headerlink" title="常用类型"></a>常用类型</h1><p>当然，对于很多常用的时间类型，标准库里面也进行了定义。不过需要注意的是，这些不是一个常量，而是一个类型。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// nanoseconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, nano&gt;         nanoseconds;</div><div class="line"><span class="comment">/// microseconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, micro&gt;        microseconds;</div><div class="line"><span class="comment">/// milliseconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, milli&gt;        milliseconds;</div><div class="line"><span class="comment">/// seconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>&gt; 		        seconds</div><div class="line"><span class="comment">/// minutes</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, ratio&lt; <span class="number">60</span>&gt;&gt;   minutes</div><div class="line"><span class="comment">/// hours</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, ratio&lt;<span class="number">3600</span>&gt;&gt;  hours;</div></pre></td></tr></table></figure>
+<p>所以在使用的时候，可以直接使用这些时间单位。比如休眠一段时间。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="built_in">std</span>::this_thread::sleep_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">3</span>)); <span class="comment">//休眠三秒</span></div><div class="line"><span class="built_in">std</span>::this_thread::sleep_for(<span class="built_in">std</span>::chrono::milliseconds(<span class="number">100</span>)); <span class="comment">//休眠100毫秒</span></div></pre></td></tr></table></figure>
+<h1 id="Count"><a href="#Count" class="headerlink" title="Count"></a>Count</h1><p>有时候，也可以计算有多个少<code>X</code>为单位的时间。这个<code>X</code>可以是毫秒，也可能是纳秒等等。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 这里只有3毫秒，所以count结果为3.</span></div><div class="line">    <span class="built_in">std</span>::chrono::milliseconds ms&#123;<span class="number">3</span>&#125;; <span class="comment">// 3 毫秒</span></div><div class="line">    <span class="comment">// 6000 microseconds constructed from 3 milliseconds</span></div><div class="line">    <span class="comment">// 这里单位变成了micro second</span></div><div class="line">    <span class="comment">// 2*ms则是6ms，也就是6000微秒</span></div><div class="line">    <span class="built_in">std</span>::chrono::microseconds us = <span class="number">2</span>*ms; <span class="comment">//6000微秒</span></div><div class="line">    <span class="comment">// 30Hz clock using fractional ticks</span></div><div class="line">    <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">double</span>, <span class="built_in">std</span>::ratio&lt;<span class="number">1</span>, <span class="number">30</span>&gt;&gt; hz30(<span class="number">3.5</span>);</div><div class="line">    <span class="comment">// 这里的输出是3.5</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"hz30 has"</span> &lt;&lt; hz30.count() &lt;&lt; <span class="string">" ticks\n"</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt;  <span class="string">"3 ms duration has "</span> &lt;&lt; ms.count() &lt;&lt; <span class="string">" ticks\n"</span>&lt;&lt;  <span class="string">"6000 us duration has "</span> &lt;&lt; us.count() &lt;&lt; <span class="string">" ticks\n"</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>程序的输出</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">hz30 has3.5 ticks</div><div class="line">3 ms duration has 3 ticks</div><div class="line">6000 us duration has 6000 ticks</div></pre></td></tr></table></figure>
+<h1 id="时间的计算"><a href="#时间的计算" class="headerlink" title="时间的计算"></a>时间的计算</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">minutes <span class="title">t1</span><span class="params">( <span class="number">10</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">seconds <span class="title">t2</span><span class="params">( <span class="number">60</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::seconds t3 = t1 - t2;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; t3.count() &lt;&lt; <span class="string">" second"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>程序的输出</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">540 second</div></pre></td></tr></table></figure>
+<h1 id="时间的转换"><a href="#时间的转换" class="headerlink" title="时间的转换"></a>时间的转换</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">minutes <span class="title">t1</span><span class="params">( <span class="number">10</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">seconds <span class="title">t2</span><span class="params">( <span class="number">60</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::seconds t3 = t1 - t2;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; t3.count() &lt;&lt; <span class="string">" second"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt;</div><div class="line">        <span class="built_in">std</span>::chrono::duration_cast&lt;<span class="built_in">std</span>::chrono::minutes&gt;(t3).count()</div><div class="line">        &lt;&lt; <span class="string">"minutes"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/04/19/mit.6.828/jos-lab2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          MIT 6.828 Lab2
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/04/15/ceph/1.Object/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.1 各种Object</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/2.chrono" data-title="1.2 Chrono Duration" data-url="https://jiyou.github.io/blog/blog/2018/04/15/ceph/2.chrono/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>

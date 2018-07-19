@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.1 type_traits | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="If else的结构有时候想在编译的时候，实现这样的效果，就是根据传入的值来决定需要产生的类型。比如：
+void function(type X, type Y) &amp;#123;    // if a == true 定义类型X    constexpr bool a = true/false;    if (a) &amp;#123;        X var;    &amp;#125; else &amp;#123">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.1 type_traits">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/07/18/stl/1.type_traits/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="If else的结构有时候想在编译的时候，实现这样的效果，就是根据传入的值来决定需要产生的类型。比如：
+void function(type X, type Y) &amp;#123;    // if a == true 定义类型X    constexpr bool a = true/false;    if (a) &amp;#123;        X var;    &amp;#125; else &amp;#123">
+<meta property="og:updated_time" content="2018-07-18T13:01:27.292Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.1 type_traits">
+<meta name="twitter:description" content="If else的结构有时候想在编译的时候，实现这样的效果，就是根据传入的值来决定需要产生的类型。比如：
+void function(type X, type Y) &amp;#123;    // if a == true 定义类型X    constexpr bool a = true/false;    if (a) &amp;#123;        X var;    &amp;#125; else &amp;#123">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 15px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-stl/1.type_traits" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/18/stl/1.type_traits/" class="article-date">
+  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.1 type_traits
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="If-else的结构"><a href="#If-else的结构" class="headerlink" title="If else的结构"></a>If else的结构</h1><p>有时候想在编译的时候，实现这样的效果，就是根据传入的值来决定需要产生的类型。<br>比如：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">function</span><span class="params">(type X, type Y)</span> </span>&#123;</div><div class="line">    <span class="comment">// if a == true 定义类型X</span></div><div class="line">    <span class="keyword">constexpr</span> <span class="keyword">bool</span> a = <span class="literal">true</span>/<span class="literal">false</span>;</div><div class="line">    <span class="keyword">if</span> (a) &#123;</div><div class="line">        X var;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        Y var;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 如果想在这里引用var，应该怎么办?</span></div><div class="line">    <span class="comment">// ?? 实际上是不能在这里用的。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>一种解决办法是，写一个父类，然后把<code>X/Y</code>声明成<code>Base</code>的子类。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> X : <span class="keyword">public</span> Base &#123;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Y : <span class="keyword">public</span> Base &#123;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">function</span><span class="params">(<span class="keyword">bool</span> a, type X, type Y)</span> </span>&#123;</div><div class="line">    Base * b = <span class="literal">nullptr</span>;</div><div class="line">    <span class="keyword">if</span> (a) &#123;</div><div class="line">        b = <span class="keyword">new</span> X();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        b = <span class="keyword">new</span> Y();</div><div class="line">    &#125;</div><div class="line">    b.接口调用();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是这么写会很烦人：</p>
+<ol>
+<li>引入了不必要的父类</li>
+<li>XY可能已经有自己的父类</li>
+<li>X/Y如果还需要与Z在其他地方生成这样的代码关系，那还得生成一个父类</li>
+</ol>
+<p>这个时候，采用面向对象的方法代码会写得比较丑，那么一种办法是引入模板偏特化。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> <span class="keyword">bool</span>, <span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond &#123;</div><div class="line">    <span class="keyword">typedef</span> If type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond&lt;<span class="literal">false</span>, If, Then&gt;&#123;</div><div class="line">    <span class="keyword">typedef</span> Then type;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>使用方式</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> X&#123;&#125;;</div><div class="line"><span class="keyword">class</span> Y&#123;&#125;;</div><div class="line">cond&lt;<span class="literal">true</span>, X, Y&gt;::type 此时为 X</div><div class="line">cond&lt;<span class="literal">false</span>, X, Y&gt;::type 就是Y</div></pre></td></tr></table></figure>
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">bool</span> Bool, <span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond &#123;</div><div class="line">    <span class="keyword">typedef</span> If type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond&lt;<span class="literal">false</span>, If, Then&gt;&#123;</div><div class="line">    <span class="keyword">typedef</span> Then type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> If &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"If"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Then &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Then"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="comment">// 需要注意的是，true/false这里需要是编译期间就可以决定的常量。</span></div><div class="line">    <span class="comment">// 不能写成bool a = true, 然后cond&lt;a, If, Then&gt;这样。</span></div><div class="line">    cond&lt;<span class="literal">true</span>, If, Then&gt;::type::print();</div><div class="line">    cond&lt;<span class="literal">false</span>, If, Then&gt;::type::print();</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里相当于在进行类型运算:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">constexpr</span> <span class="literal">true</span>) &#123;</div><div class="line">    <span class="keyword">return</span> type=X;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> type=Y;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里就需要引出后面要介绍的模板元编程。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/07/18/stl/5.模板实例化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          1.5 模板实例化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/07/18/stl/6.模板的编译/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.5 模板的编译</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/1.type_traits" data-title="1.1 type_traits" data-url="https://jiyou.github.io/blog/blog/2018/07/18/stl/1.type_traits/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>

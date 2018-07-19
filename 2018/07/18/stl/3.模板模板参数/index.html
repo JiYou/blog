@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.3 模板模板参数 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="模板的模板参数template&amp;lt;class T, int i&amp;gt; class A &amp;#123;   int x;&amp;#125;;template&amp;lt;class T&amp;gt; class A&amp;lt;T, 5&amp;gt; &amp;#123;   short x;&amp;#125;;template&amp;lt;template&amp;lt;class T&amp;gt; class U&amp;gt; class B1 &amp;#123;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.3 模板模板参数">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/07/18/stl/3.模板模板参数/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="模板的模板参数template&amp;lt;class T, int i&amp;gt; class A &amp;#123;   int x;&amp;#125;;template&amp;lt;class T&amp;gt; class A&amp;lt;T, 5&amp;gt; &amp;#123;   short x;&amp;#125;;template&amp;lt;template&amp;lt;class T&amp;gt; class U&amp;gt; class B1 &amp;#123;">
+<meta property="og:updated_time" content="2018-07-19T01:32:15.023Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.3 模板模板参数">
+<meta name="twitter:description" content="模板的模板参数template&amp;lt;class T, int i&amp;gt; class A &amp;#123;   int x;&amp;#125;;template&amp;lt;class T&amp;gt; class A&amp;lt;T, 5&amp;gt; &amp;#123;   short x;&amp;#125;;template&amp;lt;template&amp;lt;class T&amp;gt; class U&amp;gt; class B1 &amp;#123;">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 15px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-stl/3.模板模板参数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/18/stl/3.模板模板参数/" class="article-date">
+  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.3 模板模板参数
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="模板的模板参数"><a href="#模板的模板参数" class="headerlink" title="模板的模板参数"></a>模板的模板参数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> A &#123;</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> A&lt;T, <span class="number">5</span>&gt; &#123;</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> U&gt; <span class="keyword">class</span> B1 &#123; &#125;;</div><div class="line"></div><div class="line">B1&lt;A&gt; c;</div></pre></td></tr></table></figure>
+<p>注意，这个代码是无法通过编译的。因为编译器在匹配模板参数的时候，是看全部参数的，不会去考虑<code>A</code>的偏特化版本。</p>
+<p>The compiler considers the partial specializations based on a template template argument once you have instantiated a specialization based on the corresponding template template parameter. The following example demonstrates this:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">// 声明一个A的Base模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 声明A的偏特化版本</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   V&lt;<span class="keyword">int</span>, <span class="keyword">char</span>&gt; i;</div><div class="line">   V&lt;<span class="keyword">char</span>, <span class="keyword">char</span>&gt; j;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 那么，在生成代码的时候，实际上生成的是</span></div><div class="line"><span class="comment">// class B &#123; A&lt;int, char&gt; i; A &lt;char,char&gt; j; &#125;</span></div><div class="line">B&lt;A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.i.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.j.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果仔细地看一下<code>B</code>这个类，就会发现，<code>T/U</code>好像没有什么用。因为在<code>B</code>的内部声明的里面从来没有用到这两个类型，如果要用这两个类型应该怎么办？</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样是会报错的，因为<code>template&lt;class T, class U&gt; class V</code>只会用来修饰类<code>V</code>而不会用来修饰<code>B</code>。所以在编译的时候，会在<code>B</code>里面说，<code>T/U</code>没有定义。</p>
+<p>那么，如果想让<code>B</code>类里面有如下声明：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>应该怎么办？</p>
+<p>应该把<code>B</code>类的声明改成如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里要特别注意看声明。在声明<code>V</code>的时候，所有的这个<code>V</code>会引用到的变量都是在<code>template&lt;typename T, typename U, typename X, ..&gt; B</code>也就是<code>T, U, X</code>这三个里面取。至于具体取哪个，并不能从<code>template</code>的声明里面看出来。</p>
+<p>真正要实例化<code>V</code>类的时候，也就是<code>B</code>的内部声明的时候，才会知道<code>V</code>到底是怎么实例化的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">V&lt;T, U&gt; v_;</div><div class="line">V&lt;U, X&gt; ux_;</div></pre></td></tr></table></figure>
+<p>所以可以总结一下，关于模析模板参数。</p>
+<ul>
+<li>如果模板模板参数想起作用，那么只能在<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>里面取，并且声明模板板参数的时候，不能写明<code>template&lt;class T, class U&gt; class V</code>，而是需要写成<code>template&lt;class, class&gt; class V</code>这种形式，表示参数都从前面的列表里面选择。</li>
+<li>如果是写成<code>template&lt;class T, class U&gt; class V</code>这种格式，并且<code>T/U</code>不在外部列表里面。比如<code>template&lt;typename T, typename U, typename X, template&lt;typename T, typename U&gt; class V&gt;</code>这里会因为<code>T/U</code>重复声明，导到编译不过。那么需要改写成<code>template&lt;typename T, typename U, typename X, template&lt;typename A, typename B&gt; class V&gt; class B {};</code>。但是按照这种写法，模板参数<code>A/B</code>就只能在<code>B</code>类定义的时候内部各种实例化，而不能在外部指定。</li>
+</ul>
+<p>所以，也可以总结成。</p>
+<ul>
+<li>如果想定义<code>B</code>类的时候，直接也把内部类<code>A</code>的定义决定了。那么，声明的时候，必须采用1.</li>
+<li>如果想<code>B</code>类内部自由定义<code>A</code>类的实例化，那么必须采用格式2.</li>
+</ul>
+<h2 id="模板模板参数的取值范围"><a href="#模板模板参数的取值范围" class="headerlink" title="模板模板参数的取值范围"></a>模板模板参数的取值范围</h2><p>模板模板参数的取值范围可以是：</p>
+<ul>
+<li>类型声明在前面，比如<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>。这个时候，类<code>V</code>的模板参数可取范围是<code>X, Y, Z</code>。</li>
+<li>类型声明在后面，比如<code>&lt;template&lt;class, class&gt; class V, typename X, typename Y, typename Z&gt;</code>也是同样可以取到<code>X/Y/Z</code>的。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class</span> H, <span class="keyword">class</span> S&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> H&lt;S&gt; &amp;value)</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再如</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class</span> V, <span class="keyword">class</span> T, <span class="keyword">class</span> A&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(V&lt;T, A&gt; &amp;v)</span> </span>&#123;</div><div class="line">    <span class="comment">// This can be "typename V&lt;T, A&gt;::value_type",</span></div><div class="line">    <span class="comment">// but we are pretending we don't have it</span></div><div class="line"></div><div class="line">    T temp = v.back();</div><div class="line">    v.pop_back();</div><div class="line">    <span class="comment">// Do some work on temp</span></div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; temp &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="缺省值"><a href="#缺省值" class="headerlink" title="缺省值"></a>缺省值</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont = Deque&gt;</div><div class="line"><span class="keyword">class</span> Stack &#123;</div><div class="line">    <span class="comment">//...</span></div><div class="line">&#125;;</div><div class="line"><span class="comment">//...</span></div><div class="line">Stack&lt;<span class="keyword">int</span>&gt; aStack1; <span class="comment">// use default: Cont is Deque</span></div><div class="line">Stack&lt;<span class="built_in">std</span>::<span class="built_in">string</span>,List&gt; aStack2; <span class="comment">// Cont is List</span></div></pre></td></tr></table></figure>
+<p>只是需要注意的是，这里的<code>Deque</code>的声明也需要是<code>template &lt;typename&gt; class Deque { };</code>这样。也就是只有一个模板参数。</p>
+<p><strong>注意</strong>这里的<code>Deque</code>不是<code>STL</code>里面<code>Deque</code>。</p>
+<h1 id="无用的模板参数"><a href="#无用的模板参数" class="headerlink" title="无用的模板参数"></a>无用的模板参数</h1><p>有时候，如果采用如下声明，会导致相同的结果。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Vec &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125; ;</div></pre></td></tr></table></figure>
+<p>在这里，<code>Wrap</code>的声明得到的效果就与</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>得到同样的效果。因为<code>template&lt;template&lt;typename T&gt; typename V&gt;</code>会导致<code>V</code>没有参数范围可以选择。只能在内部指定类型。</p>
+<p>同理，可以扩展到多个参数的情况。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element,</div><div class="line">    <span class="keyword">class</span> Allocator&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
+<p>与</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
+<p>这两个也应该是等价的。在使用的时候，都需要在</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3 &#123;</div><div class="line">    Cont&lt;<span class="keyword">int</span>,<span class="built_in">std</span>::allocator&lt;<span class="keyword">int</span>&gt;&gt; cont_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样的声明方式。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/blog/2018/07/18/stl/5.模板实例化/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.5 模板实例化</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/3.模板模板参数" data-title="1.3 模板模板参数" data-url="https://jiyou.github.io/blog/blog/2018/07/18/stl/3.模板模板参数/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>

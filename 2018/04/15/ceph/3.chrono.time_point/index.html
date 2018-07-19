@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.2 Chrono time_point | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="时钟的说明：
+
+system_clock：从系统获取的时钟；
+steady_clock：不能被修改的时钟；
+high_resolution_clock：高精度时钟，实际上是system_clock或者steady_clock的别名。
+
+steady_clock可以获取稳定可靠的时间间隔，后一次调用now()的值和前一次的差值是不因为修改了系统时间而改变，它保证了稳定的时间间隔。
+除了表示时间片段，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.2 Chrono time_point">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/04/15/ceph/3.chrono.time_point/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="时钟的说明：
+
+system_clock：从系统获取的时钟；
+steady_clock：不能被修改的时钟；
+high_resolution_clock：高精度时钟，实际上是system_clock或者steady_clock的别名。
+
+steady_clock可以获取稳定可靠的时间间隔，后一次调用now()的值和前一次的差值是不因为修改了系统时间而改变，它保证了稳定的时间间隔。
+除了表示时间片段，">
+<meta property="og:updated_time" content="2018-07-19T01:33:43.291Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.2 Chrono time_point">
+<meta name="twitter:description" content="时钟的说明：
+
+system_clock：从系统获取的时钟；
+steady_clock：不能被修改的时钟；
+high_resolution_clock：高精度时钟，实际上是system_clock或者steady_clock的别名。
+
+steady_clock可以获取稳定可靠的时间间隔，后一次调用now()的值和前一次的差值是不因为修改了系统时间而改变，它保证了稳定的时间间隔。
+除了表示时间片段，">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>About</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 15px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-ceph/3.chrono.time_point" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/04/15/ceph/3.chrono.time_point/" class="article-date">
+  	<time datetime="2018-04-14T21:28:32.000Z" itemprop="datePublished">2018-04-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.2 Chrono time_point
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>时钟的说明：</p>
+<ul>
+<li>system_clock：从系统获取的时钟；</li>
+<li>steady_clock：不能被修改的时钟；</li>
+<li>high_resolution_clock：高精度时钟，实际上是system_clock或者steady_clock的别名。</li>
+</ul>
+<p><code>steady_clock</code>可以获取稳定可靠的时间间隔，后一次调用now()的值和前一次的差值是不因为修改了系统时间而改变，它保证了稳定的时间间隔。</p>
+<p>除了表示时间片段，有时候我们可能更想知道一个具体的时间点，这里就要提一下<code>time_point</code>，<code>time_point</code>表示的是：</p>
+<ul>
+<li>用来获取1970.1.1以来的秒数和当前的时间</li>
+<li>可以做一些时间的比较和算术运算</li>
+<li>可以和ctime库结合起来显示时间</li>
+</ul>
+<p>看一下类的声明：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">class</span> system_clock</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> microseconds                     duration;</div><div class="line">    <span class="keyword">typedef</span> duration::rep                    rep;</div><div class="line">    <span class="keyword">typedef</span> duration::period                 period;</div><div class="line">    <span class="keyword">typedef</span> chrono::time_point&lt;system_clock&gt; time_point;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> is_steady = <span class="literal">false</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">now</span><span class="params">()</span> _NOEXCEPT</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> time_t     <span class="title">to_time_t</span>  <span class="params">(<span class="keyword">const</span> time_point&amp; <span class="number">__</span>t)</span> _NOEXCEPT</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">from_time_t</span><span class="params">(<span class="keyword">time_t</span> <span class="number">__</span>t)</span> _NOEXCEPT</span>;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _LIBCPP_HAS_NO_MONOTONIC_CLOCK</span></div><div class="line"><span class="keyword">class</span> steady_clock</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> nanoseconds                                   duration;</div><div class="line">    <span class="keyword">typedef</span> duration::rep                                 rep;</div><div class="line">    <span class="keyword">typedef</span> duration::period                              period;</div><div class="line">    <span class="keyword">typedef</span> chrono::time_point&lt;steady_clock, duration&gt;    time_point;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> is_steady = <span class="literal">true</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">now</span><span class="params">()</span> _NOEXCEPT</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> steady_clock high_resolution_clock;</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line"><span class="keyword">typedef</span> system_clock high_resolution_clock;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
+<p>这里本来应该是有三种<code>clock</code>的，也就是</p>
+<ul>
+<li>system_clock</li>
+<li>steady_clock</li>
+<li>high_resolution_clock</li>
+</ul>
+<p>但是从这里的定义来看，难道有的平台没有<code>steady_clock</code>？并且<code>high_resolution_clock</code>的定义是随着<code>_LIBCPP_HAS_NO_MONOTONIC_CLOCK</code>。这里的意思是说，</p>
+<ul>
+<li>如果没有单调的时钟，那么就需要自己定义一个<code>steady_clock</code>。</li>
+<li>如果有，就不用定义了，直接用<code>system_clock</code>。</li>
+</ul>
+<p>获取一段代码的运行时间</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// steady_clock example</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ratio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line"></div><div class="line">  steady_clock::time_point t1 = steady_clock::now();</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"printing out 1000 stars...\n"</span>;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">1000</span>; ++i) <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"*"</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">  steady_clock::time_point t2 = steady_clock::now();</div><div class="line"></div><div class="line">  <span class="comment">// 这里转换成为时间段，只不过是用double</span></div><div class="line">  <span class="comment">// 来表示，所以可以表示比如0.5秒，0.01秒这种case.</span></div><div class="line">  duration&lt;<span class="keyword">double</span>&gt; time_span = duration_cast&lt;duration&lt;<span class="keyword">double</span>&gt;&gt;(t2 - t1);</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"It took me "</span> &lt;&lt; time_span.count() &lt;&lt; <span class="string">" seconds."</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="system-clock"><a href="#system-clock" class="headerlink" title="system_clock"></a>system_clock</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// system_clock example</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ratio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">using</span> <span class="built_in">std</span>::chrono::system_clock;</div><div class="line">  <span class="comment">// 这里声明一天的类型</span></div><div class="line">  <span class="comment">// 其实用std::chrono::hours day(24);</span></div><div class="line">  <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">int</span>, <span class="built_in">std</span>::ratio&lt;<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>&gt; &gt; one_day(<span class="number">1</span>);</div><div class="line">  <span class="comment">// 取得当前的时间点</span></div><div class="line">  system_clock::time_point today = system_clock::now();</div><div class="line">  <span class="comment">// 当前的时间点，加上一段时间</span></div><div class="line">  system_clock::time_point tomorrow = today + one_day;</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="keyword">time_t</span> tt;</div><div class="line">  tt = system_clock::<span class="keyword">to_time_t</span> (today);</div><div class="line"></div><div class="line">  <span class="comment">// 注意ctime是把time_t转换成为字符串</span></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"today is: "</span> &lt;&lt; ctime(&amp;tt);</div><div class="line"></div><div class="line">  tt = system_clock::<span class="keyword">to_time_t</span>(tomorrow);</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"tomorrow will be: "</span> &lt;&lt; ctime(&amp;tt);</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>时间的加减</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iomanip&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line">    system_clock::time_point now = system_clock::now();</div><div class="line">    <span class="built_in">std</span>::<span class="keyword">time_t</span> last = system_clock::<span class="keyword">to_time_t</span>(now - <span class="built_in">std</span>::chrono::hours(<span class="number">24</span>));</div><div class="line">　　<span class="built_in">std</span>::<span class="keyword">time_t</span> next= system_clock::<span class="keyword">to_time_t</span>(now - <span class="built_in">std</span>::chrono::hours(<span class="number">24</span>));</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"One day ago, the time was "</span>&lt;&lt; <span class="built_in">std</span>::put_time(<span class="built_in">std</span>::localtime(&amp;last), <span class="string">"%F %T"</span>) &lt;&lt; <span class="string">'\n'</span>;</div><div class="line">　　<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Next day, the time was "</span>&lt;&lt; <span class="built_in">std</span>::put_time(<span class="built_in">std</span>::localtime(&amp;next), <span class="string">"%F %T"</span>) &lt;&lt; <span class="string">'\n'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"hello word"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    timer t; <span class="comment">//开始计时</span></div><div class="line">    fun()</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;t.elapsed()&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//打印fun函数耗时多少毫秒</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="自定义定时器"><a href="#自定义定时器" class="headerlink" title="自定义定时器"></a>自定义定时器</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Timer &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Timer() : m_begin(high_resolution_clock::now()) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123; m_begin = high_resolution_clock::now(); &#125;</div><div class="line"></div><div class="line">    <span class="comment">//默认输出秒</span></div><div class="line">　　<span class="function"><span class="keyword">double</span> <span class="title">elapsed</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">　　　　<span class="keyword">return</span> duration_cast&lt;duration&lt;<span class="keyword">double</span>&gt;&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">　　&#125;</div><div class="line"></div><div class="line"><span class="comment">//默认输出毫秒</span></div><div class="line">    <span class="comment">//int64_t elapsed() const</span></div><div class="line">    <span class="comment">//&#123;</span></div><div class="line">        <span class="comment">//return duration_cast&lt;chrono::milliseconds&gt;(high_resolution_clock::now() - m_begin).count();</span></div><div class="line">    <span class="comment">//&#125;</span></div><div class="line"></div><div class="line">    <span class="comment">//微秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_micro() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::microseconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//纳秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_nano() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::nanoseconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_seconds() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::seconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//分</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_minutes() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::minutes&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//时</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_hours() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::hours&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    time_point&lt;high_resolution_clock&gt; m_begin;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/04/15/ceph/1.Object/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          1.1 各种Object
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/04/15/mit.6.828/jos-lab1/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">MIT 6.828 Lab1</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/3.chrono.time_point" data-title="1.2 Chrono time_point" data-url="https://jiyou.github.io/blog/blog/2018/04/15/ceph/3.chrono.time_point/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
