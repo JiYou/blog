@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>1.5 模板的编译 | 缘生故如幻</title>
+  <title>1.6 模板的编译 | 缘生故如幻</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="模板的编译一般采用包含编译，(其他比较偏门的会介绍export啥的)，export已经被废止了，所以不再去研究。
 正确的做法是:
@@ -16,7 +16,7 @@
 嵌套类型依赖假设想使用T类里面的iterator，如果代码写做如下：
 template&amp;lt;typename T&amp;">
 <meta property="og:type" content="article">
-<meta property="og:title" content="1.5 模板的编译">
+<meta property="og:title" content="1.6 模板的编译">
 <meta property="og:url" content="https://jiyou.github.io/blog/2018/07/18/stl/6.模板的编译/index.html">
 <meta property="og:site_name" content="缘生故如幻">
 <meta property="og:description" content="模板的编译一般采用包含编译，(其他比较偏门的会介绍export啥的)，export已经被废止了，所以不再去研究。
@@ -28,9 +28,9 @@ template&amp;lt;typename T&amp;">
 在链接阶段，如果是因为模板生成的代码，比如类定义或者函数义有多份，那么会自动去重。
 嵌套类型依赖假设想使用T类里面的iterator，如果代码写做如下：
 template&amp;lt;typename T&amp;">
-<meta property="og:updated_time" content="2018-07-19T13:32:43.638Z">
+<meta property="og:updated_time" content="2018-07-19T13:46:44.342Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="1.5 模板的编译">
+<meta name="twitter:title" content="1.6 模板的编译">
 <meta name="twitter:description" content="模板的编译一般采用包含编译，(其他比较偏门的会介绍export啥的)，export已经被废止了，所以不再去研究。
 正确的做法是:
 
@@ -102,7 +102,7 @@ template&amp;lt;typename T&amp;">
 						<li>Links</li>
 						
 						
-						<li>About</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -229,7 +229,7 @@ template&amp;lt;typename T&amp;">
   
     <div class="article-meta">
       <a href="/blog/2018/07/18/stl/6.模板的编译/" class="article-date">
-  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
+  	<time datetime="2018-07-17T21:29:32.000Z" itemprop="datePublished">2018-07-18</time>
 </a>
     </div>
   
@@ -242,7 +242,7 @@ template&amp;lt;typename T&amp;">
         
   
     <h1 class="article-title" itemprop="name">
-      1.5 模板的编译
+      1.6 模板的编译
     </h1>
   
 
@@ -279,10 +279,15 @@ template&amp;lt;typename T&amp;">
 <p>那么正确的写法应该是</p>
 <figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> T&amp; container)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">typename</span> T::const_iterator *x;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 <p>也就是说，在嵌套类型依赖的时候，需要明确的指出<code>typename</code>这个类型。</p>
-<h1 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h1><p>只有2个地方是不需要在嵌套依赖的时候来指明<code>typename</code>的，那么就是声明继承的时候。</p>
+<h2 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h2><p>只有2个地方是不需要在嵌套依赖的时候来指明<code>typename</code>的，那么就是声明继承的时候。</p>
 <figure class="highlight"><table><tr><td class="code"><pre><div class="line">template&lt;typename T&gt;</div><div class="line">class Derived: public Base&lt;T&gt;::Nested // 1. 这里不需要</div><div class="line">&#123;</div><div class="line">　public:</div><div class="line">　　explicit Derived(int x)</div><div class="line">　　: Base&lt;T&gt;::Nested(x) //  2. 这里也不需要</div><div class="line">　　&#123;</div><div class="line">　　　typename Base&lt;T&gt;::Nested temp; //nested dependent type, need typename</div><div class="line">　　&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 <p>比如，这里<code>Nested</code>就是<code>Base&lt;T&gt;</code>里面的一个类型。实际上，这里也很明显，那就是继承肯定是继承于类型，而不是一个静态变量。</p>
-
+<h1 id="类中的模板函数"><a href="#类中的模板函数" class="headerlink" title="类中的模板函数"></a>类中的模板函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> aTMP&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">const</span> T reType;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"global f()"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> N = <span class="number">99</span>&gt;  <span class="comment">// 这里需要声明模板函数</span></div><div class="line">    <span class="keyword">void</span> f() &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"member f(): "</span> &lt;&lt; N &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; </div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="this指针"><a href="#this指针" class="headerlink" title="this指针"></a>this指针</h1><p>this 用于指定查找基类中的成员</p>
+<ul>
+<li>（当基类是依赖模板参数的类模板实例时，由于实例化总是推迟，这时不依赖模板参数的名字不在基类中查找，文献[1]第 166 页）</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> aTMP&#123;</div><div class="line"><span class="keyword">public</span>: <span class="keyword">typedef</span> <span class="keyword">const</span> T reType;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"global f()\n"</span>; &#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span> &lt;<span class="keyword">int</span> N = <span class="number">99</span>&gt;</div><div class="line">    <span class="keyword">void</span> f() &#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"member f(): "</span> &lt;&lt; N &lt;&lt; <span class="string">'\n'</span>; &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Derived : <span class="keyword">public</span> Base&lt;T&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typename</span> T::reType m; <span class="comment">// typename 不能省略</span></div><div class="line">    Derived(<span class="keyword">typename</span> T::reType a) : m(a) &#123; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df1</span><span class="params">()</span> </span>&#123; f(); &#125;                       <span class="comment">// 调用全局 f()，而非想象中的基类 f()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df2</span><span class="params">()</span> </span>&#123; <span class="keyword">this</span>-&gt;<span class="function"><span class="keyword">template</span> <span class="title">f</span><span class="params">()</span></span>; &#125;        <span class="comment">// 基类 f&lt;99&gt;()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df3</span><span class="params">()</span> </span>&#123; Base&lt;T&gt;::<span class="keyword">template</span> f&lt;<span class="number">22</span>&gt;(); &#125; <span class="comment">// 强制基类 f&lt;22&gt;()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df4</span><span class="params">()</span> </span>&#123; ::f(); &#125;                     <span class="comment">// 强制全局 f()</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    Derived&lt;aTMP&lt;<span class="keyword">int</span>&gt;&gt; a(<span class="number">10</span>);</div><div class="line">    a.df1(); a.df2(); a.df3(); a.df4();</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cin</span>.get(); <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
       
     </div>
     
@@ -291,18 +296,18 @@ template&amp;lt;typename T&amp;">
     
 <nav id="article-nav">
   
-    <a href="/blog/2018/07/18/stl/1.type_traits/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/blog/2018/07/18/stl/7.Cpp11的扩展/" id="article-nav-newer" class="article-nav-link-wrap">
       <strong class="article-nav-caption"><</strong>
       <div class="article-nav-title">
         
-          1.1 type_traits
+          1.7 c++11的扩展
         
       </div>
     </a>
   
   
     <a href="/blog/2018/07/18/stl/4.模板特化/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">1.3 模板偏特化</div>
+      <div class="article-nav-title">1.4 模板偏特化</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -338,7 +343,7 @@ template&amp;lt;typename T&amp;">
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-stl/6.模板的编译" data-title="1.5 模板的编译" data-url="https://jiyou.github.io/blog/blog/2018/07/18/stl/6.模板的编译/"></div>
+    <div class="ds-thread" data-thread-key="post-stl/6.模板的编译" data-title="1.6 模板的编译" data-url="https://jiyou.github.io/blog/blog/2018/07/18/stl/6.模板的编译/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

@@ -77,7 +77,7 @@
 						<li>Links</li>
 						
 						
-						<li>About</li>
+						<li>Über</li>
 						
 					</ul>
 				</div>
@@ -202,11 +202,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-stl/3.模板模板参数" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-stl/9.模板的控制结构" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2018/07/18/stl/3.模板模板参数/" class="article-date">
-  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
+      <a href="/blog/2018/07/19/stl/9.模板的控制结构/" class="article-date">
+  	<time datetime="2018-07-18T21:30:32.000Z" itemprop="datePublished">2018-07-19</time>
 </a>
     </div>
   
@@ -219,7 +219,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/07/18/stl/3.模板模板参数/">1.3 模板模板参数</a>
+      <a class="article-title" href="/blog/2018/07/19/stl/9.模板的控制结构/">1.9 模板的控制结构</a>
     </h1>
   
 
@@ -228,54 +228,132 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="模板的模板参数"><a href="#模板的模板参数" class="headerlink" title="模板的模板参数"></a>模板的模板参数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> A &#123;</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> A&lt;T, <span class="number">5</span>&gt; &#123;</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> U&gt; <span class="keyword">class</span> B1 &#123; &#125;;</div><div class="line"></div><div class="line">B1&lt;A&gt; c;</div></pre></td></tr></table></figure>
-<p>注意，这个代码是无法通过编译的。因为编译器在匹配模板参数的时候，是看全部参数的，不会去考虑<code>A</code>的偏特化版本。</p>
-<p>The compiler considers the partial specializations based on a template template argument once you have instantiated a specialization based on the corresponding template template parameter. The following example demonstrates this:</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">// 声明一个A的Base模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 声明A的偏特化版本</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   V&lt;<span class="keyword">int</span>, <span class="keyword">char</span>&gt; i;</div><div class="line">   V&lt;<span class="keyword">char</span>, <span class="keyword">char</span>&gt; j;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 那么，在生成代码的时候，实际上生成的是</span></div><div class="line"><span class="comment">// class B &#123; A&lt;int, char&gt; i; A &lt;char,char&gt; j; &#125;</span></div><div class="line">B&lt;A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.i.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.j.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>如果仔细地看一下<code>B</code>这个类，就会发现，<code>T/U</code>好像没有什么用。因为在<code>B</code>的内部声明的里面从来没有用到这两个类型，如果要用这两个类型应该怎么办？</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>这样是会报错的，因为<code>template&lt;class T, class U&gt; class V</code>只会用来修饰类<code>V</code>而不会用来修饰<code>B</code>。所以在编译的时候，会在<code>B</code>里面说，<code>T/U</code>没有定义。</p>
-<p>那么，如果想让<code>B</code>类里面有如下声明：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>应该怎么办？</p>
-<p>应该把<code>B</code>类的声明改成如下：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里要特别注意看声明。在声明<code>V</code>的时候，所有的这个<code>V</code>会引用到的变量都是在<code>template&lt;typename T, typename U, typename X, ..&gt; B</code>也就是<code>T, U, X</code>这三个里面取。至于具体取哪个，并不能从<code>template</code>的声明里面看出来。</p>
-<p>真正要实例化<code>V</code>类的时候，也就是<code>B</code>的内部声明的时候，才会知道<code>V</code>到底是怎么实例化的。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">V&lt;T, U&gt; v_;</div><div class="line">V&lt;U, X&gt; ux_;</div></pre></td></tr></table></figure>
-<p>所以可以总结一下，关于模析模板参数。</p>
-<ul>
-<li>如果模板模板参数想起作用，那么只能在<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>里面取，并且声明模板板参数的时候，不能写明<code>template&lt;class T, class U&gt; class V</code>，而是需要写成<code>template&lt;class, class&gt; class V</code>这种形式，表示参数都从前面的列表里面选择。</li>
-<li>如果是写成<code>template&lt;class T, class U&gt; class V</code>这种格式，并且<code>T/U</code>不在外部列表里面。比如<code>template&lt;typename T, typename U, typename X, template&lt;typename T, typename U&gt; class V&gt;</code>这里会因为<code>T/U</code>重复声明，导到编译不过。那么需要改写成<code>template&lt;typename T, typename U, typename X, template&lt;typename A, typename B&gt; class V&gt; class B {};</code>。但是按照这种写法，模板参数<code>A/B</code>就只能在<code>B</code>类定义的时候内部各种实例化，而不能在外部指定。</li>
+        <h1 id="IF语句"><a href="#IF语句" class="headerlink" title="IF语句"></a>IF语句</h1><p>这里可以拿最开始的那个例子。也就是通过<code>if/else</code>实现控制语句。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">bool</span> value, <span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> IF &#123;</div><div class="line">    <span class="keyword">typedef</span> If type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> IF&lt;<span class="literal">false</span>, If, Then&gt; &#123;</div><div class="line">    <span class="keyword">typedef</span> Then type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> IfClass &#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"IfClass"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">struct</span> ThenClass &#123;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"ThenClass"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    IF&lt;<span class="literal">true</span>, IfClass, ThenClass&gt;::type x;</div><div class="line">    x.print();</div><div class="line">    IF&lt;<span class="literal">false</span>, IfClass, ThenClass&gt;::type y;</div><div class="line">    y.print();</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>自定义数据类型</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> len = <span class="number">4</span>;</div><div class="line"><span class="keyword">typedef</span> IF&lt;<span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)==len, <span class="keyword">long</span> <span class="keyword">long</span>, <span class="keyword">void</span>&gt;::type <span class="keyword">long_long_or_void_t</span>;</div><div class="line"><span class="keyword">typedef</span> IF&lt;<span class="keyword">sizeof</span>(<span class="keyword">long</span>)==len, <span class="keyword">long</span>, <span class="keyword">long_long_or_void_t</span>&gt;::type <span class="keyword">long_or_llong_void_t</span>;</div><div class="line"><span class="keyword">typedef</span> IF&lt;<span class="keyword">sizeof</span>(<span class="keyword">int</span>)==len, <span class="keyword">int</span>, <span class="keyword">long_or_llong_void_t</span>&gt;::type <span class="keyword">int_long_llong_void_t</span>;</div><div class="line"><span class="keyword">typedef</span> IF&lt;<span class="keyword">sizeof</span>(<span class="keyword">short</span>)==len, <span class="keyword">short</span>, <span class="keyword">int_long_llong_void_t</span>&gt;::type <span class="keyword">short_int_long_llong_void_t</span>;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> <span class="keyword">short_int_long_llong_void_t</span> <span class="keyword">int32_t</span>;</div></pre></td></tr></table></figure>
+<p>这里实际上就是想定义一个完全<code>4bytes</code>的整数类型。</p>
+<p>如果嵌套一点，就是</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">const</span> <span class="keyword">int</span> len = <span class="number">4</span>;</div><div class="line"><span class="keyword">typedef</span></div><div class="line">    IF_&lt;<span class="keyword">sizeof</span>(<span class="keyword">short</span>)==len, <span class="keyword">short</span>,</div><div class="line">    IF_&lt;<span class="keyword">sizeof</span>(<span class="keyword">int</span>)==len, <span class="keyword">int</span>,</div><div class="line">    IF_&lt;<span class="keyword">sizeof</span>(<span class="keyword">long</span>)==len, <span class="keyword">long</span>,</div><div class="line">    IF_&lt;<span class="keyword">sizeof</span>(<span class="keyword">long</span> <span class="keyword">long</span>)==len, <span class="keyword">long</span> <span class="keyword">long</span>,</div><div class="line">    <span class="keyword">void</span>&gt;::reType&gt;::reType&gt;::reType&gt;::reType</div><div class="line"><span class="keyword">int32_t</span>; <span class="comment">// 定义一个指定字节数的类型</span></div><div class="line"><span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="keyword">sizeof</span>(<span class="keyword">int32_t</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div></pre></td></tr></table></figure>
+<h1 id="WHILE语句"><a href="#WHILE语句" class="headerlink" title="WHILE语句"></a>WHILE语句</h1><p>通过模板，也可以实现一个<code>WHILE</code>语句。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// cond需要有value/type</span></div><div class="line"><span class="comment">// statement需要有next</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span>&gt; <span class="keyword">class</span> cond, <span class="keyword">typename</span> statement&gt;</div><div class="line"><span class="keyword">struct</span> WHILE &#123;</div><div class="line">    <span class="keyword">struct</span> STOP &#123;</div><div class="line">        <span class="keyword">typedef</span> statement type;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span></div><div class="line">        IF&lt;cond&lt;statement&gt;::value,</div><div class="line">            WHILE&lt;cond, <span class="keyword">typename</span> statement::next&gt;,</div><div class="line">            STOP</div><div class="line">        &gt;::type::type type;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>比如下面这个程序就是用来求解<code>1^x + 2^x + 3^x + ... + n^x</code>。代码中用<code>e</code>表示<code>x</code>注意，不是自然对数的那个<code>e</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">bool</span> cond, <span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> IF &#123;</div><div class="line">    <span class="keyword">typedef</span> If type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> IF&lt;<span class="literal">false</span>, If, Then&gt; &#123;</div><div class="line">    <span class="keyword">typedef</span> Then type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// cond需要有value/type</span></div><div class="line"><span class="comment">// statement需要有next</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span>&gt; <span class="keyword">class</span> cond, <span class="keyword">typename</span> statement&gt;</div><div class="line"><span class="keyword">struct</span> WHILE &#123;</div><div class="line">    <span class="keyword">struct</span> STOP &#123;</div><div class="line">        <span class="keyword">typedef</span> statement type;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span></div><div class="line">        IF&lt;cond&lt;statement&gt;::value,</div><div class="line">            WHILE&lt;cond, <span class="keyword">typename</span> statement::next&gt;,</div><div class="line">            STOP</div><div class="line">        &gt;::type::type type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 计算 1^e+2^e+...+n^e</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> n, <span class="keyword">int</span> e&gt;</div><div class="line"><span class="keyword">struct</span> sum_pow &#123;</div><div class="line">    <span class="comment">// pow是取x^e</span></div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> x&gt;</div><div class="line">    <span class="keyword">struct</span> <span class="built_in">pow</span> &#123;</div><div class="line">        <span class="comment">// p^q的求解</span></div><div class="line">        <span class="keyword">template</span>&lt;<span class="keyword">int</span> p, <span class="keyword">int</span> q&gt;</div><div class="line">        <span class="keyword">struct</span> pow_q &#123;</div><div class="line">            <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> value = p * pow_q&lt;p,q<span class="number">-1</span>&gt;::value;</div><div class="line">        &#125;;</div><div class="line">        <span class="keyword">template</span>&lt;<span class="keyword">int</span> p&gt;</div><div class="line">        <span class="keyword">struct</span> pow_q&lt;p, <span class="number">0</span>&gt; &#123;</div><div class="line">            <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> value = <span class="number">1</span>;</div><div class="line">        &#125;;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> value = pow_q&lt;x,e&gt;::value;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> statement&gt;</div><div class="line">    <span class="keyword">struct</span> cond &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = statement::iter &lt;= n;</div><div class="line">        <span class="keyword">typedef</span> statement type;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> i, <span class="keyword">int</span> sum&gt;</div><div class="line">    <span class="keyword">struct</span> statement &#123;</div><div class="line">        <span class="keyword">typedef</span> statement&lt;i+<span class="number">1</span>, sum+<span class="built_in">pow</span>&lt;i&gt;::value&gt; next;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> iter = i;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> value = sum;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> value = WHILE&lt;cond, statement&lt;<span class="number">1</span>,<span class="number">0</span>&gt;&gt;::type::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="comment">// 1^2 + 2^2 + ... + 10^2</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; sum_pow&lt;<span class="number">10</span>,<span class="number">2</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="有趣的编译错误"><a href="#有趣的编译错误" class="headerlink" title="有趣的编译错误"></a>有趣的编译错误</h1><p>这个编译错误是在无意中写错程序发现的。那就是利用<code>WHILE</code>循环来求最大公约数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">bool</span> cond, <span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> IF &#123;</div><div class="line">    <span class="keyword">typedef</span> If type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> IF&lt;<span class="literal">false</span>, If, Then&gt; &#123;</div><div class="line">    <span class="keyword">typedef</span> Then type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// cond has type/value</span></div><div class="line"><span class="comment">// statement has next</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">class</span> cond, <span class="keyword">typename</span> statement&gt;</div><div class="line"><span class="keyword">struct</span> WHILE &#123;</div><div class="line">    <span class="keyword">struct</span> STOP &#123;</div><div class="line">        <span class="keyword">typedef</span> statement type;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">typename</span> IF&lt;</div><div class="line">        cond&lt;statement&gt;::value,</div><div class="line">        WHILE&lt;cond, <span class="keyword">typename</span> statement::next&gt;,</div><div class="line">        STOP</div><div class="line">    &gt;::type::type type; </div><div class="line">    <span class="comment">// 注意：这里有两层type,</span></div><div class="line">    <span class="comment">// 第一层是IF&lt;&gt;::type，比如递归结束时，定位到STOP</span></div><div class="line">    <span class="comment">// 第二层是通过剥开STOP，通过STOP拿到最后的类型=STOP::type</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// Test GCD while循环</span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * a,b</div><div class="line"> * while (b) &#123;</div><div class="line"> *     temp = b;</div><div class="line"> *     b = a % b;</div><div class="line"> *     a = b;</div><div class="line"> * &#125;</div><div class="line"> */</div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> a, <span class="keyword">int</span> b&gt;</div><div class="line"><span class="keyword">struct</span> GCD &#123;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">typename</span> statement&gt;</div><div class="line">    <span class="keyword">struct</span> cond &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = statement::i != <span class="number">0</span>;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> x, <span class="keyword">int</span> y&gt;</div><div class="line">    <span class="keyword">struct</span> statement &#123;</div><div class="line">        <span class="keyword">typedef</span> statement&lt;y, x%y&gt; next;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> i = x%y;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">int</span> value = y;</div><div class="line">        <span class="comment">// 注意：i = y; value = x % y会导致编译通不过</span></div><div class="line">        <span class="comment">// 这里一定要注意，就是防止出现</span></div><div class="line">        <span class="comment">// x % 0 的情况</span></div><div class="line">        <span class="comment">// 由于当i = y, value = x % y的时候无法避免这种情况，</span></div><div class="line">        <span class="comment">// 报错信息就特别奇怪</span></div><div class="line">        <span class="comment">// non-type template argument is not a constant expression</span></div><div class="line">        <span class="comment">// division by zero -&gt; 这里才是关键</span></div><div class="line">        <span class="comment">// 如果给的值是statement&lt;10, 5&gt;</span></div><div class="line">        <span class="comment">//   -&gt; typedef statement&lt;5, 0&gt; next;</span></div><div class="line">        <span class="comment">//   -&gt; i = 5,</span></div><div class="line">        <span class="comment">//   -&gt; value = 0;</span></div><div class="line">        <span class="comment">// WHILE里面会发现i = 5，于是还可以展开statement&lt;5,0&gt;</span></div><div class="line">        <span class="comment">//   -&gt; typedef statement&lt;0,5%0&gt; next;  &lt;-- 这里也就报错了。</span></div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">static</span>  <span class="keyword">const</span> <span class="keyword">int</span> value = WHILE&lt;cond, statement&lt;a,b&gt;&gt;::type::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; Sum&lt;<span class="number">100</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; PowSum&lt;<span class="number">10</span>,<span class="number">2</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; GCD&lt;<span class="number">10</span>, <span class="number">5</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>一定要注意程序中的注释：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 注意：i = y; value = x % y会导致编译通不过</span></div><div class="line"><span class="comment">// 这里一定要注意，就是防止出现</span></div><div class="line"><span class="comment">// x % 0 的情况</span></div><div class="line"><span class="comment">// 由于当i = y, value = x % y的时候无法避免这种情况，</span></div><div class="line"><span class="comment">// 报错信息就特别奇怪</span></div><div class="line"><span class="comment">// non-type template argument is not a constant expression</span></div><div class="line"><span class="comment">// division by zero -&gt; 这里才是关键</span></div><div class="line"><span class="comment">// 如果给的值是statement&lt;10, 5&gt;</span></div><div class="line"><span class="comment">//   -&gt; typedef statement&lt;5, 0&gt; next;</span></div><div class="line"><span class="comment">//   -&gt; i = 5,</span></div><div class="line"><span class="comment">//   -&gt; value = 0;</span></div><div class="line"><span class="comment">// WHILE里面会发现i = 5，于是还可以展开statement&lt;5,0&gt;</span></div><div class="line"><span class="comment">//   -&gt; typedef statement&lt;0,5%0&gt; next;  &lt;-- 这里也就报错了。</span></div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/9.模板的控制结构" data-title="1.9 模板的控制结构" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-stl/8.模板元编程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/19/stl/8.模板元编程/" class="article-date">
+  	<time datetime="2018-07-18T21:30:32.000Z" itemprop="datePublished">2018-07-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/07/19/stl/8.模板元编程/">1.8 模板元编程</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="模板元编程"><a href="#模板元编程" class="headerlink" title="模板元编程"></a>模板元编程</h1><ul>
+<li>编译期数值计算: 求阶乘</li>
+<li>类型计算: <code>if/else</code>, <code>is_same_type</code></li>
+<li>代码计算</li>
 </ul>
-<p>所以，也可以总结成。</p>
+<p><img src="/blog/img/compiler.meta.step.png" alt=""></p>
+<p>注意元编程的位置。</p>
+<h1 id="编程形式"><a href="#编程形式" class="headerlink" title="编程形式"></a>编程形式</h1><p>从编程范型（programming paradigm）上来说，<code>C++模板</code>是函数式编程（functional programming），它的主要特点是：<code>函数调用不产生任何副作用（没有可变的存储）</code>，用<code>递归</code>形式实现<code>循环</code>结构的功能。C++模板的特例化提供了<code>条件判断能力</code>，而模板递归嵌套提供了循环的能力，这两点使得其具有和普通语言一样通用的能力（图灵完备性）。</p>
+<p>总结一下就是：</p>
 <ul>
-<li>如果想定义<code>B</code>类的时候，直接也把内部类<code>A</code>的定义决定了。那么，声明的时候，必须采用1.</li>
-<li>如果想<code>B</code>类内部自由定义<code>A</code>类的实例化，那么必须采用格式2.</li>
+<li>不能访问存储变量</li>
+<li>偏特化来支持递归</li>
+<li>偏特化实现<code>if/else</code>结构</li>
 </ul>
-<h2 id="模板模板参数的取值范围"><a href="#模板模板参数的取值范围" class="headerlink" title="模板模板参数的取值范围"></a>模板模板参数的取值范围</h2><p>模板模板参数的取值范围可以是：</p>
+<p>从<code>编程形式</code>来看，模板的<code>&lt;&gt;</code>中的模板参数相当于<code>函数调用</code>的<code>输入参数</code>，模板中的<code>typedef</code>或<code>static const</code>或<code>enum</code>定义函数返回值（<code>类型</code>或<code>数值</code>，<code>数值</code>仅支持<code>整型</code>，如果需要可以通过编码计算浮点数），代码计算是通过类型计算进而选择类型的函数实现的（C++ 属于静态类型语言，编译器对类型的操控能力很强）。</p>
+<p>这里需要解释一下：</p>
 <ul>
-<li>类型声明在前面，比如<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>。这个时候，类<code>V</code>的模板参数可取范围是<code>X, Y, Z</code>。</li>
-<li>类型声明在后面，比如<code>&lt;template&lt;class, class&gt; class V, typename X, typename Y, typename Z&gt;</code>也是同样可以取到<code>X/Y/Z</code>的。</li>
+<li>templnate&lt;.输入类型.&gt;是函数的输入</li>
+<li>typedef ….或者static constexpr 整型是函数的返回值</li>
+<li>代码计算是通过不同的类型跳转到不同的函数来运行。</li>
 </ul>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class</span> H, <span class="keyword">class</span> S&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> H&lt;S&gt; &amp;value)</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>再如</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class</span> V, <span class="keyword">class</span> T, <span class="keyword">class</span> A&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(V&lt;T, A&gt; &amp;v)</span> </span>&#123;</div><div class="line">    <span class="comment">// This can be "typename V&lt;T, A&gt;::value_type",</span></div><div class="line">    <span class="comment">// but we are pretending we don't have it</span></div><div class="line"></div><div class="line">    T temp = v.back();</div><div class="line">    v.pop_back();</div><div class="line">    <span class="comment">// Do some work on temp</span></div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; temp &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="缺省值"><a href="#缺省值" class="headerlink" title="缺省值"></a>缺省值</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont = Deque&gt;</div><div class="line"><span class="keyword">class</span> Stack &#123;</div><div class="line">    <span class="comment">//...</span></div><div class="line">&#125;;</div><div class="line"><span class="comment">//...</span></div><div class="line">Stack&lt;<span class="keyword">int</span>&gt; aStack1; <span class="comment">// use default: Cont is Deque</span></div><div class="line">Stack&lt;<span class="built_in">std</span>::<span class="built_in">string</span>,List&gt; aStack2; <span class="comment">// Cont is List</span></div></pre></td></tr></table></figure>
-<p>只是需要注意的是，这里的<code>Deque</code>的声明也需要是<code>template &lt;typename&gt; class Deque { };</code>这样。也就是只有一个模板参数。</p>
-<p><strong>注意</strong>这里的<code>Deque</code>不是<code>STL</code>里面<code>Deque</code>。</p>
-<h1 id="无用的模板参数"><a href="#无用的模板参数" class="headerlink" title="无用的模板参数"></a>无用的模板参数</h1><p>有时候，如果采用如下声明，会导致相同的结果。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Vec &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125; ;</div></pre></td></tr></table></figure>
-<p>在这里，<code>Wrap</code>的声明得到的效果就与</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125;;</div></pre></td></tr></table></figure>
-<p>得到同样的效果。因为<code>template&lt;template&lt;typename T&gt; typename V&gt;</code>会导致<code>V</code>没有参数范围可以选择。只能在内部指定类型。</p>
-<p>同理，可以扩展到多个参数的情况。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element,</div><div class="line">    <span class="keyword">class</span> Allocator&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
-<p>与</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
-<p>这两个也应该是等价的。在使用的时候，都需要在</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3 &#123;</div><div class="line">    Cont&lt;<span class="keyword">int</span>,<span class="built_in">std</span>::allocator&lt;<span class="keyword">int</span>&gt;&gt; cont_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>这样的声明方式。</p>
+<p>这里有个非常简单的例子来说明这三点。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i=<span class="number">1</span>&gt;</div><div class="line"><span class="keyword">class</span> someComputing &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">volatile</span> T* retType; <span class="comment">// 类型计算</span></div><div class="line">    <span class="keyword">enum</span> &#123; retValume = i + someComputing&lt;T, i<span class="number">-1</span>&gt;::retValume &#125;; <span class="comment">// 数值计算，递归</span></div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"someComputing: i="</span> &lt;&lt; i &lt;&lt; <span class="string">'\n'</span>; &#125;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="comment">// 模板特例，递归终止条件</span></div><div class="line"><span class="keyword">class</span> someComputing&lt;T, <span class="number">0</span>&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">enum</span> &#123; retValume = <span class="number">0</span> &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> codeComputing &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123; T::f(); &#125; <span class="comment">// 根据类型调用函数，代码计算</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    someComputing&lt;<span class="keyword">int</span>&gt;::retType a=<span class="number">0</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="keyword">sizeof</span>(a) &lt;&lt; <span class="string">'\n'</span>; <span class="comment">// 64-bit 程序指针</span></div><div class="line">    <span class="comment">// VS2013 默认最大递归深度500，GCC4.8 默认最大递归深度900（-ftemplate-depth=n）</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; someComputing&lt;<span class="keyword">int</span>, <span class="number">500</span>&gt;::retValume &lt;&lt; <span class="string">'\n'</span>; <span class="comment">// 1+2+...+500</span></div><div class="line">    codeComputing&lt;someComputing&lt;<span class="keyword">int</span>, <span class="number">99</span>&gt;&gt;::f();</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cin</span>.get(); <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>模板元编程的组织形式</p>
+<p><img src="/blog/img/meta.programming.png" alt=""></p>
+<h2 id="数值计算"><a href="#数值计算" class="headerlink" title="数值计算"></a>数值计算</h2><p>前面已经介绍了连续求和的模板。这里写一个编译时计算一个数值是否是质数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> is_prime &#123;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> p, <span class="keyword">int</span> i&gt;</div><div class="line">    <span class="keyword">struct</span> check_prime &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = (p%i) &amp;&amp; check_prime&lt;p, i<span class="number">-1</span>&gt;::value;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> p&gt;</div><div class="line">    <span class="keyword">struct</span> check_prime&lt;p, <span class="number">2</span>&gt; &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = p == <span class="number">2</span> || (p &gt; <span class="number">2</span> &amp;&amp; (p&amp;<span class="number">0x01</span>));</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> p&gt;</div><div class="line">    <span class="keyword">struct</span> check_prime&lt;p, <span class="number">1</span>&gt; &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = N == <span class="number">2</span> || check_prime&lt;N, N<span class="number">-1</span>&gt;::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_prime&lt;<span class="number">5</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_prime&lt;<span class="number">7</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_prime&lt;<span class="number">2</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果是再写一个类，用来连续打印<code>&lt;=N</code>的所有的质数。写法如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> print_prime &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = (N &lt; <span class="number">2</span>) ? <span class="literal">false</span> : is_prime&lt;N&gt;::value;</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (value) &#123;</div><div class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; N &lt;&lt; <span class="string">":"</span> &lt;&lt; <span class="string">"true"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">        &#125;</div><div class="line">        print_prime&lt;N<span class="number">-1</span>&gt;::print();</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> print_prime&lt;<span class="number">2</span>&gt; &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="number">2</span> &lt;&lt; <span class="string">":"</span> &lt;&lt; <span class="string">"true"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -309,7 +387,400 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-stl/3.模板模板参数" data-title="1.3 模板模板参数" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-stl/8.模板元编程" data-title="1.8 模板元编程" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-stl/10.循环展开" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/19/stl/10.循环展开/" class="article-date">
+  	<time datetime="2018-07-18T21:30:32.000Z" itemprop="datePublished">2018-07-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/07/19/stl/10.循环展开/">1.9 循环展开</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="冒泡排序的展开"><a href="#冒泡排序的展开" class="headerlink" title="冒泡排序的展开"></a>冒泡排序的展开</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="keyword">int</span>* data, <span class="keyword">int</span> n)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span>( n &lt;= <span class="number">1</span>)</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; n<span class="number">-1</span>; ++j)</div><div class="line">        <span class="keyword">if</span>(data[j] &gt; data[j+<span class="number">1</span>])</div><div class="line">            <span class="built_in">std</span>::swap(data[j], data[j+<span class="number">1</span>]);</div><div class="line">    bubbleSort(data, n<span class="number">-1</span>);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> j&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">check_swap</span><span class="params">(<span class="keyword">int</span> *data)</span> </span>&#123;</div><div class="line">    <span class="keyword">if</span> (data[j] &gt; data[j+<span class="number">1</span>])</div><div class="line">        <span class="built_in">std</span>::swap(data[j], data[j+<span class="number">1</span>]);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">// 不能让j==n</span></div><div class="line"><span class="comment">// 因为下一把递归到check_swap的时候</span></div><div class="line"><span class="comment">// j+1就超出n了。</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> n, <span class="keyword">int</span> j&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">bloop</span><span class="params">(<span class="keyword">int</span> *data)</span> </span>&#123;</div><div class="line">    check_swap&lt;j&gt;(data);</div><div class="line">    <span class="comment">// 本来递归的写法就应该是</span></div><div class="line">    <span class="comment">// bloop&lt;n, j+1&gt;(data);</span></div><div class="line">    <span class="comment">// 但是这种写法以是无穷展开</span></div><div class="line">    <span class="comment">// 所以需要判断j+1 &gt; n</span></div><div class="line">    <span class="comment">// 如果j+1 &gt; n，然后把第二个模板参数</span></div><div class="line">    <span class="comment">// 设置为-1</span></div><div class="line">    bloop&lt; (j+<span class="number">1</span> &gt;= n? <span class="number">-1</span> : n), (j+<span class="number">1</span> &gt;= n? <span class="number">-1</span> : j+<span class="number">1</span>)&gt;(data);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">void</span> bloop&lt;<span class="number">-1</span>,<span class="number">-1</span>&gt;(<span class="keyword">int</span> *data) &#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">bsort</span><span class="params">(<span class="keyword">int</span> *data)</span> </span>&#123;</div><div class="line">    <span class="comment">// for (i = 0, i &lt; N-1; check_swap(i,i+1))</span></div><div class="line">    <span class="comment">// 也就是0, N-1</span></div><div class="line">    bloop&lt;N<span class="number">-1</span>, <span class="number">0</span>&gt;(data);</div><div class="line">    bsort&lt;N<span class="number">-1</span>&gt;(data);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">void</span> bsort&lt;<span class="number">1</span>&gt;(<span class="keyword">int</span> *data) &#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">void</span> bsort&lt;<span class="number">0</span>&gt;(<span class="keyword">int</span> *data) &#123;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> data[] = &#123;<span class="number">4</span>,<span class="number">3</span>,<span class="number">2</span>,<span class="number">1</span>&#125;;</div><div class="line">    bsort&lt;<span class="number">4</span>&gt;(data);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span> x : data) &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; x &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="代码膨胀"><a href="#代码膨胀" class="headerlink" title="代码膨胀"></a>代码膨胀</h1><p>为了实现封装细节，那么可以把上面的<code>bloop/check_swap</code>函数都放到一个类里面，写法如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> n&gt;</div><div class="line"><span class="keyword">class</span> IntBubbleSortC &#123;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> j&gt;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> check_swap ....</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> n, <span class="keyword">int</span> j&gt;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> bloop ...</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> bsort ...</div><div class="line">&#125;;</div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">class</span> IntBubbleSortC&lt;<span class="number">0</span>&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span>* data)</span> </span>&#123; &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> data[<span class="number">4</span>] = &#123;<span class="number">3</span>,<span class="number">4</span>,<span class="number">2</span>,<span class="number">1</span>&#125;;</div><div class="line">    IntBubbleSortC&lt;<span class="number">4</span>&gt;::sort(data); <span class="comment">// 如此调用</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cin</span>.get(); <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是这里一定要注意的是类内部的函数定义一定要使用<code>inline</code>函数。否则会导致代码膨胀。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/10.循环展开" data-title="1.9 循环展开" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-stl/7.Cpp11的扩展" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/18/stl/7.Cpp11的扩展/" class="article-date">
+  	<time datetime="2018-07-17T21:30:32.000Z" itemprop="datePublished">2018-07-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/07/18/stl/7.Cpp11的扩展/">1.7 c++11的扩展</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <ul>
+<li><code>&gt;&gt;</code> 根据上下文自动识别正确语义；</li>
+<li>函数模板参数默认值；</li>
+<li>变长模板参数（扩展 sizeof…() 获取参数个数）；</li>
+<li>模板别名（扩展 using 关键字）；</li>
+<li>外部模板实例（拓展 extern 关键字），弃用 export template。</li>
+</ul>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/7.Cpp11的扩展" data-title="1.7 c++11的扩展" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-stl/6.模板的编译" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/18/stl/6.模板的编译/" class="article-date">
+  	<time datetime="2018-07-17T21:29:32.000Z" itemprop="datePublished">2018-07-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/07/18/stl/6.模板的编译/">1.6 模板的编译</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>模板的编译一般采用包含编译，(其他比较偏门的会介绍<code>export</code>啥的)，<code>export</code>已经被废止了，所以不再去研究。</p>
+<p>正确的做法是:</p>
+<ul>
+<li>模板的实现都放到<code>.h</code>也就是头文件里面</li>
+<li>使用的时候直接包含头文件</li>
+</ul>
+<p>在链接阶段，如果是因为模板生成的代码，比如类定义或者函数义有多份，那么会自动去重。</p>
+<h1 id="嵌套类型依赖"><a href="#嵌套类型依赖" class="headerlink" title="嵌套类型依赖"></a>嵌套类型依赖</h1><p>假设想使用<code>T</code>类里面的<code>iterator</code>，如果代码写做如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> T&amp; container)</span></span></div><div class="line">&#123;</div><div class="line">    T::const_iterator * x;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由于编译器并不清楚<code>const_iterator</code>是一个类型，还是静态变量，大多数情况下会认为是一个<code>静态变量</code>。但是，这里实际上是一个类型，所以这里会编译报错。</p>
+<p>那么正确的写法应该是</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> T&amp; container)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">typename</span> T::const_iterator *x;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也就是说，在嵌套类型依赖的时候，需要明确的指出<code>typename</code>这个类型。</p>
+<h2 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h2><p>只有2个地方是不需要在嵌套依赖的时候来指明<code>typename</code>的，那么就是声明继承的时候。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">template&lt;typename T&gt;</div><div class="line">class Derived: public Base&lt;T&gt;::Nested // 1. 这里不需要</div><div class="line">&#123;</div><div class="line">　public:</div><div class="line">　　explicit Derived(int x)</div><div class="line">　　: Base&lt;T&gt;::Nested(x) //  2. 这里也不需要</div><div class="line">　　&#123;</div><div class="line">　　　typename Base&lt;T&gt;::Nested temp; //nested dependent type, need typename</div><div class="line">　　&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>比如，这里<code>Nested</code>就是<code>Base&lt;T&gt;</code>里面的一个类型。实际上，这里也很明显，那就是继承肯定是继承于类型，而不是一个静态变量。</p>
+<h1 id="类中的模板函数"><a href="#类中的模板函数" class="headerlink" title="类中的模板函数"></a>类中的模板函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> aTMP&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">const</span> T reType;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"global f()"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> N = <span class="number">99</span>&gt;  <span class="comment">// 这里需要声明模板函数</span></div><div class="line">    <span class="keyword">void</span> f() &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"member f(): "</span> &lt;&lt; N &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; </div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="this指针"><a href="#this指针" class="headerlink" title="this指针"></a>this指针</h1><p>this 用于指定查找基类中的成员</p>
+<ul>
+<li>（当基类是依赖模板参数的类模板实例时，由于实例化总是推迟，这时不依赖模板参数的名字不在基类中查找，文献[1]第 166 页）</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> aTMP&#123;</div><div class="line"><span class="keyword">public</span>: <span class="keyword">typedef</span> <span class="keyword">const</span> T reType;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"global f()\n"</span>; &#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span> &lt;<span class="keyword">int</span> N = <span class="number">99</span>&gt;</div><div class="line">    <span class="keyword">void</span> f() &#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"member f(): "</span> &lt;&lt; N &lt;&lt; <span class="string">'\n'</span>; &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Derived : <span class="keyword">public</span> Base&lt;T&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typename</span> T::reType m; <span class="comment">// typename 不能省略</span></div><div class="line">    Derived(<span class="keyword">typename</span> T::reType a) : m(a) &#123; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df1</span><span class="params">()</span> </span>&#123; f(); &#125;                       <span class="comment">// 调用全局 f()，而非想象中的基类 f()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df2</span><span class="params">()</span> </span>&#123; <span class="keyword">this</span>-&gt;<span class="function"><span class="keyword">template</span> <span class="title">f</span><span class="params">()</span></span>; &#125;        <span class="comment">// 基类 f&lt;99&gt;()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df3</span><span class="params">()</span> </span>&#123; Base&lt;T&gt;::<span class="keyword">template</span> f&lt;<span class="number">22</span>&gt;(); &#125; <span class="comment">// 强制基类 f&lt;22&gt;()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df4</span><span class="params">()</span> </span>&#123; ::f(); &#125;                     <span class="comment">// 强制全局 f()</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    Derived&lt;aTMP&lt;<span class="keyword">int</span>&gt;&gt; a(<span class="number">10</span>);</div><div class="line">    a.df1(); a.df2(); a.df3(); a.df4();</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cin</span>.get(); <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/6.模板的编译" data-title="1.6 模板的编译" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-stl/4.模板特化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/18/stl/4.模板特化/" class="article-date">
+  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/07/18/stl/4.模板特化/">1.4 模板偏特化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="偏特化"><a href="#偏特化" class="headerlink" title="偏特化"></a>偏特化</h1><p>前面介绍过，模板的偏特化可以有两种形式</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&#123;</div><div class="line">    T v_[N];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">float</span>, <span class="number">4</span>&gt; &#123;</div><div class="line">    <span class="keyword">float</span> v_[<span class="number">4</span>];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">bool</span>, N&gt;&#123;</div><div class="line">    <span class="keyword">char</span> v_[(N+<span class="keyword">sizeof</span>(<span class="keyword">char</span>)<span class="number">-1</span>)/<span class="keyword">sizeof</span>(<span class="keyword">char</span>)];</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li>把所有的参数具体化，比如<code>T = float, N = 4</code></li>
+<li>把部分参数具体化，比如<code>T = bool</code></li>
+</ul>
+<p>需要注意的是，已经被具体化的参数就不要再出现在<code>template&lt;&gt;</code>这里面了。如果所有的参数都被具体化的，那么<code>template&lt;&gt;</code>这里面就什么都没有了。</p>
+<p>比较复杂的是两种情况，也就是模板特化与<code>模板模板参数</code>混在一起的时候。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// V这里的参数只能从T/U/X里面选择。</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着再分析另外一个例子。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// 完全特例化</span></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">int</span>, <span class="keyword">float</span>, <span class="number">2</span>, Arg&gt;;</div><div class="line"></div><div class="line"><span class="comment">// 第一个参数有const修饰</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T1, T2, i, CP&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>需要注意的是后面的那个<code>class CP</code>在选择类型的时候，只能从<code>T1/T2/i</code>里面选择了。</p>
+<h1 id="类型组合的特化"><a href="#类型组合的特化" class="headerlink" title="类型组合的特化"></a>类型组合的特化</h1><p>再看一个有趣的例子。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 第一二个参数为Arg的实例且满足一定关系，第四个参数为Arg</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;Arg&lt;T, i&gt;, Arg&lt;T, i+<span class="number">10</span>&gt;, i, Arg&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>也就是说，在特化的时候，可以写成这样。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;参数范围A&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;由A范围组合出按照顺序满足条件的这个具体类型即可&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>那么在类里面使用<code>Arg</code>的时候，可以选择的参数范围就是已知的类型。比如：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg&#123; &#125;; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T, Arg&lt;T,i+<span class="number">10</span>&gt;, i, Arg&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Arg&lt;T, i&gt; s_;</div><div class="line">    Arg&lt;<span class="keyword">const</span> T, i&gt; a_;</div><div class="line">    Arg&lt;Arg&lt;T,i&gt;,i&gt; b_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>所以，可以看出<code>Arg</code>这个模板类可以使用<code>T,i, const T, Arg&lt;T,i+10&gt;, i,</code>都可以。</p>
+<p>关于模板特化</p>
+<ul>
+<li>Base模板需要提前声明</li>
+<li>如果模板A是模板B的子集，优先匹配A。</li>
+<li>如果两个模板有交集，且不成子集关系，编译报错。</li>
+</ul>
+<h1 id="模板偏特化元编程"><a href="#模板偏特化元编程" class="headerlink" title="模板偏特化元编程"></a>模板偏特化元编程</h1><p>可以利用偏特化来实现<code>if/else</code>对类型的操作。比如判断两个类型是否相等。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div><div class="line"><span class="keyword">struct</span> is_same &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">false</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">struct</span> is_same&lt;T,T&gt; &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 自定义类型，只是用来测试is_same模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> uint;</div><div class="line">    <span class="keyword">typedef</span> uint uint2;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;<span class="keyword">unsigned</span>, uint2&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">unsigned</span>, <span class="number">2</span>&gt;, Example&lt;uint2, <span class="number">2</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt;, Example&lt;<span class="keyword">int</span>, <span class="number">3</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="计算阶乘"><a href="#计算阶乘" class="headerlink" title="计算阶乘"></a>计算阶乘</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;stdint.h&gt;</div><div class="line"></div><div class="line">template&lt;int N&gt;</div><div class="line">struct order &#123;</div><div class="line">    static constexpr int64_t value = N * order&lt;N-1&gt;::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 由于只有一个参数需要偏特化，所以</div><div class="line">// 这里用template&lt;&gt;</div><div class="line">template&lt;&gt;</div><div class="line">struct order&lt;0&gt; &#123;</div><div class="line">    static constexpr int64_t value = 1;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int main(void) &#123;</div><div class="line">    std::cout &lt;&lt; order&lt;10&gt;::value &lt;&lt; std::endl;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/4.模板特化" data-title="1.4 模板偏特化" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -528,10 +999,10 @@
 
 
   
-    <article id="post-stl/6.模板的编译" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-stl/3.模板模板参数" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2018/07/18/stl/6.模板的编译/" class="article-date">
+      <a href="/blog/2018/07/18/stl/3.模板模板参数/" class="article-date">
   	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
 </a>
     </div>
@@ -545,7 +1016,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/07/18/stl/6.模板的编译/">1.5 模板的编译</a>
+      <a class="article-title" href="/blog/2018/07/18/stl/3.模板模板参数/">1.3 模板模板参数</a>
     </h1>
   
 
@@ -554,22 +1025,54 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>模板的编译一般采用包含编译，(其他比较偏门的会介绍<code>export</code>啥的)，<code>export</code>已经被废止了，所以不再去研究。</p>
-<p>正确的做法是:</p>
+        <h1 id="模板的模板参数"><a href="#模板的模板参数" class="headerlink" title="模板的模板参数"></a>模板的模板参数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> A &#123;</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> A&lt;T, <span class="number">5</span>&gt; &#123;</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> U&gt; <span class="keyword">class</span> B1 &#123; &#125;;</div><div class="line"></div><div class="line">B1&lt;A&gt; c;</div></pre></td></tr></table></figure>
+<p>注意，这个代码是无法通过编译的。因为编译器在匹配模板参数的时候，是看全部参数的，不会去考虑<code>A</code>的偏特化版本。</p>
+<p>The compiler considers the partial specializations based on a template template argument once you have instantiated a specialization based on the corresponding template template parameter. The following example demonstrates this:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">// 声明一个A的Base模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 声明A的偏特化版本</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   V&lt;<span class="keyword">int</span>, <span class="keyword">char</span>&gt; i;</div><div class="line">   V&lt;<span class="keyword">char</span>, <span class="keyword">char</span>&gt; j;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 那么，在生成代码的时候，实际上生成的是</span></div><div class="line"><span class="comment">// class B &#123; A&lt;int, char&gt; i; A &lt;char,char&gt; j; &#125;</span></div><div class="line">B&lt;A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.i.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.j.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果仔细地看一下<code>B</code>这个类，就会发现，<code>T/U</code>好像没有什么用。因为在<code>B</code>的内部声明的里面从来没有用到这两个类型，如果要用这两个类型应该怎么办？</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样是会报错的，因为<code>template&lt;class T, class U&gt; class V</code>只会用来修饰类<code>V</code>而不会用来修饰<code>B</code>。所以在编译的时候，会在<code>B</code>里面说，<code>T/U</code>没有定义。</p>
+<p>那么，如果想让<code>B</code>类里面有如下声明：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>应该怎么办？</p>
+<p>应该把<code>B</code>类的声明改成如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里要特别注意看声明。在声明<code>V</code>的时候，所有的这个<code>V</code>会引用到的变量都是在<code>template&lt;typename T, typename U, typename X, ..&gt; B</code>也就是<code>T, U, X</code>这三个里面取。至于具体取哪个，并不能从<code>template</code>的声明里面看出来。</p>
+<p>真正要实例化<code>V</code>类的时候，也就是<code>B</code>的内部声明的时候，才会知道<code>V</code>到底是怎么实例化的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">V&lt;T, U&gt; v_;</div><div class="line">V&lt;U, X&gt; ux_;</div></pre></td></tr></table></figure>
+<p>所以可以总结一下，关于模析模板参数。</p>
 <ul>
-<li>模板的实现都放到<code>.h</code>也就是头文件里面</li>
-<li>使用的时候直接包含头文件</li>
+<li>如果模板模板参数想起作用，那么只能在<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>里面取，并且声明模板板参数的时候，不能写明<code>template&lt;class T, class U&gt; class V</code>，而是需要写成<code>template&lt;class, class&gt; class V</code>这种形式，表示参数都从前面的列表里面选择。</li>
+<li>如果是写成<code>template&lt;class T, class U&gt; class V</code>这种格式，并且<code>T/U</code>不在外部列表里面。比如<code>template&lt;typename T, typename U, typename X, template&lt;typename T, typename U&gt; class V&gt;</code>这里会因为<code>T/U</code>重复声明，导到编译不过。那么需要改写成<code>template&lt;typename T, typename U, typename X, template&lt;typename A, typename B&gt; class V&gt; class B {};</code>。但是按照这种写法，模板参数<code>A/B</code>就只能在<code>B</code>类定义的时候内部各种实例化，而不能在外部指定。</li>
 </ul>
-<p>在链接阶段，如果是因为模板生成的代码，比如类定义或者函数义有多份，那么会自动去重。</p>
-<h1 id="嵌套类型依赖"><a href="#嵌套类型依赖" class="headerlink" title="嵌套类型依赖"></a>嵌套类型依赖</h1><p>假设想使用<code>T</code>类里面的<code>iterator</code>，如果代码写做如下：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> T&amp; container)</span></span></div><div class="line">&#123;</div><div class="line">    T::const_iterator * x;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>由于编译器并不清楚<code>const_iterator</code>是一个类型，还是静态变量，大多数情况下会认为是一个<code>静态变量</code>。但是，这里实际上是一个类型，所以这里会编译报错。</p>
-<p>那么正确的写法应该是</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> T&amp; container)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">typename</span> T::const_iterator *x;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>也就是说，在嵌套类型依赖的时候，需要明确的指出<code>typename</code>这个类型。</p>
-<h1 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h1><p>只有2个地方是不需要在嵌套依赖的时候来指明<code>typename</code>的，那么就是声明继承的时候。</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">template&lt;typename T&gt;</div><div class="line">class Derived: public Base&lt;T&gt;::Nested // 1. 这里不需要</div><div class="line">&#123;</div><div class="line">　public:</div><div class="line">　　explicit Derived(int x)</div><div class="line">　　: Base&lt;T&gt;::Nested(x) //  2. 这里也不需要</div><div class="line">　　&#123;</div><div class="line">　　　typename Base&lt;T&gt;::Nested temp; //nested dependent type, need typename</div><div class="line">　　&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>比如，这里<code>Nested</code>就是<code>Base&lt;T&gt;</code>里面的一个类型。实际上，这里也很明显，那就是继承肯定是继承于类型，而不是一个静态变量。</p>
+<p>所以，也可以总结成。</p>
+<ul>
+<li>如果想定义<code>B</code>类的时候，直接也把内部类<code>A</code>的定义决定了。那么，声明的时候，必须采用1.</li>
+<li>如果想<code>B</code>类内部自由定义<code>A</code>类的实例化，那么必须采用格式2.</li>
+</ul>
+<h2 id="模板模板参数的取值范围"><a href="#模板模板参数的取值范围" class="headerlink" title="模板模板参数的取值范围"></a>模板模板参数的取值范围</h2><p>模板模板参数的取值范围可以是：</p>
+<ul>
+<li>类型声明在前面，比如<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>。这个时候，类<code>V</code>的模板参数可取范围是<code>X, Y, Z</code>。</li>
+<li>类型声明在后面，比如<code>&lt;template&lt;class, class&gt; class V, typename X, typename Y, typename Z&gt;</code>也是同样可以取到<code>X/Y/Z</code>的。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class</span> H, <span class="keyword">class</span> S&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> H&lt;S&gt; &amp;value)</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再如</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class</span> V, <span class="keyword">class</span> T, <span class="keyword">class</span> A&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(V&lt;T, A&gt; &amp;v)</span> </span>&#123;</div><div class="line">    <span class="comment">// This can be "typename V&lt;T, A&gt;::value_type",</span></div><div class="line">    <span class="comment">// but we are pretending we don't have it</span></div><div class="line"></div><div class="line">    T temp = v.back();</div><div class="line">    v.pop_back();</div><div class="line">    <span class="comment">// Do some work on temp</span></div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; temp &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="缺省值"><a href="#缺省值" class="headerlink" title="缺省值"></a>缺省值</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont = Deque&gt;</div><div class="line"><span class="keyword">class</span> Stack &#123;</div><div class="line">    <span class="comment">//...</span></div><div class="line">&#125;;</div><div class="line"><span class="comment">//...</span></div><div class="line">Stack&lt;<span class="keyword">int</span>&gt; aStack1; <span class="comment">// use default: Cont is Deque</span></div><div class="line">Stack&lt;<span class="built_in">std</span>::<span class="built_in">string</span>,List&gt; aStack2; <span class="comment">// Cont is List</span></div></pre></td></tr></table></figure>
+<p>只是需要注意的是，这里的<code>Deque</code>的声明也需要是<code>template &lt;typename&gt; class Deque { };</code>这样。也就是只有一个模板参数。</p>
+<p><strong>注意</strong>这里的<code>Deque</code>不是<code>STL</code>里面<code>Deque</code>。</p>
+<h1 id="无用的模板参数"><a href="#无用的模板参数" class="headerlink" title="无用的模板参数"></a>无用的模板参数</h1><p>有时候，如果采用如下声明，会导致相同的结果。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Vec &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125; ;</div></pre></td></tr></table></figure>
+<p>在这里，<code>Wrap</code>的声明得到的效果就与</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>得到同样的效果。因为<code>template&lt;template&lt;typename T&gt; typename V&gt;</code>会导致<code>V</code>没有参数范围可以选择。只能在内部指定类型。</p>
+<p>同理，可以扩展到多个参数的情况。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element,</div><div class="line">    <span class="keyword">class</span> Allocator&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
+<p>与</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
+<p>这两个也应该是等价的。在使用的时候，都需要在</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3 &#123;</div><div class="line">    Cont&lt;<span class="keyword">int</span>,<span class="built_in">std</span>::allocator&lt;<span class="keyword">int</span>&gt;&gt; cont_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样的声明方式。</p>
 
       
     </div>
@@ -603,118 +1106,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-stl/6.模板的编译" data-title="1.5 模板的编译" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-stl/4.模板特化" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/07/18/stl/4.模板特化/" class="article-date">
-  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/07/18/stl/4.模板特化/">1.3 模板偏特化</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="偏特化"><a href="#偏特化" class="headerlink" title="偏特化"></a>偏特化</h1><p>前面介绍过，模板的偏特化可以有两种形式</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&#123;</div><div class="line">    T v_[N];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">float</span>, <span class="number">4</span>&gt; &#123;</div><div class="line">    <span class="keyword">float</span> v_[<span class="number">4</span>];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">bool</span>, N&gt;&#123;</div><div class="line">    <span class="keyword">char</span> v_[(N+<span class="keyword">sizeof</span>(<span class="keyword">char</span>)<span class="number">-1</span>)/<span class="keyword">sizeof</span>(<span class="keyword">char</span>)];</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<ul>
-<li>把所有的参数具体化，比如<code>T = float, N = 4</code></li>
-<li>把部分参数具体化，比如<code>T = bool</code></li>
-</ul>
-<p>需要注意的是，已经被具体化的参数就不要再出现在<code>template&lt;&gt;</code>这里面了。如果所有的参数都被具体化的，那么<code>template&lt;&gt;</code>这里面就什么都没有了。</p>
-<p>比较复杂的是两种情况，也就是模板特化与<code>模板模板参数</code>混在一起的时候。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// V这里的参数只能从T/U/X里面选择。</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>接着再分析另外一个例子。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// 完全特例化</span></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">int</span>, <span class="keyword">float</span>, <span class="number">2</span>, Arg&gt;;</div><div class="line"></div><div class="line"><span class="comment">// 第一个参数有const修饰</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T1, T2, i, CP&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
-<p>需要注意的是后面的那个<code>class CP</code>在选择类型的时候，只能从<code>T1/T2/i</code>里面选择了。</p>
-<h1 id="类型组合的特化"><a href="#类型组合的特化" class="headerlink" title="类型组合的特化"></a>类型组合的特化</h1><p>再看一个有趣的例子。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 第一二个参数为Arg的实例且满足一定关系，第四个参数为Arg</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;Arg&lt;T, i&gt;, Arg&lt;T, i+<span class="number">10</span>&gt;, i, Arg&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
-<p>也就是说，在特化的时候，可以写成这样。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;参数范围A&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;由A范围组合出按照顺序满足条件的这个具体类型即可&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
-<p>那么在类里面使用<code>Arg</code>的时候，可以选择的参数范围就是已知的类型。比如：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg&#123; &#125;; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T, Arg&lt;T,i+<span class="number">10</span>&gt;, i, Arg&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Arg&lt;T, i&gt; s_;</div><div class="line">    Arg&lt;<span class="keyword">const</span> T, i&gt; a_;</div><div class="line">    Arg&lt;Arg&lt;T,i&gt;,i&gt; b_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<p>所以，可以看出<code>Arg</code>这个模板类可以使用<code>T,i, const T, Arg&lt;T,i+10&gt;, i,</code>都可以。</p>
-<p>关于模板特化</p>
-<ul>
-<li>Base模板需要提前声明</li>
-<li>如果模板A是模板B的子集，优先匹配A。</li>
-<li>如果两个模板有交集，且不成子集关系，编译报错。</li>
-</ul>
-<h1 id="模板偏特化元编程"><a href="#模板偏特化元编程" class="headerlink" title="模板偏特化元编程"></a>模板偏特化元编程</h1><p>可以利用偏特化来实现<code>if/else</code>对类型的操作。比如判断两个类型是否相等。代码如下：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div><div class="line"><span class="keyword">struct</span> is_same &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">false</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">struct</span> is_same&lt;T,T&gt; &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 自定义类型，只是用来测试is_same模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> uint;</div><div class="line">    <span class="keyword">typedef</span> uint uint2;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;<span class="keyword">unsigned</span>, uint2&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">unsigned</span>, <span class="number">2</span>&gt;, Example&lt;uint2, <span class="number">2</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt;, Example&lt;<span class="keyword">int</span>, <span class="number">3</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="计算阶乘"><a href="#计算阶乘" class="headerlink" title="计算阶乘"></a>计算阶乘</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;stdint.h&gt;</div><div class="line"></div><div class="line">template&lt;int N&gt;</div><div class="line">struct order &#123;</div><div class="line">    static constexpr int64_t value = N * order&lt;N-1&gt;::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 由于只有一个参数需要偏特化，所以</div><div class="line">// 这里用template&lt;&gt;</div><div class="line">template&lt;&gt;</div><div class="line">struct order&lt;0&gt; &#123;</div><div class="line">    static constexpr int64_t value = 1;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int main(void) &#123;</div><div class="line">    std::cout &lt;&lt; order&lt;10&gt;::value &lt;&lt; std::endl;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-stl/4.模板特化" data-title="1.3 模板偏特化" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-stl/3.模板模板参数" data-title="1.3 模板模板参数" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -857,400 +1249,9 @@
 
 
   
-    <article id="post-leetcode/222" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/05/02/leetcode/222/" class="article-date">
-  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/05/02/leetcode/222/">LeetCode.22 反转二叉树</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Invert a binary tree.</div><div class="line"></div><div class="line">Example:</div><div class="line"></div><div class="line">Input:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  2     7</div><div class="line"> / \   / \</div><div class="line">1   3 6   9</div><div class="line">Output:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  7     2</div><div class="line"> / \   / \</div><div class="line">9   6 3   1</div></pre></td></tr></table></figure>
-<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="简洁写法"><a href="#简洁写法" class="headerlink" title="简洁写法"></a>简洁写法</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Definition for a binary tree node.</div><div class="line"> * struct TreeNode &#123;</div><div class="line"> *     int val;</div><div class="line"> *     TreeNode *left;</div><div class="line"> *     TreeNode *right;</div><div class="line"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</div><div class="line"> * &#125;;</div><div class="line"> */</div><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">TreeNode* <span class="title">invertTree_recursive</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (root==<span class="literal">NULL</span>) <span class="keyword">return</span> root;</div><div class="line">        TreeNode* node = invertTree_recursive(root-&gt;left);</div><div class="line">        root-&gt;left = invertTree_recursive(root-&gt;right);</div><div class="line">        root-&gt;right = node;</div><div class="line">        <span class="keyword">return</span> root;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h2 id="带栈"><a href="#带栈" class="headerlink" title="带栈"></a>带栈</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 带栈的写法</div><div class="line">TreeNode* invertTree(TreeNode* root) &#123;</div><div class="line">    if (!root) return nullptr;</div><div class="line">    stack&lt;TreeNode*&gt; s;</div><div class="line">    s.push(root);</div><div class="line">    while (!s.empty()) &#123;</div><div class="line">        auto p = s.top(); s.pop();</div><div class="line">        std::swap(p-&gt;left, p-&gt;right);</div><div class="line">        if (p-&gt;left) s.push(p-&gt;left);</div><div class="line">        if (p-&gt;right) s.push(p-&gt;right);</div><div class="line">    &#125;</div><div class="line">    return root;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-leetcode/222" data-title="LeetCode.22 反转二叉树" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-leetcode/22" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/05/02/leetcode/22/" class="article-date">
-  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/05/02/leetcode/22/">LeetCode.22 合法括号对的总排列</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><p>给定括号的对数。要求写出程序。把所有可能的，符合运算括号排列的都输出出来。</p>
-<h1 id="总的结果数目"><a href="#总的结果数目" class="headerlink" title="总的结果数目"></a>总的结果数目</h1><p>比如当给定括号 的对数为n的时候。总的字符数是n*2。那么总的结果可能是:</p>
-<p>相当于有<code>2*n</code>个箱子。每个箱子可以选择’(‘或者’)’。那么总的数目有<code>2^(n&lt;&lt;1)</code>个。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">size_t</span> total_size = (<span class="number">1</span>&lt;&lt;(n&lt;&lt;<span class="number">1</span>)) + <span class="number">1</span>;</div><div class="line"><span class="keyword">char</span> **ret = (<span class="keyword">char</span>**) <span class="built_in">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * total_size);</div><div class="line"><span class="built_in">memset</span>(ret, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * total_size);</div></pre></td></tr></table></figure>
-<h1 id="第pos个字符应该放什么"><a href="#第pos个字符应该放什么" class="headerlink" title="第pos个字符应该放什么?"></a>第pos个字符应该放什么?</h1><p>由于所有的结果都已经放到了<code>ret</code>中。并且有一个<code>ret_tail</code>记录ret中接下来的空箱子的位置。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">for</span> i = <span class="number">0</span> : ret &#123;</div><div class="line">    字符串 = ret[i]</div><div class="line">    根据  字符串 里面的(/)符号数</div><div class="line">        决定在后面追加的内容</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>循环体可以写成</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line">ret[<span class="number">0</span>] = <span class="string">"("</span>;</div><div class="line"><span class="keyword">for</span> (pos = <span class="number">1</span>; pos &lt; (n&lt;&lt;<span class="number">1</span>); pos++) &#123;</div><div class="line">    <span class="comment">// 当前字符串的数目</span></div><div class="line">    cnt = ret_tail;</div><div class="line">    <span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; cnt; i++) &#123;</div><div class="line">        <span class="built_in">string</span> = ret[i];</div><div class="line">        如果不生成新的字符串，直接在ret[i]上追加字符</div><div class="line">        如果需要生成新的字符串，ret_tail申请空间，复制ret[i],然后追加字符到ret[ret_tail];</div><div class="line">            ret_tail++;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="加速判断"><a href="#加速判断" class="headerlink" title="加速判断"></a>加速判断</h2><p>为了加速判断，每个字符串申请的空间是:</p>
-<ol>
-<li>先与4 bytes对齐</li>
-<li>再多申请4个int的空间</li>
-</ol>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">|........string......|...|used|left|</div></pre></td></tr></table></figure>
-<p>也就是前面都是正常的C字符串。只不过在这个字符串后面，多申请了一段空间用来存放<code>used/left</code>。</p>
-<ul>
-<li>used表示<code>(</code>用了多少？</li>
-<li>left表示<code>)</code>抵消的<code>(</code>还留下多少？比如<code>(()</code>这里的<code>used=2, left = 1</code>。</li>
-</ul>
-<p>把这两个<code>int</code>与字符串一起放的原因是容易申请内存。也跟随字符串一起，容易定位与操作。<br>所以这里生成了两个宏，专门用来取<code>used/left</code>。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> LEFT_COUNT(p, l) ((int*)(p + l - sizeof(int)))</span></div><div class="line"><span class="meta">#<span class="meta-keyword">define</span> USED_COUNT(p, l) ((int*)(p + l - 2*sizeof(int)))</span></div></pre></td></tr></table></figure>
-<p>有了<code>used/left</code>之后。生成新的字符串的时候，<code>used/left</code>的值，就直接在原有的字符串上累加就可以了。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">set_char</span><span class="params">(<span class="keyword">char</span> **ret, <span class="keyword">const</span> <span class="keyword">size_t</span> i, <span class="keyword">const</span> <span class="keyword">size_t</span> pos, <span class="keyword">const</span> <span class="keyword">size_t</span> str_len, <span class="keyword">char</span> c)</span> </span>&#123;</div><div class="line">    assert(!ret[i][pos]);</div><div class="line">    ret[i][pos] = c;</div><div class="line">    <span class="keyword">int</span> *left = LEFT_COUNT(ret[i], str_len);</div><div class="line">    <span class="keyword">int</span> *used = USED_COUNT(ret[i], str_len);</div><div class="line">    <span class="keyword">if</span> (c == <span class="string">'('</span>) &#123;</div><div class="line">        *left += <span class="number">1</span>;</div><div class="line">        *used += <span class="number">1</span>;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;        </div><div class="line">        *left -= <span class="number">1</span>;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h1><figure class="highlight"><table><tr><td class="code"><pre><div class="line">/**</div><div class="line"> * Return an array of size *returnSize.</div><div class="line"> * Note: The returned array must be malloced, assume caller calls free().</div><div class="line"> */</div><div class="line">#define ROUND_UP(x) ((((x) + 3) &gt;&gt; 2) &lt;&lt; 2)</div><div class="line">#define LEFT_COUNT(p, l) ((int*)(p + l - sizeof(int)))</div><div class="line">#define USED_COUNT(p, l) ((int*)(p + l - 2*sizeof(int)))</div><div class="line"></div><div class="line">void set_char(char **ret, const size_t i, const size_t pos, const size_t str_len, char c) &#123;</div><div class="line">    assert(!ret[i][pos]);</div><div class="line">    ret[i][pos] = c;</div><div class="line">    int *left = LEFT_COUNT(ret[i], str_len);</div><div class="line">    int *used = USED_COUNT(ret[i], str_len);</div><div class="line">    if (c == '(') &#123;</div><div class="line">        *left += 1;</div><div class="line">        *used += 1;</div><div class="line">    &#125; else &#123;        </div><div class="line">        *left -= 1;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">void dup_string(char **ret, const size_t from, const size_t to, const size_t str_len, int* returnSize) &#123;</div><div class="line">    assert(!ret[to]);</div><div class="line">    ret[to] = (char*) malloc(sizeof(char) * str_len);</div><div class="line">    memcpy(ret[to], ret[from], sizeof(char) * str_len);</div><div class="line">    *returnSize += 1; // ERROR: *returnSize + 1 -&gt; *returnSize += 1</div><div class="line">&#125;</div><div class="line"></div><div class="line">char** generateParenthesis(int n, int* returnSize) &#123;</div><div class="line">    if (0 == n) &#123;</div><div class="line">        *returnSize = 0;</div><div class="line">        return NULL;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    size_t total_size = (1&lt;&lt;(n&lt;&lt;1)) + 1;</div><div class="line">    char **ret = (char**) malloc(sizeof(char*) * total_size);</div><div class="line">    memset(ret, 0, sizeof(char*) * total_size);</div><div class="line">    </div><div class="line">    size_t str_len = ROUND_UP(n&lt;&lt;1) + (sizeof(int)&lt;&lt;2);</div><div class="line">    ret[0] = (char*) malloc(sizeof(char) * str_len);</div><div class="line">    *returnSize = 1; // ERROR: 这里也需要初始化为1</div><div class="line">    memset(ret[0], 0, sizeof(char) * str_len);</div><div class="line"></div><div class="line">    /*需要填充的字符串的位置，其中第一个位置能只填(*/</div><div class="line">    set_char(ret, 0, 0, str_len, '(');</div><div class="line"></div><div class="line">    /*指向需要填充的尾巴, ret_tail中还没有字符串生成*/</div><div class="line">    size_t ret_tail = 1;</div><div class="line"></div><div class="line">    /*其他位置*/</div><div class="line">    for (size_t pos = 1; pos &lt; (n&lt;&lt;1); pos++) &#123;</div><div class="line">        /*遍历里面的每个字符串*/</div><div class="line">        const size_t cnt = ret_tail;</div><div class="line">        for (size_t i = 0; i &lt; cnt; i++) &#123;</div><div class="line">            assert(ret[i]);</div><div class="line">            //assert(ret_tail &lt;= (1&lt;&lt;n));</div><div class="line"></div><div class="line">            char *p = ret[i];</div><div class="line">            int *left = LEFT_COUNT(p, str_len);</div><div class="line">            int *used = USED_COUNT(p, str_len);</div><div class="line"></div><div class="line">            /*如果(已经用光, 且left为0*/</div><div class="line">            if (*used == n &amp;&amp; 0 == *left) continue;</div><div class="line">            </div><div class="line">            /*如果(用光，但是left还有，只能补)*/</div><div class="line">            if (*used == n &amp;&amp; *left &gt; 0) &#123;</div><div class="line">                set_char(ret, i, pos, str_len, ')');</div><div class="line">                continue;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            assert(*used &lt; n);</div><div class="line">            /*还有(没有用光，那么有两种情况:注意先复制!!可以省掉处理旧字符的情况*/</div><div class="line">            if (*left &gt; 0) &#123;</div><div class="line">                // b. 放(</div><div class="line">                dup_string(ret, i, ret_tail, str_len, returnSize);</div><div class="line">                set_char(ret, ret_tail, pos, str_len, '(');</div><div class="line">                ret_tail++;</div><div class="line"></div><div class="line">                // a. 放)</div><div class="line">                set_char(ret, i, pos, str_len, ')');</div><div class="line">                continue;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            /*left == 0, 只能放(*/</div><div class="line">            assert(*left == 0);</div><div class="line">            set_char(ret, i, pos, str_len, '(');</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    return ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-leetcode/22" data-title="LeetCode.22 合法括号对的总排列" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-leetcode/17" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/05/02/leetcode/17/" class="article-date">
-  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/05/02/leetcode/17/">LeetCode.17 九键字母组合</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="题目含义"><a href="#题目含义" class="headerlink" title="题目含义"></a>题目含义</h1><p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" alt=""></p>
-<p>对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Input: &quot;23&quot;</div><div class="line">Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].</div></pre></td></tr></table></figure>
-<p>输出的时候，不需要考虑顺序。</p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>总的思想还是比较简单的。首先根据每个数字上面的字母数，得到结果总数。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>得到总的结果数之后，可以一次性地把所有需要动态申请的内存都申请完。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*申请结果空间*/</span></div><div class="line"><span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line"><span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line"><span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>);</div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>初始处理，比如给定的数字串是”999”。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 第一个数字为<span class="number">9</span></div><div class="line">   生成相应的字符串</div><div class="line">   ar1 = </div><div class="line">   [</div><div class="line">    <span class="string">"w"</span>,</div><div class="line">    <span class="string">"x"</span>,</div><div class="line">    <span class="string">"y"</span>,</div><div class="line">    <span class="string">"z"</span>,</div><div class="line">   ]</div><div class="line"></div><div class="line"><span class="number">2.</span> 第二个数字为<span class="number">9</span></div><div class="line">   ar2 = []</div><div class="line">   <span class="keyword">for</span> c in <span class="string">"wxyz"</span>:</div><div class="line">       新数组 = ar1 + c;</div><div class="line">       ar2 = [ar2; 新数组]</div><div class="line">   如果把循环展开，就是</div><div class="line">   c = <span class="string">"w"</span></div><div class="line">   新数组 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   ar2 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   </div><div class="line">   第二次循环</div><div class="line">   c = <span class="string">"x"</span></div><div class="line">   新数组 = [<span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>]</div><div class="line">   ar2 = [</div><div class="line">   <span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>,</div><div class="line">   <span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>,</div><div class="line">   ]</div><div class="line">   ...</div><div class="line">   </div><div class="line">   假设ar1长度为N。</div><div class="line">   那么后面每次循环的时候，只需要把</div><div class="line">   这N个字符串拷贝到新的位置。</div><div class="line">        a. 第一次添加的是<span class="number">0</span>~N<span class="number">-1</span></div><div class="line">        b. 第二次处理的字符串是N~<span class="number">2</span>N<span class="number">-1</span></div><div class="line">        c. 第三次处理的是<span class="number">2</span>N~<span class="number">3</span>N<span class="number">-1</span></div><div class="line"><span class="number">3.</span> 递归处理第三个数字</div></pre></td></tr></table></figure>
-<p>这段代码的关键就是在:</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line"><span class="comment">// pos指向当前需要处理的是哪个数字</span></div><div class="line"><span class="comment">// 同时也是结果字符串需要填充的字符</span></div><div class="line"><span class="comment">// 串的位置。</span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这段代码利用9-&gt;"wxyz"中的"w"来生成</div><div class="line"> * ar1，并且得到长度len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">size_t</span> pos = str - a;</div><div class="line"><span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">    ret[i][pos] = *dic;</div><div class="line">    assert(<span class="number">0</span> &lt;= i &amp;&amp; i &lt; retLen);</div><div class="line">    assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">    i++;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * curlen就是指len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line"><span class="comment">// *p指向9-&gt;wxyz中的第二个字母x</span></div><div class="line"><span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"><span class="comment">// 从第二个字母开始依次处理每个字母</span></div><div class="line"><span class="keyword">while</span> (*p) &#123;</div><div class="line">    <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">    <span class="comment">// 在处理的时候，把</span></div><div class="line">    <span class="comment">// [0, len(ar1))拷贝到</span></div><div class="line">    <span class="comment">// [i*len(ar1), (i+1)*len(ar1) )</span></div><div class="line">    <span class="comment">// 然后再修改pos位置的字母</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">        <span class="comment">// 注意处理的字符串</span></div><div class="line">        <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">        assert(<span class="number">0</span> &lt;= (npos+i) &amp;&amp; (npos+i) &lt; retLen);</div><div class="line">        assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">        ret[npos+i][pos] = *p;</div><div class="line">    &#125;</div><div class="line">    p++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里并没有使用任何第三方库。直接使用一下递归就可以了。</p>
-<h1 id="完整的代码"><a href="#完整的代码" class="headerlink" title="完整的代码"></a>完整的代码</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/*单字符串快速查找*/</span></div><div class="line"><span class="keyword">char</span>* str_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="string">"abc"</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="string">"def"</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="string">"ghi"</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="string">"jkl"</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="string">"mno"</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="string">"pqrs"</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="string">"tuv"</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="string">"wxyz"</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这里递归进行处理</div><div class="line"> * str指向当前要处理的字符指针</div><div class="line"> * ret已经申请好所有的空间。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">append_char</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *a, <span class="keyword">char</span> *str, <span class="keyword">char</span> **ret)</span> </span>&#123;</div><div class="line">    <span class="comment">/*已经结束*/</span></div><div class="line">    <span class="keyword">if</span> (!str || !(*str)) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*当前字符映射过去的字符串*/</span></div><div class="line">    <span class="keyword">char</span> *dic = str_rec[*str];</div><div class="line">    <span class="keyword">if</span> (!dic || !(*dic)) <span class="keyword">return</span>;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理dic里面的第一个字符*/</span></div><div class="line">    <span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line">    <span class="keyword">size_t</span> pos = str - a;</div><div class="line">    <span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">        ret[i][pos] = *dic;</div><div class="line">        i++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*当前ret的长度*/</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line">    <span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">            <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">            ret[npos+i][pos] = *p;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    append_char(a, str + <span class="number">1</span>, ret);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Return an array of size *returnSize.</div><div class="line"> * Note: The returned array must be malloced, assume caller calls free().</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">char</span>** <span class="title">letterCombinations</span><span class="params">(<span class="keyword">char</span>* digits, <span class="keyword">int</span>* returnSize)</span> </span>&#123;</div><div class="line">    <span class="comment">/*如果为空串*/</span></div><div class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == digits || *digits == <span class="number">0</span>) &#123;</div><div class="line">        *returnSize = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* d_len表示当前数字串的长度，</span></div><div class="line">     * 结果字符串的长度是d_len + 1</div><div class="line">     */</div><div class="line">    <span class="keyword">int</span> d_len = p - digits;</div><div class="line"></div><div class="line">    <span class="comment">/*申请结果空间*/</span></div><div class="line">    <span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line">    <span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line">    <span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">        <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// 这里要多申请一个char</span></div><div class="line">        ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">        <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理第一个字符*/</span></div><div class="line">    <span class="keyword">char</span> *str = str_rec[*digits];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>;  str[i]; i++) &#123;</div><div class="line">        ret[i][<span class="number">0</span>] = str[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    append_char(digits, digits + <span class="number">1</span>, ret);</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>在提交的时候，总是遇到</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">sysmalloc: Assertion `(old_top == (((mbinptr) (((char *) &amp;((av)-&gt;bins[((1) - 1) * 2])) - __builtin_offsetof (struct malloc_chunk, fd)))) &amp;&amp; old_size == 0) || ((unsigned long) (old_size) &gt;= (unsigned long)((((__builtin_offsetof (struct malloc_chunk, fd_nextsize))+((2 *(sizeof(size_t))) - 1)) &amp; ~((2 *(sizeof(size_t))) - 1))) &amp;&amp; ((old_top)-&gt;size &amp; 0x1) &amp;&amp; ((unsigned long) old_end &amp; pagemask) == 0)' failed.</div></pre></td></tr></table></figure>
-<p>说的是内存访问越界。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 这里在申请内存的时候，要多一个char</span></div><div class="line"><span class="comment">// 并且要把申请的内存空间请0.</span></div><div class="line"><span class="comment">// memset(ret[i], 0, d_len);会导致上面那个错. </span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// ERROR: 这里要多申请一个char!!!</span></div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-leetcode/17" data-title="LeetCode.17 九键字母组合" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-leetcode/10" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/05/02/leetcode/10/" class="article-date">
-  	<time datetime="2018-05-02T02:28:32.000Z" itemprop="datePublished">2018-05-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/05/02/leetcode/10/">LeetCode.10 正则表达式匹配</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="题目描述"><a href="#题目描述" class="headerlink" title="题目描述"></a>题目描述</h1><p>给定一个字符串，以及一个正则表达式。<br>判断给定的正则表达式是否可以表示字符串。</p>
-<p>这里并没有让所有的正则表达式的符号都参与进来。<br>只是让’*’, ‘.’这两个符号加进来了。且字符串中只有<code>a~z</code>小写。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">* 吃掉前面的字符，或者无视自己，或者把前面的字符重复x次。</div><div class="line">. 可以匹配任意字符</div></pre></td></tr></table></figure>
-<p>比如</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">a*有好几种解释</div><div class="line"><span class="number">1.</span> 空串后面的*把a吃掉</div><div class="line"><span class="number">2.</span> a, *自身没有起任何作用</div><div class="line"><span class="number">3.</span> aa重复<span class="number">1</span>次</div><div class="line"><span class="number">4.</span> aaa重复<span class="number">2</span>次</div></pre></td></tr></table></figure>
-<h2 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">.* 万能字符串，可以表示任何字符在重复的时候，也可以写成....这样。</div><div class="line">** 后面的*可以选择吃掉前面的字符。前面的字符*可能的一种选项就是忽略自己。</div><div class="line">   1. 空串</div><div class="line">   2. *</div><div class="line">   3. **</div><div class="line">   4. ***</div></pre></td></tr></table></figure>
-<h1 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h1><p>这个题的做法是典型的深度优先搜索。不过在处理的时候，可以考虑预处理一下。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> x*x*如果出现在正则表达式里面。实际上是可以简化成x*的。</div><div class="line"><span class="number">2.</span> x*x*x*可以优化成x*</div></pre></td></tr></table></figure>
-<p>预处理的代码如下：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">isMatch</span><span class="params">(<span class="keyword">char</span>* s, <span class="keyword">char</span>* p)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> len_p = <span class="built_in">strlen</span>(p);</div><div class="line">    <span class="keyword">int</span> i;</div><div class="line">    <span class="keyword">for</span> (i = len_p - <span class="number">1</span>; i &gt; <span class="number">1</span>; --i) &#123;</div><div class="line">        <span class="comment">// 匹配x*x*这种情况, i指向后面的那个x</span></div><div class="line">        <span class="keyword">if</span> (p[i - <span class="number">1</span>] == <span class="string">'*'</span> &amp;&amp; p[i + <span class="number">1</span>] == <span class="string">'*'</span> &amp;&amp; p[i] == p[i - <span class="number">2</span>]) &#123;</div><div class="line">            memmove(p + i, p + i + <span class="number">2</span>, len_p - i - <span class="number">1</span>);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 经过上面的处理，x*x*x*可以被缩减为x*</span></div><div class="line">    <span class="comment">// 这里开始进行match匹配</span></div><div class="line">    <span class="keyword">return</span> match_sub(s, p);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在进行匹配的时候，首先可以考虑没有<code>&#39;*&#39;</code>号的情况。比如。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">abc 与 a.c</div><div class="line">abc 与 bdc</div><div class="line"><span class="string">""</span>  与 pg</div><div class="line"><span class="literal">NULL</span> 与 abc</div></pre></td></tr></table></figure>
-<p>这种都特别容易判断。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">define</span> same(a,b) ((a)==(b) || (<span class="meta-string">'.'</span>) == (b))</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">match_sub</span><span class="params">(<span class="keyword">char</span> *s, <span class="keyword">char</span> *p)</span> </span>&#123;</div><div class="line">    <span class="keyword">for</span> (;*p &amp;&amp; *(p + <span class="number">1</span>) != <span class="string">'*'</span>; ++s, ++p)</div><div class="line">        <span class="keyword">if</span> (!s|| !*s || !same(*s, *p))</div><div class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</div><div class="line">    ...</div><div class="line">    <span class="comment">// 此时*p == 0或p[1] == '*'</span></div><div class="line">    <span class="keyword">if</span> (!*p) <span class="keyword">return</span> <span class="literal">NULL</span> == s || *s == <span class="number">0</span>;</div><div class="line">    <span class="comment">// 此时p[1] 必然为'*'</span></div><div class="line">    </div><div class="line">    <span class="comment">// 如果当前字符相等，此时p[1] == '*'</span></div><div class="line">    <span class="comment">// 那么可以选择</span></div><div class="line">    <span class="comment">// 1. 重复 match_sub(s+1, p)</span></div><div class="line">    <span class="comment">// 2. 利用*吃掉当前字符 match_sub(s, p+2);</span></div><div class="line">    <span class="comment">// 3. a*b, *号可以选择无视自己.那么就是match_sub(s+1, p+2);</span></div><div class="line">    <span class="keyword">if</span> (*s &amp;&amp; same(*s, *p))</div><div class="line">        <span class="keyword">return</span>  match_sub(s + <span class="number">1</span>, p) || match_sub(s, p + <span class="number">2</span>) || match_sub(s+<span class="number">1</span>, p+<span class="number">2</span>);</div><div class="line">    <span class="keyword">else</span></div><div class="line">        <span class="keyword">return</span> match_sub(s, p + <span class="number">2</span>);</div><div class="line">    <span class="comment">// 除此之外的其他情况，比如*s == 0 || !same</span></div><div class="line">    <span class="comment">// 那么只能利用*号吃掉当前字符</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-leetcode/10" data-title="LeetCode.10 正则表达式匹配" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
   
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="extend next" rel="next" href="/blog/page/2/">Next &raquo;</a>
+      <span class="page-number current">1</span><a class="page-number" href="/blog/page/2/">2</a><a class="page-number" href="/blog/page/3/">3</a><a class="extend next" rel="next" href="/blog/page/2/">Next &raquo;</a>
     </nav>
   
 </div>

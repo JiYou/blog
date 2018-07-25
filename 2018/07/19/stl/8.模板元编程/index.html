@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.8 模板元编程 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="模板元编程
+编译期数值计算: 求阶乘
+类型计算: if/else, is_same_type
+代码计算
+
+
+注意元编程的位置。
+编程形式从编程范型（programming paradigm）上来说，C++模板是函数式编程（functional programming），它的主要特点是：函数调用不产生任何副作用（没有可变的存储），用递归形式实现循环结构的功能。C++模板的特例化提供了条件判断能力，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.8 模板元编程">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/07/19/stl/8.模板元编程/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="模板元编程
+编译期数值计算: 求阶乘
+类型计算: if/else, is_same_type
+代码计算
+
+
+注意元编程的位置。
+编程形式从编程范型（programming paradigm）上来说，C++模板是函数式编程（functional programming），它的主要特点是：函数调用不产生任何副作用（没有可变的存储），用递归形式实现循环结构的功能。C++模板的特例化提供了条件判断能力，">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/compiler.meta.step.png">
+<meta property="og:image" content="https://jiyou.github.io/blog/blog/img/meta.programming.png">
+<meta property="og:updated_time" content="2018-07-23T06:43:42.546Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.8 模板元编程">
+<meta name="twitter:description" content="模板元编程
+编译期数值计算: 求阶乘
+类型计算: if/else, is_same_type
+代码计算
+
+
+注意元编程的位置。
+编程形式从编程范型（programming paradigm）上来说，C++模板是函数式编程（functional programming），它的主要特点是：函数调用不产生任何副作用（没有可变的存储），用递归形式实现循环结构的功能。C++模板的特例化提供了条件判断能力，">
+<meta name="twitter:image" content="https://jiyou.github.io/blog/blog/img/compiler.meta.step.png">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 15px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-stl/8.模板元编程" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/19/stl/8.模板元编程/" class="article-date">
+  	<time datetime="2018-07-18T21:30:32.000Z" itemprop="datePublished">2018-07-19</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.8 模板元编程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="模板元编程"><a href="#模板元编程" class="headerlink" title="模板元编程"></a>模板元编程</h1><ul>
+<li>编译期数值计算: 求阶乘</li>
+<li>类型计算: <code>if/else</code>, <code>is_same_type</code></li>
+<li>代码计算</li>
+</ul>
+<p><img src="/blog/img/compiler.meta.step.png" alt=""></p>
+<p>注意元编程的位置。</p>
+<h1 id="编程形式"><a href="#编程形式" class="headerlink" title="编程形式"></a>编程形式</h1><p>从编程范型（programming paradigm）上来说，<code>C++模板</code>是函数式编程（functional programming），它的主要特点是：<code>函数调用不产生任何副作用（没有可变的存储）</code>，用<code>递归</code>形式实现<code>循环</code>结构的功能。C++模板的特例化提供了<code>条件判断能力</code>，而模板递归嵌套提供了循环的能力，这两点使得其具有和普通语言一样通用的能力（图灵完备性）。</p>
+<p>总结一下就是：</p>
+<ul>
+<li>不能访问存储变量</li>
+<li>偏特化来支持递归</li>
+<li>偏特化实现<code>if/else</code>结构</li>
+</ul>
+<p>从<code>编程形式</code>来看，模板的<code>&lt;&gt;</code>中的模板参数相当于<code>函数调用</code>的<code>输入参数</code>，模板中的<code>typedef</code>或<code>static const</code>或<code>enum</code>定义函数返回值（<code>类型</code>或<code>数值</code>，<code>数值</code>仅支持<code>整型</code>，如果需要可以通过编码计算浮点数），代码计算是通过类型计算进而选择类型的函数实现的（C++ 属于静态类型语言，编译器对类型的操控能力很强）。</p>
+<p>这里需要解释一下：</p>
+<ul>
+<li>templnate&lt;.输入类型.&gt;是函数的输入</li>
+<li>typedef ….或者static constexpr 整型是函数的返回值</li>
+<li>代码计算是通过不同的类型跳转到不同的函数来运行。</li>
+</ul>
+<p>这里有个非常简单的例子来说明这三点。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i=<span class="number">1</span>&gt;</div><div class="line"><span class="keyword">class</span> someComputing &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">volatile</span> T* retType; <span class="comment">// 类型计算</span></div><div class="line">    <span class="keyword">enum</span> &#123; retValume = i + someComputing&lt;T, i<span class="number">-1</span>&gt;::retValume &#125;; <span class="comment">// 数值计算，递归</span></div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"someComputing: i="</span> &lt;&lt; i &lt;&lt; <span class="string">'\n'</span>; &#125;</div><div class="line">&#125;;</div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="comment">// 模板特例，递归终止条件</span></div><div class="line"><span class="keyword">class</span> someComputing&lt;T, <span class="number">0</span>&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">enum</span> &#123; retValume = <span class="number">0</span> &#125;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> codeComputing &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123; T::f(); &#125; <span class="comment">// 根据类型调用函数，代码计算</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    someComputing&lt;<span class="keyword">int</span>&gt;::retType a=<span class="number">0</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="keyword">sizeof</span>(a) &lt;&lt; <span class="string">'\n'</span>; <span class="comment">// 64-bit 程序指针</span></div><div class="line">    <span class="comment">// VS2013 默认最大递归深度500，GCC4.8 默认最大递归深度900（-ftemplate-depth=n）</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; someComputing&lt;<span class="keyword">int</span>, <span class="number">500</span>&gt;::retValume &lt;&lt; <span class="string">'\n'</span>; <span class="comment">// 1+2+...+500</span></div><div class="line">    codeComputing&lt;someComputing&lt;<span class="keyword">int</span>, <span class="number">99</span>&gt;&gt;::f();</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cin</span>.get(); <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>模板元编程的组织形式</p>
+<p><img src="/blog/img/meta.programming.png" alt=""></p>
+<h2 id="数值计算"><a href="#数值计算" class="headerlink" title="数值计算"></a>数值计算</h2><p>前面已经介绍了连续求和的模板。这里写一个编译时计算一个数值是否是质数。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> is_prime &#123;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> p, <span class="keyword">int</span> i&gt;</div><div class="line">    <span class="keyword">struct</span> check_prime &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = (p%i) &amp;&amp; check_prime&lt;p, i<span class="number">-1</span>&gt;::value;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> p&gt;</div><div class="line">    <span class="keyword">struct</span> check_prime&lt;p, <span class="number">2</span>&gt; &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = p == <span class="number">2</span> || (p &gt; <span class="number">2</span> &amp;&amp; (p&amp;<span class="number">0x01</span>));</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> p&gt;</div><div class="line">    <span class="keyword">struct</span> check_prime&lt;p, <span class="number">1</span>&gt; &#123;</div><div class="line">        <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">    &#125;;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = N == <span class="number">2</span> || check_prime&lt;N, N<span class="number">-1</span>&gt;::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_prime&lt;<span class="number">5</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_prime&lt;<span class="number">7</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_prime&lt;<span class="number">2</span>&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果是再写一个类，用来连续打印<code>&lt;=N</code>的所有的质数。写法如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> print_prime &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = (N &lt; <span class="number">2</span>) ? <span class="literal">false</span> : is_prime&lt;N&gt;::value;</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (value) &#123;</div><div class="line">            <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; N &lt;&lt; <span class="string">":"</span> &lt;&lt; <span class="string">"true"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">        &#125;</div><div class="line">        print_prime&lt;N<span class="number">-1</span>&gt;::print();</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> print_prime&lt;<span class="number">2</span>&gt; &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="number">2</span> &lt;&lt; <span class="string">":"</span> &lt;&lt; <span class="string">"true"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/07/19/stl/9.模板的控制结构/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          1.9 模板的控制结构
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/07/19/stl/10.循环展开/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.9 循环展开</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/8.模板元编程" data-title="1.8 模板元编程" data-url="https://jiyou.github.io/blog/blog/2018/07/19/stl/8.模板元编程/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
