@@ -202,11 +202,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-leetcode/222" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-stl/3.模板模板参数" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2018/05/02/leetcode/222/" class="article-date">
-  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+      <a href="/blog/2018/07/18/stl/3.模板模板参数/" class="article-date">
+  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
 </a>
     </div>
   
@@ -219,7 +219,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/05/02/leetcode/222/">LeetCode.22 反转二叉树</a>
+      <a class="article-title" href="/blog/2018/07/18/stl/3.模板模板参数/">1.3 模板模板参数</a>
     </h1>
   
 
@@ -228,9 +228,54 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Invert a binary tree.</div><div class="line"></div><div class="line">Example:</div><div class="line"></div><div class="line">Input:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  2     7</div><div class="line"> / \   / \</div><div class="line">1   3 6   9</div><div class="line">Output:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  7     2</div><div class="line"> / \   / \</div><div class="line">9   6 3   1</div></pre></td></tr></table></figure>
-<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="简洁写法"><a href="#简洁写法" class="headerlink" title="简洁写法"></a>简洁写法</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Definition for a binary tree node.</div><div class="line"> * struct TreeNode &#123;</div><div class="line"> *     int val;</div><div class="line"> *     TreeNode *left;</div><div class="line"> *     TreeNode *right;</div><div class="line"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</div><div class="line"> * &#125;;</div><div class="line"> */</div><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">TreeNode* <span class="title">invertTree_recursive</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (root==<span class="literal">NULL</span>) <span class="keyword">return</span> root;</div><div class="line">        TreeNode* node = invertTree_recursive(root-&gt;left);</div><div class="line">        root-&gt;left = invertTree_recursive(root-&gt;right);</div><div class="line">        root-&gt;right = node;</div><div class="line">        <span class="keyword">return</span> root;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h2 id="带栈"><a href="#带栈" class="headerlink" title="带栈"></a>带栈</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 带栈的写法</div><div class="line">TreeNode* invertTree(TreeNode* root) &#123;</div><div class="line">    if (!root) return nullptr;</div><div class="line">    stack&lt;TreeNode*&gt; s;</div><div class="line">    s.push(root);</div><div class="line">    while (!s.empty()) &#123;</div><div class="line">        auto p = s.top(); s.pop();</div><div class="line">        std::swap(p-&gt;left, p-&gt;right);</div><div class="line">        if (p-&gt;left) s.push(p-&gt;left);</div><div class="line">        if (p-&gt;right) s.push(p-&gt;right);</div><div class="line">    &#125;</div><div class="line">    return root;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h1 id="模板的模板参数"><a href="#模板的模板参数" class="headerlink" title="模板的模板参数"></a>模板的模板参数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> A &#123;</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> A&lt;T, <span class="number">5</span>&gt; &#123;</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T&gt; <span class="keyword">class</span> U&gt; <span class="keyword">class</span> B1 &#123; &#125;;</div><div class="line"></div><div class="line">B1&lt;A&gt; c;</div></pre></td></tr></table></figure>
+<p>注意，这个代码是无法通过编译的。因为编译器在匹配模板参数的时候，是看全部参数的，不会去考虑<code>A</code>的偏特化版本。</p>
+<p>The compiler considers the partial specializations based on a template template argument once you have instantiated a specialization based on the corresponding template template parameter. The following example demonstrates this:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="comment">// 声明一个A的Base模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">int</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 声明A的偏特化版本</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   V&lt;<span class="keyword">int</span>, <span class="keyword">char</span>&gt; i;</div><div class="line">   V&lt;<span class="keyword">char</span>, <span class="keyword">char</span>&gt; j;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 那么，在生成代码的时候，实际上生成的是</span></div><div class="line"><span class="comment">// class B &#123; A&lt;int, char&gt; i; A &lt;char,char&gt; j; &#125;</span></div><div class="line">B&lt;A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.i.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">   <span class="built_in">cout</span> &lt;&lt; <span class="keyword">typeid</span>(c.j.x).name() &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>如果仔细地看一下<code>B</code>这个类，就会发现，<code>T/U</code>好像没有什么用。因为在<code>B</code>的内部声明的里面从来没有用到这两个类型，如果要用这两个类型应该怎么办？</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样是会报错的，因为<code>template&lt;class T, class U&gt; class V</code>只会用来修饰类<code>V</code>而不会用来修饰<code>B</code>。所以在编译的时候，会在<code>B</code>里面说，<code>T/U</code>没有定义。</p>
+<p>那么，如果想让<code>B</code>类里面有如下声明：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">    A&lt;T,U&gt; a_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>应该怎么办？</p>
+<p>应该把<code>B</code>类的声明改成如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里要特别注意看声明。在声明<code>V</code>的时候，所有的这个<code>V</code>会引用到的变量都是在<code>template&lt;typename T, typename U, typename X, ..&gt; B</code>也就是<code>T, U, X</code>这三个里面取。至于具体取哪个，并不能从<code>template</code>的声明里面看出来。</p>
+<p>真正要实例化<code>V</code>类的时候，也就是<code>B</code>的内部声明的时候，才会知道<code>V</code>到底是怎么实例化的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">V&lt;T, U&gt; v_;</div><div class="line">V&lt;U, X&gt; ux_;</div></pre></td></tr></table></figure>
+<p>所以可以总结一下，关于模析模板参数。</p>
+<ul>
+<li>如果模板模板参数想起作用，那么只能在<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>里面取，并且声明模板板参数的时候，不能写明<code>template&lt;class T, class U&gt; class V</code>，而是需要写成<code>template&lt;class, class&gt; class V</code>这种形式，表示参数都从前面的列表里面选择。</li>
+<li>如果是写成<code>template&lt;class T, class U&gt; class V</code>这种格式，并且<code>T/U</code>不在外部列表里面。比如<code>template&lt;typename T, typename U, typename X, template&lt;typename T, typename U&gt; class V&gt;</code>这里会因为<code>T/U</code>重复声明，导到编译不过。那么需要改写成<code>template&lt;typename T, typename U, typename X, template&lt;typename A, typename B&gt; class V&gt; class B {};</code>。但是按照这种写法，模板参数<code>A/B</code>就只能在<code>B</code>类定义的时候内部各种实例化，而不能在外部指定。</li>
+</ul>
+<p>所以，也可以总结成。</p>
+<ul>
+<li>如果想定义<code>B</code>类的时候，直接也把内部类<code>A</code>的定义决定了。那么，声明的时候，必须采用1.</li>
+<li>如果想<code>B</code>类内部自由定义<code>A</code>类的实例化，那么必须采用格式2.</li>
+</ul>
+<h2 id="模板模板参数的取值范围"><a href="#模板模板参数的取值范围" class="headerlink" title="模板模板参数的取值范围"></a>模板模板参数的取值范围</h2><p>模板模板参数的取值范围可以是：</p>
+<ul>
+<li>类型声明在前面，比如<code>&lt;typename X, typename Y, typename Z, template&lt;class, class&gt; class V&gt;</code>。这个时候，类<code>V</code>的模板参数可取范围是<code>X, Y, Z</code>。</li>
+<li>类型声明在后面，比如<code>&lt;template&lt;class, class&gt; class V, typename X, typename Y, typename Z&gt;</code>也是同样可以取到<code>X/Y/Z</code>的。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>&gt; <span class="keyword">class</span> H, <span class="keyword">class</span> S&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(<span class="keyword">const</span> H&lt;S&gt; &amp;value)</span> </span>&#123;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>再如</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span>&lt;<span class="keyword">class</span>, <span class="keyword">class</span>&gt; <span class="keyword">class</span> V, <span class="keyword">class</span> T, <span class="keyword">class</span> A&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">(V&lt;T, A&gt; &amp;v)</span> </span>&#123;</div><div class="line">    <span class="comment">// This can be "typename V&lt;T, A&gt;::value_type",</span></div><div class="line">    <span class="comment">// but we are pretending we don't have it</span></div><div class="line"></div><div class="line">    T temp = v.back();</div><div class="line">    v.pop_back();</div><div class="line">    <span class="comment">// Do some work on temp</span></div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; temp &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="缺省值"><a href="#缺省值" class="headerlink" title="缺省值"></a>缺省值</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T, <span class="keyword">template</span> &lt;<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont = Deque&gt;</div><div class="line"><span class="keyword">class</span> Stack &#123;</div><div class="line">    <span class="comment">//...</span></div><div class="line">&#125;;</div><div class="line"><span class="comment">//...</span></div><div class="line">Stack&lt;<span class="keyword">int</span>&gt; aStack1; <span class="comment">// use default: Cont is Deque</span></div><div class="line">Stack&lt;<span class="built_in">std</span>::<span class="built_in">string</span>,List&gt; aStack2; <span class="comment">// Cont is List</span></div></pre></td></tr></table></figure>
+<p>只是需要注意的是，这里的<code>Deque</code>的声明也需要是<code>template &lt;typename&gt; class Deque { };</code>这样。也就是只有一个模板参数。</p>
+<p><strong>注意</strong>这里的<code>Deque</code>不是<code>STL</code>里面<code>Deque</code>。</p>
+<h1 id="无用的模板参数"><a href="#无用的模板参数" class="headerlink" title="无用的模板参数"></a>无用的模板参数</h1><p>有时候，如果采用如下声明，会导致相同的结果。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Vec &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125; ;</div></pre></td></tr></table></figure>
+<p>在这里，<code>Wrap</code>的声明得到的效果就与</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">typename</span> V&gt;</div><div class="line"><span class="keyword">class</span> Wrap &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>得到同样的效果。因为<code>template&lt;template&lt;typename T&gt; typename V&gt;</code>会导致<code>V</code>没有参数范围可以选择。只能在内部指定类型。</p>
+<p>同理，可以扩展到多个参数的情况。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> Element,</div><div class="line">    <span class="keyword">class</span> Allocator&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
+<p>与</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3;</div></pre></td></tr></table></figure>
+<p>这两个也应该是等价的。在使用的时候，都需要在</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">template</span> &lt;<span class="keyword">typename</span>,<span class="keyword">typename</span>&gt; <span class="keyword">class</span> Cont&gt;</div><div class="line"><span class="keyword">class</span> Wrapper3 &#123;</div><div class="line">    Cont&lt;<span class="keyword">int</span>,<span class="built_in">std</span>::allocator&lt;<span class="keyword">int</span>&gt;&gt; cont_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>这样的声明方式。</p>
 
       
     </div>
@@ -239,12 +284,12 @@
       
       
 	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
 	</div>
 
       
 	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
 	</div>
 
 
@@ -264,7 +309,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-leetcode/222" data-title="LeetCode.22 反转二叉树" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-stl/3.模板模板参数" data-title="1.3 模板模板参数" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -372,6 +417,92 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-leetcode/22" data-title="LeetCode.22 合法括号对的总排列" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-leetcode/222" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/05/02/leetcode/222/" class="article-date">
+  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/05/02/leetcode/222/">LeetCode.22 反转二叉树</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Invert a binary tree.</div><div class="line"></div><div class="line">Example:</div><div class="line"></div><div class="line">Input:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  2     7</div><div class="line"> / \   / \</div><div class="line">1   3 6   9</div><div class="line">Output:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  7     2</div><div class="line"> / \   / \</div><div class="line">9   6 3   1</div></pre></td></tr></table></figure>
+<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="简洁写法"><a href="#简洁写法" class="headerlink" title="简洁写法"></a>简洁写法</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Definition for a binary tree node.</div><div class="line"> * struct TreeNode &#123;</div><div class="line"> *     int val;</div><div class="line"> *     TreeNode *left;</div><div class="line"> *     TreeNode *right;</div><div class="line"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</div><div class="line"> * &#125;;</div><div class="line"> */</div><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">TreeNode* <span class="title">invertTree_recursive</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (root==<span class="literal">NULL</span>) <span class="keyword">return</span> root;</div><div class="line">        TreeNode* node = invertTree_recursive(root-&gt;left);</div><div class="line">        root-&gt;left = invertTree_recursive(root-&gt;right);</div><div class="line">        root-&gt;right = node;</div><div class="line">        <span class="keyword">return</span> root;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="带栈"><a href="#带栈" class="headerlink" title="带栈"></a>带栈</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 带栈的写法</div><div class="line">TreeNode* invertTree(TreeNode* root) &#123;</div><div class="line">    if (!root) return nullptr;</div><div class="line">    stack&lt;TreeNode*&gt; s;</div><div class="line">    s.push(root);</div><div class="line">    while (!s.empty()) &#123;</div><div class="line">        auto p = s.top(); s.pop();</div><div class="line">        std::swap(p-&gt;left, p-&gt;right);</div><div class="line">        if (p-&gt;left) s.push(p-&gt;left);</div><div class="line">        if (p-&gt;right) s.push(p-&gt;right);</div><div class="line">    &#125;</div><div class="line">    return root;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/leetcode/">leetcode</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/算法/">算法</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/leetcode/">leetcode</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-leetcode/222" data-title="LeetCode.22 反转二叉树" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -1073,121 +1204,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-mit.6.828/jos-lab2" data-title="MIT 6.828 Lab2" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/3.chrono.time_point" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/04/15/ceph/3.chrono.time_point/" class="article-date">
-  	<time datetime="2018-04-14T21:28:32.000Z" itemprop="datePublished">2018-04-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/04/15/ceph/3.chrono.time_point/">1.2 Chrono time_point</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>时钟的说明：</p>
-<ul>
-<li>system_clock：从系统获取的时钟；</li>
-<li>steady_clock：不能被修改的时钟；</li>
-<li>high_resolution_clock：高精度时钟，实际上是system_clock或者steady_clock的别名。</li>
-</ul>
-<p><code>steady_clock</code>可以获取稳定可靠的时间间隔，后一次调用now()的值和前一次的差值是不因为修改了系统时间而改变，它保证了稳定的时间间隔。</p>
-<p>除了表示时间片段，有时候我们可能更想知道一个具体的时间点，这里就要提一下<code>time_point</code>，<code>time_point</code>表示的是：</p>
-<ul>
-<li>用来获取1970.1.1以来的秒数和当前的时间</li>
-<li>可以做一些时间的比较和算术运算</li>
-<li>可以和ctime库结合起来显示时间</li>
-</ul>
-<p>看一下类的声明：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">class</span> system_clock</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> microseconds                     duration;</div><div class="line">    <span class="keyword">typedef</span> duration::rep                    rep;</div><div class="line">    <span class="keyword">typedef</span> duration::period                 period;</div><div class="line">    <span class="keyword">typedef</span> chrono::time_point&lt;system_clock&gt; time_point;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> is_steady = <span class="literal">false</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">now</span><span class="params">()</span> _NOEXCEPT</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> time_t     <span class="title">to_time_t</span>  <span class="params">(<span class="keyword">const</span> time_point&amp; <span class="number">__</span>t)</span> _NOEXCEPT</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">from_time_t</span><span class="params">(<span class="keyword">time_t</span> <span class="number">__</span>t)</span> _NOEXCEPT</span>;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _LIBCPP_HAS_NO_MONOTONIC_CLOCK</span></div><div class="line"><span class="keyword">class</span> steady_clock</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> nanoseconds                                   duration;</div><div class="line">    <span class="keyword">typedef</span> duration::rep                                 rep;</div><div class="line">    <span class="keyword">typedef</span> duration::period                              period;</div><div class="line">    <span class="keyword">typedef</span> chrono::time_point&lt;steady_clock, duration&gt;    time_point;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> is_steady = <span class="literal">true</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">now</span><span class="params">()</span> _NOEXCEPT</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> steady_clock high_resolution_clock;</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line"><span class="keyword">typedef</span> system_clock high_resolution_clock;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
-<p>这里本来应该是有三种<code>clock</code>的，也就是</p>
-<ul>
-<li>system_clock</li>
-<li>steady_clock</li>
-<li>high_resolution_clock</li>
-</ul>
-<p>但是从这里的定义来看，难道有的平台没有<code>steady_clock</code>？并且<code>high_resolution_clock</code>的定义是随着<code>_LIBCPP_HAS_NO_MONOTONIC_CLOCK</code>。这里的意思是说，</p>
-<ul>
-<li>如果没有单调的时钟，那么就需要自己定义一个<code>steady_clock</code>。</li>
-<li>如果有，就不用定义了，直接用<code>system_clock</code>。</li>
-</ul>
-<p>获取一段代码的运行时间</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// steady_clock example</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ratio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line"></div><div class="line">  steady_clock::time_point t1 = steady_clock::now();</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"printing out 1000 stars...\n"</span>;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">1000</span>; ++i) <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"*"</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">  steady_clock::time_point t2 = steady_clock::now();</div><div class="line"></div><div class="line">  <span class="comment">// 这里转换成为时间段，只不过是用double</span></div><div class="line">  <span class="comment">// 来表示，所以可以表示比如0.5秒，0.01秒这种case.</span></div><div class="line">  duration&lt;<span class="keyword">double</span>&gt; time_span = duration_cast&lt;duration&lt;<span class="keyword">double</span>&gt;&gt;(t2 - t1);</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"It took me "</span> &lt;&lt; time_span.count() &lt;&lt; <span class="string">" seconds."</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="system-clock"><a href="#system-clock" class="headerlink" title="system_clock"></a>system_clock</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// system_clock example</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ratio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">using</span> <span class="built_in">std</span>::chrono::system_clock;</div><div class="line">  <span class="comment">// 这里声明一天的类型</span></div><div class="line">  <span class="comment">// 其实用std::chrono::hours day(24);</span></div><div class="line">  <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">int</span>, <span class="built_in">std</span>::ratio&lt;<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>&gt; &gt; one_day(<span class="number">1</span>);</div><div class="line">  <span class="comment">// 取得当前的时间点</span></div><div class="line">  system_clock::time_point today = system_clock::now();</div><div class="line">  <span class="comment">// 当前的时间点，加上一段时间</span></div><div class="line">  system_clock::time_point tomorrow = today + one_day;</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="keyword">time_t</span> tt;</div><div class="line">  tt = system_clock::<span class="keyword">to_time_t</span> (today);</div><div class="line"></div><div class="line">  <span class="comment">// 注意ctime是把time_t转换成为字符串</span></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"today is: "</span> &lt;&lt; ctime(&amp;tt);</div><div class="line"></div><div class="line">  tt = system_clock::<span class="keyword">to_time_t</span>(tomorrow);</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"tomorrow will be: "</span> &lt;&lt; ctime(&amp;tt);</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>时间的加减</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iomanip&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line">    system_clock::time_point now = system_clock::now();</div><div class="line">    <span class="built_in">std</span>::<span class="keyword">time_t</span> last = system_clock::<span class="keyword">to_time_t</span>(now - <span class="built_in">std</span>::chrono::hours(<span class="number">24</span>));</div><div class="line">　　<span class="built_in">std</span>::<span class="keyword">time_t</span> next= system_clock::<span class="keyword">to_time_t</span>(now - <span class="built_in">std</span>::chrono::hours(<span class="number">24</span>));</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"One day ago, the time was "</span>&lt;&lt; <span class="built_in">std</span>::put_time(<span class="built_in">std</span>::localtime(&amp;last), <span class="string">"%F %T"</span>) &lt;&lt; <span class="string">'\n'</span>;</div><div class="line">　　<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Next day, the time was "</span>&lt;&lt; <span class="built_in">std</span>::put_time(<span class="built_in">std</span>::localtime(&amp;next), <span class="string">"%F %T"</span>) &lt;&lt; <span class="string">'\n'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"hello word"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    timer t; <span class="comment">//开始计时</span></div><div class="line">    fun()</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;t.elapsed()&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//打印fun函数耗时多少毫秒</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="自定义定时器"><a href="#自定义定时器" class="headerlink" title="自定义定时器"></a>自定义定时器</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Timer &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Timer() : m_begin(high_resolution_clock::now()) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123; m_begin = high_resolution_clock::now(); &#125;</div><div class="line"></div><div class="line">    <span class="comment">//默认输出秒</span></div><div class="line">　　<span class="function"><span class="keyword">double</span> <span class="title">elapsed</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">　　　　<span class="keyword">return</span> duration_cast&lt;duration&lt;<span class="keyword">double</span>&gt;&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">　　&#125;</div><div class="line"></div><div class="line"><span class="comment">//默认输出毫秒</span></div><div class="line">    <span class="comment">//int64_t elapsed() const</span></div><div class="line">    <span class="comment">//&#123;</span></div><div class="line">        <span class="comment">//return duration_cast&lt;chrono::milliseconds&gt;(high_resolution_clock::now() - m_begin).count();</span></div><div class="line">    <span class="comment">//&#125;</span></div><div class="line"></div><div class="line">    <span class="comment">//微秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_micro() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::microseconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//纳秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_nano() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::nanoseconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_seconds() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::seconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//分</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_minutes() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::minutes&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//时</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_hours() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::hours&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    time_point&lt;high_resolution_clock&gt; m_begin;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/3.chrono.time_point" data-title="1.2 Chrono time_point" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
