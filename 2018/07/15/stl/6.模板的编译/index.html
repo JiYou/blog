@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.6 模板的编译 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="模板的编译一般采用包含编译，(其他比较偏门的会介绍export啥的)，export已经被废止了，所以不再去研究。
+正确的做法是:
+
+模板的实现都放到.h也就是头文件里面
+使用的时候直接包含头文件
+
+在链接阶段，如果是因为模板生成的代码，比如类定义或者函数义有多份，那么会自动去重。
+嵌套类型依赖假设想使用T类里面的iterator，如果代码写做如下：
+template&amp;lt;typename T&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.6 模板的编译">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/07/15/stl/6.模板的编译/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="模板的编译一般采用包含编译，(其他比较偏门的会介绍export啥的)，export已经被废止了，所以不再去研究。
+正确的做法是:
+
+模板的实现都放到.h也就是头文件里面
+使用的时候直接包含头文件
+
+在链接阶段，如果是因为模板生成的代码，比如类定义或者函数义有多份，那么会自动去重。
+嵌套类型依赖假设想使用T类里面的iterator，如果代码写做如下：
+template&amp;lt;typename T&amp;">
+<meta property="og:updated_time" content="2018-07-28T02:04:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.6 模板的编译">
+<meta name="twitter:description" content="模板的编译一般采用包含编译，(其他比较偏门的会介绍export啥的)，export已经被废止了，所以不再去研究。
+正确的做法是:
+
+模板的实现都放到.h也就是头文件里面
+使用的时候直接包含头文件
+
+在链接阶段，如果是因为模板生成的代码，比如类定义或者函数义有多份，那么会自动去重。
+嵌套类型依赖假设想使用T类里面的iterator，如果代码写做如下：
+template&amp;lt;typename T&amp;">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 16.67px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 13.33px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-stl/6.模板的编译" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/15/stl/6.模板的编译/" class="article-date">
+  	<time datetime="2018-07-15T05:29:32.000Z" itemprop="datePublished">2018-07-15</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.6 模板的编译
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>模板的编译一般采用包含编译，(其他比较偏门的会介绍<code>export</code>啥的)，<code>export</code>已经被废止了，所以不再去研究。</p>
+<p>正确的做法是:</p>
+<ul>
+<li>模板的实现都放到<code>.h</code>也就是头文件里面</li>
+<li>使用的时候直接包含头文件</li>
+</ul>
+<p>在链接阶段，如果是因为模板生成的代码，比如类定义或者函数义有多份，那么会自动去重。</p>
+<h1 id="嵌套类型依赖"><a href="#嵌套类型依赖" class="headerlink" title="嵌套类型依赖"></a>嵌套类型依赖</h1><p>假设想使用<code>T</code>类里面的<code>iterator</code>，如果代码写做如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> T&amp; container)</span></span></div><div class="line">&#123;</div><div class="line">    T::const_iterator * x;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>由于编译器并不清楚<code>const_iterator</code>是一个类型，还是静态变量，大多数情况下会认为是一个<code>静态变量</code>。但是，这里实际上是一个类型，所以这里会编译报错。</p>
+<p>那么正确的写法应该是</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">print2nd</span><span class="params">(<span class="keyword">const</span> T&amp; container)</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">typename</span> T::const_iterator *x;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也就是说，在嵌套类型依赖的时候，需要明确的指出<code>typename</code>这个类型。</p>
+<h2 id="例外"><a href="#例外" class="headerlink" title="例外"></a>例外</h2><p>只有2个地方是不需要在嵌套依赖的时候来指明<code>typename</code>的，那么就是声明继承的时候。</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">template&lt;typename T&gt;</div><div class="line">class Derived: public Base&lt;T&gt;::Nested // 1. 这里不需要</div><div class="line">&#123;</div><div class="line">　public:</div><div class="line">　　explicit Derived(int x)</div><div class="line">　　: Base&lt;T&gt;::Nested(x) //  2. 这里也不需要</div><div class="line">　　&#123;</div><div class="line">　　　typename Base&lt;T&gt;::Nested temp; //nested dependent type, need typename</div><div class="line">　　&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>比如，这里<code>Nested</code>就是<code>Base&lt;T&gt;</code>里面的一个类型。实际上，这里也很明显，那就是继承肯定是继承于类型，而不是一个静态变量。</p>
+<h1 id="类中的模板函数"><a href="#类中的模板函数" class="headerlink" title="类中的模板函数"></a>类中的模板函数</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> aTMP&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">const</span> T reType;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"global f()"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span>&lt;<span class="keyword">int</span> N = <span class="number">99</span>&gt;  <span class="comment">// 这里需要声明模板函数</span></div><div class="line">    <span class="keyword">void</span> f() &#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"member f(): "</span> &lt;&lt; N &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>; </div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h1 id="this指针"><a href="#this指针" class="headerlink" title="this指针"></a>this指针</h1><p>this 用于指定查找基类中的成员</p>
+<ul>
+<li>（当基类是依赖模板参数的类模板实例时，由于实例化总是推迟，这时不依赖模板参数的名字不在基类中查找，文献[1]第 166 页）</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> aTMP&#123;</div><div class="line"><span class="keyword">public</span>: <span class="keyword">typedef</span> <span class="keyword">const</span> T reType;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">()</span> </span>&#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"global f()\n"</span>; &#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">template</span> &lt;<span class="keyword">int</span> N = <span class="number">99</span>&gt;</div><div class="line">    <span class="keyword">void</span> f() &#123; <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"member f(): "</span> &lt;&lt; N &lt;&lt; <span class="string">'\n'</span>; &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Derived : <span class="keyword">public</span> Base&lt;T&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typename</span> T::reType m; <span class="comment">// typename 不能省略</span></div><div class="line">    Derived(<span class="keyword">typename</span> T::reType a) : m(a) &#123; &#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df1</span><span class="params">()</span> </span>&#123; f(); &#125;                       <span class="comment">// 调用全局 f()，而非想象中的基类 f()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df2</span><span class="params">()</span> </span>&#123; <span class="keyword">this</span>-&gt;<span class="function"><span class="keyword">template</span> <span class="title">f</span><span class="params">()</span></span>; &#125;        <span class="comment">// 基类 f&lt;99&gt;()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df3</span><span class="params">()</span> </span>&#123; Base&lt;T&gt;::<span class="keyword">template</span> f&lt;<span class="number">22</span>&gt;(); &#125; <span class="comment">// 强制基类 f&lt;22&gt;()</span></div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">df4</span><span class="params">()</span> </span>&#123; ::f(); &#125;                     <span class="comment">// 强制全局 f()</span></div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span>&#123;</div><div class="line">    Derived&lt;aTMP&lt;<span class="keyword">int</span>&gt;&gt; a(<span class="number">10</span>);</div><div class="line">    a.df1(); a.df2(); a.df3(); a.df4();</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cin</span>.get(); <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/07/16/stl/7.Cpp11的扩展/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          1.7 c++11的扩展
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/07/14/stl/5.模板实例化/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.5 模板实例化</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/6.模板的编译" data-title="1.6 模板的编译" data-url="https://jiyou.github.io/blog/blog/2018/07/15/stl/6.模板的编译/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>

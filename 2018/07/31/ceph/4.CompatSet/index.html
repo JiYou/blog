@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.3 CompatSet | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="referencehttps://blog.csdn.net/litianze99/article/details/74596843
+CompatSet是一个结构体类型，其用于对特性兼容性进行管理。该类型的定义位于src/include/CompatSet.h文件中。
+为什么OSD对外提供一些功能特性，这个些特性需要OSD后端的存储驱动（或者文件系统）如filestore支持，如果后端驱动不支持，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.3 CompatSet">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/07/31/ceph/4.CompatSet/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="referencehttps://blog.csdn.net/litianze99/article/details/74596843
+CompatSet是一个结构体类型，其用于对特性兼容性进行管理。该类型的定义位于src/include/CompatSet.h文件中。
+为什么OSD对外提供一些功能特性，这个些特性需要OSD后端的存储驱动（或者文件系统）如filestore支持，如果后端驱动不支持，">
+<meta property="og:updated_time" content="2018-08-01T06:15:44.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.3 CompatSet">
+<meta name="twitter:description" content="referencehttps://blog.csdn.net/litianze99/article/details/74596843
+CompatSet是一个结构体类型，其用于对特性兼容性进行管理。该类型的定义位于src/include/CompatSet.h文件中。
+为什么OSD对外提供一些功能特性，这个些特性需要OSD后端的存储驱动（或者文件系统）如filestore支持，如果后端驱动不支持，">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 16.67px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 13.33px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-ceph/4.CompatSet" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/31/ceph/4.CompatSet/" class="article-date">
+  	<time datetime="2018-07-31T05:28:32.000Z" itemprop="datePublished">2018-07-31</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.3 CompatSet
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="reference"><a href="#reference" class="headerlink" title="reference"></a>reference</h1><p><a href="https://blog.csdn.net/litianze99/article/details/74596843" target="_blank" rel="external">https://blog.csdn.net/litianze99/article/details/74596843</a></p>
+<p><code>CompatSet</code>是一个结构体类型，其用于对特性兼容性进行管理。该类型的定义位于<code>src/include/CompatSet.h</code>文件中。</p>
+<h1 id="为什么"><a href="#为什么" class="headerlink" title="为什么"></a>为什么</h1><p><code>OSD</code>对外提供一些功能特性，这个些特性需要<code>OSD</code>后端的存储驱动（或者文件系统）如filestore支持，如果后端驱动不支持，即两者之间在某些特性上不能兼容，就会影响读写操作，所以谨慎处理这些特性的兼容性是非常重要的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">struct</span> CompatSet &#123;</div><div class="line"></div><div class="line">    <span class="keyword">struct</span> Feature &#123;</div><div class="line">        <span class="keyword">uint64_t</span> id;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">string</span> name;</div><div class="line"></div><div class="line">        Feature(<span class="keyword">uint64_t</span> <span class="number">_</span>id, <span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; <span class="number">_</span>name) : id(<span class="number">_</span>id), name(<span class="number">_</span>name) &#123;&#125;</div><div class="line">    &#125;;</div><div class="line"></div><div class="line">    <span class="keyword">class</span> FeatureSet &#123;</div><div class="line">        <span class="keyword">uint64_t</span> mask;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">map</span>&lt;<span class="keyword">uint64_t</span>, <span class="built_in">std</span>::<span class="built_in">string</span>&gt; names;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// These features have no impact on the read / write status</span></div><div class="line">    FeatureSet compat;</div><div class="line">    <span class="comment">// If any of these features are missing, read is possible ( as long</span></div><div class="line">    <span class="comment">// as no incompat feature is missing ) but it is not possible to write</span></div><div class="line">    FeatureSet ro_compat;</div><div class="line">    <span class="comment">// If any of these features are missing, read or write is not possible</span></div><div class="line">    FeatureSet incompat;</div></pre></td></tr></table></figure>
+<h2 id="Feature"><a href="#Feature" class="headerlink" title="Feature"></a>Feature</h2><p>该类型包含两个重要属性： </p>
+<ul>
+<li>id：特性的唯一标识 </li>
+<li>name：特性的名字</li>
+</ul>
+<h2 id="FeatureSet"><a href="#FeatureSet" class="headerlink" title="FeatureSet"></a>FeatureSet</h2><p>该类型包含两个重要属性： </p>
+<ul>
+<li>mask：标识该组特性的位图 </li>
+<li>names：是一个map，key为特性的id，value为特性的name</li>
+</ul>
+<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>该类型中包含了三个重要的属性，分别是：<code>compat</code>、<code>ro_compat</code>、<code>incompat</code>，都是<code>FeatureSet</code>实例。 </p>
+<ul>
+<li>compat：该组中的特性支持与否，对读写没有任何影响。 </li>
+<li>ro_compat：该组中的特性，如果不支持，则会影响写入操作，读操作没有影响。 </li>
+<li>incompat：该组中的特性，如果不支持，则会影响读写操作。</li>
+</ul>
+<h1 id="主要的功能与接口"><a href="#主要的功能与接口" class="headerlink" title="主要的功能与接口"></a>主要的功能与接口</h1><h2 id="readable"><a href="#readable" class="headerlink" title="readable"></a>readable</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 这个文件系统是否实现了相应的接口，进而可以读取另外一个file system.</span></div><div class="line"><span class="comment">/* does this filesystem implementation have the</span></div><div class="line">   features required to read the other? */</div><div class="line"><span class="keyword">bool</span> CompatSet::readable(CompatSet <span class="keyword">const</span>&amp; other) <span class="keyword">const</span> &#123;</div><div class="line">  <span class="keyword">return</span> !((other.incompat.mask ^ incompat.mask) &amp; other.incompat.mask);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="writeable"><a href="#writeable" class="headerlink" title="writeable"></a>writeable</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 这个文件系统的实现，是否有需要写other时所需的特性</span></div><div class="line"><span class="comment">/* does this filesystem implementation have the</span></div><div class="line">   features required to write the other? */</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">writeable</span><span class="params">(CompatSet <span class="keyword">const</span>&amp; other)</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> readable(other) &amp;&amp;</div><div class="line">           !((other.ro_compat.mask ^ ro_compat.mask) &amp; other.ro_compat.mask);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="compare"><a href="#compare" class="headerlink" title="compare"></a>compare</h2><p>注意这里的比较是基于特性的比较。<code>a&lt;b</code>时是不能保证<code>b&lt;a</code>的。这是因为</p>
+<ul>
+<li>0 表示两者的特性集是一样</li>
+<li>1 表示a是b的超集</li>
+<li>-1表示a缺少b里面至少一个特性</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/* Compare this CompatSet to another.</span></div><div class="line"> * CAREFULLY <span class="doctag">NOTE:</span> This operation is NOT commutative.</div><div class="line"> * a &gt; b DOES NOT imply that b &lt; a.</div><div class="line"> * If returns:</div><div class="line"> * 0: The CompatSets have the same feature set.</div><div class="line"> * 1: This CompatSet's features are a strict superset of the other's.</div><div class="line"> * -1: This CompatSet is missing at least one feature</div><div class="line"> *     described in the other. It may still have more features, though.</div><div class="line"> */</div><div class="line"><span class="keyword">int</span> CompatSet::compare(<span class="keyword">const</span> CompatSet&amp; other) &#123;</div><div class="line">  <span class="keyword">if</span> ((other.compat.mask == compat.mask) &amp;&amp;</div><div class="line">      (other.ro_compat.mask == ro_compat.mask) &amp;&amp;</div><div class="line">      (other.incompat.mask == incompat.mask)) <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">  <span class="comment">//okay, they're not the same</span></div><div class="line"></div><div class="line">  <span class="comment">//if we're writeable we have a superset of theirs on incompat and ro_compat</span></div><div class="line">  <span class="keyword">if</span> (writeable(other) &amp;&amp; !((other.compat.mask ^ compat.mask)</div><div class="line">                            &amp; other.compat.mask)) <span class="keyword">return</span> <span class="number">1</span>;</div><div class="line">  <span class="comment">//if we make it here, we weren't writeable or had a difference compat set</span></div><div class="line">  <span class="keyword">return</span> <span class="number">-1</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="unsupported"><a href="#unsupported" class="headerlink" title="unsupported"></a>unsupported</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/07/31/stl/2.模板简介/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          1.2 模板元编程
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/07/31/ceph/5.ObjectStore的接口/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.4 ObjectStore的接口</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-ceph/4.CompatSet" data-title="1.3 CompatSet" data-url="https://jiyou.github.io/blog/blog/2018/07/31/ceph/4.CompatSet/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>

@@ -120,7 +120,7 @@
 				
 				<section class="switch-part switch-part2">
 					<div class="widget tagcloud" id="js-tagcloud">
-						<a href="/blog/tags/ceph/" style="font-size: 10px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 15px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 15px;">算法</a>
+						<a href="/blog/tags/ceph/" style="font-size: 16.67px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 13.33px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a>
 					</div>
 				</section>
 				
@@ -202,11 +202,11 @@
 
       <div class="body-wrap">
   
-    <article id="post-stl/3.模板模板参数" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-stl/5.模板实例化" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2018/07/18/stl/3.模板模板参数/" class="article-date">
-  	<time datetime="2018-07-17T21:28:32.000Z" itemprop="datePublished">2018-07-18</time>
+      <a href="/blog/2018/07/14/stl/5.模板实例化/" class="article-date">
+  	<time datetime="2018-07-14T05:28:32.000Z" itemprop="datePublished">2018-07-14</time>
 </a>
     </div>
   
@@ -219,7 +219,212 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/07/18/stl/3.模板模板参数/">1.3 模板模板参数</a>
+      <a class="article-title" href="/blog/2018/07/14/stl/5.模板实例化/">1.5 模板实例化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>实例化的定义：</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">指在编译或链接时生成函数模板或类模板的具体实例源代码，即用使用模板时的实参类型替换模板类型参数（还有非类型参数和模板型参数）；</div></pre></td></tr></table></figure>
+<p>有点类似于C语言中的宏来生成代码。</p>
+<h1 id="实例化的方式"><a href="#实例化的方式" class="headerlink" title="实例化的方式"></a>实例化的方式</h1><ul>
+<li>隐式实例化（implicit instantiation）：当使用实例化的模板时自动地在当前代码单元之前插入模板的实例化代码，模板的成员函数一直到引用时才被实例化；</li>
+<li>显式实例化（explicit instantiation）：直接声明模板实例化，模板所有成员立即都被实例化；</li>
+</ul>
+<p>实例化也是一种<code>偏特化</code>，被称为实例化的特例（instantiated (or generated) specialization）。</p>
+<h1 id="隐式实例化"><a href="#隐式实例化" class="headerlink" title="隐式实例化"></a>隐式实例化</h1><p>由于隐式实例化的存在，也就是编译的报错会推迟，导致出错信息特别长。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> X &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;typenmae T&gt;</div><div class="line"><span class="keyword">class</span> Y &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> Z &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    X&lt;Y&gt; x_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>可以发现这个依赖链条比较长<code>Z-&gt;X-&gt;Y</code>，如果一旦出错，那么这个编译出错信息会特别长。所以针对模板而言，尽量在做测试时将其实例化掉。尽早发现编译错误。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/5.模板实例化" data-title="1.5 模板实例化" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-stl/4.模板特化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/13/stl/4.模板特化/" class="article-date">
+  	<time datetime="2018-07-13T05:28:32.000Z" itemprop="datePublished">2018-07-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/07/13/stl/4.模板特化/">1.4 模板偏特化</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="偏特化"><a href="#偏特化" class="headerlink" title="偏特化"></a>偏特化</h1><p>前面介绍过，模板的偏特化可以有两种形式</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&#123;</div><div class="line">    T v_[N];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">float</span>, <span class="number">4</span>&gt; &#123;</div><div class="line">    <span class="keyword">float</span> v_[<span class="number">4</span>];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">bool</span>, N&gt;&#123;</div><div class="line">    <span class="keyword">char</span> v_[(N+<span class="keyword">sizeof</span>(<span class="keyword">char</span>)<span class="number">-1</span>)/<span class="keyword">sizeof</span>(<span class="keyword">char</span>)];</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li>把所有的参数具体化，比如<code>T = float, N = 4</code></li>
+<li>把部分参数具体化，比如<code>T = bool</code></li>
+</ul>
+<p>需要注意的是，已经被具体化的参数就不要再出现在<code>template&lt;&gt;</code>这里面了。如果所有的参数都被具体化的，那么<code>template&lt;&gt;</code>这里面就什么都没有了。</p>
+<p>比较复杂的是两种情况，也就是模板特化与<code>模板模板参数</code>混在一起的时候。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// V这里的参数只能从T/U/X里面选择。</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着再分析另外一个例子。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// 完全特例化</span></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">int</span>, <span class="keyword">float</span>, <span class="number">2</span>, Arg&gt;;</div><div class="line"></div><div class="line"><span class="comment">// 第一个参数有const修饰</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T1, T2, i, CP&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>需要注意的是后面的那个<code>class CP</code>在选择类型的时候，只能从<code>T1/T2/i</code>里面选择了。</p>
+<h1 id="类型组合的特化"><a href="#类型组合的特化" class="headerlink" title="类型组合的特化"></a>类型组合的特化</h1><p>再看一个有趣的例子。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 第一二个参数为Arg的实例且满足一定关系，第四个参数为Arg</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;Arg&lt;T, i&gt;, Arg&lt;T, i+<span class="number">10</span>&gt;, i, Arg&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>也就是说，在特化的时候，可以写成这样。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;参数范围A&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;由A范围组合出按照顺序满足条件的这个具体类型即可&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>那么在类里面使用<code>Arg</code>的时候，可以选择的参数范围就是已知的类型。比如：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg&#123; &#125;; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T, Arg&lt;T,i+<span class="number">10</span>&gt;, i, Arg&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Arg&lt;T, i&gt; s_;</div><div class="line">    Arg&lt;<span class="keyword">const</span> T, i&gt; a_;</div><div class="line">    Arg&lt;Arg&lt;T,i&gt;,i&gt; b_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>所以，可以看出<code>Arg</code>这个模板类可以使用<code>T,i, const T, Arg&lt;T,i+10&gt;, i,</code>都可以。</p>
+<p>关于模板特化</p>
+<ul>
+<li>Base模板需要提前声明</li>
+<li>如果模板A是模板B的子集，优先匹配A。</li>
+<li>如果两个模板有交集，且不成子集关系，编译报错。</li>
+</ul>
+<h1 id="模板偏特化元编程"><a href="#模板偏特化元编程" class="headerlink" title="模板偏特化元编程"></a>模板偏特化元编程</h1><p>可以利用偏特化来实现<code>if/else</code>对类型的操作。比如判断两个类型是否相等。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div><div class="line"><span class="keyword">struct</span> is_same &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">false</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">struct</span> is_same&lt;T,T&gt; &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 自定义类型，只是用来测试is_same模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> uint;</div><div class="line">    <span class="keyword">typedef</span> uint uint2;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;<span class="keyword">unsigned</span>, uint2&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">unsigned</span>, <span class="number">2</span>&gt;, Example&lt;uint2, <span class="number">2</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt;, Example&lt;<span class="keyword">int</span>, <span class="number">3</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="计算阶乘"><a href="#计算阶乘" class="headerlink" title="计算阶乘"></a>计算阶乘</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;stdint.h&gt;</div><div class="line"></div><div class="line">template&lt;int N&gt;</div><div class="line">struct order &#123;</div><div class="line">    static constexpr int64_t value = N * order&lt;N-1&gt;::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 由于只有一个参数需要偏特化，所以</div><div class="line">// 这里用template&lt;&gt;</div><div class="line">template&lt;&gt;</div><div class="line">struct order&lt;0&gt; &#123;</div><div class="line">    static constexpr int64_t value = 1;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int main(void) &#123;</div><div class="line">    std::cout &lt;&lt; order&lt;10&gt;::value &lt;&lt; std::endl;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/4.模板特化" data-title="1.4 模板偏特化" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-stl/3.模板模板参数" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/12/stl/3.模板模板参数/" class="article-date">
+  	<time datetime="2018-07-12T05:28:32.000Z" itemprop="datePublished">2018-07-12</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/07/12/stl/3.模板模板参数/">1.3 模板模板参数</a>
     </h1>
   
 
@@ -333,11 +538,11 @@
 
 
   
-    <article id="post-leetcode/17" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-stl/1.type_traits" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2018/05/02/leetcode/17/" class="article-date">
-  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+      <a href="/blog/2018/07/10/stl/1.type_traits/" class="article-date">
+  	<time datetime="2018-07-10T05:28:32.000Z" itemprop="datePublished">2018-07-10</time>
 </a>
     </div>
   
@@ -350,7 +555,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/05/02/leetcode/17/">LeetCode.17 九键字母组合</a>
+      <a class="article-title" href="/blog/2018/07/10/stl/1.type_traits/">1.1 type_traits</a>
     </h1>
   
 
@@ -359,24 +564,110 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="题目含义"><a href="#题目含义" class="headerlink" title="题目含义"></a>题目含义</h1><p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" alt=""></p>
-<p>对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Input: &quot;23&quot;</div><div class="line">Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].</div></pre></td></tr></table></figure>
-<p>输出的时候，不需要考虑顺序。</p>
-<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>总的思想还是比较简单的。首先根据每个数字上面的字母数，得到结果总数。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>得到总的结果数之后，可以一次性地把所有需要动态申请的内存都申请完。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*申请结果空间*/</span></div><div class="line"><span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line"><span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line"><span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>);</div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>初始处理，比如给定的数字串是”999”。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 第一个数字为<span class="number">9</span></div><div class="line">   生成相应的字符串</div><div class="line">   ar1 = </div><div class="line">   [</div><div class="line">    <span class="string">"w"</span>,</div><div class="line">    <span class="string">"x"</span>,</div><div class="line">    <span class="string">"y"</span>,</div><div class="line">    <span class="string">"z"</span>,</div><div class="line">   ]</div><div class="line"></div><div class="line"><span class="number">2.</span> 第二个数字为<span class="number">9</span></div><div class="line">   ar2 = []</div><div class="line">   <span class="keyword">for</span> c in <span class="string">"wxyz"</span>:</div><div class="line">       新数组 = ar1 + c;</div><div class="line">       ar2 = [ar2; 新数组]</div><div class="line">   如果把循环展开，就是</div><div class="line">   c = <span class="string">"w"</span></div><div class="line">   新数组 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   ar2 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   </div><div class="line">   第二次循环</div><div class="line">   c = <span class="string">"x"</span></div><div class="line">   新数组 = [<span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>]</div><div class="line">   ar2 = [</div><div class="line">   <span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>,</div><div class="line">   <span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>,</div><div class="line">   ]</div><div class="line">   ...</div><div class="line">   </div><div class="line">   假设ar1长度为N。</div><div class="line">   那么后面每次循环的时候，只需要把</div><div class="line">   这N个字符串拷贝到新的位置。</div><div class="line">        a. 第一次添加的是<span class="number">0</span>~N<span class="number">-1</span></div><div class="line">        b. 第二次处理的字符串是N~<span class="number">2</span>N<span class="number">-1</span></div><div class="line">        c. 第三次处理的是<span class="number">2</span>N~<span class="number">3</span>N<span class="number">-1</span></div><div class="line"><span class="number">3.</span> 递归处理第三个数字</div></pre></td></tr></table></figure>
-<p>这段代码的关键就是在:</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line"><span class="comment">// pos指向当前需要处理的是哪个数字</span></div><div class="line"><span class="comment">// 同时也是结果字符串需要填充的字符</span></div><div class="line"><span class="comment">// 串的位置。</span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这段代码利用9-&gt;"wxyz"中的"w"来生成</div><div class="line"> * ar1，并且得到长度len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">size_t</span> pos = str - a;</div><div class="line"><span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">    ret[i][pos] = *dic;</div><div class="line">    assert(<span class="number">0</span> &lt;= i &amp;&amp; i &lt; retLen);</div><div class="line">    assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">    i++;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * curlen就是指len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line"><span class="comment">// *p指向9-&gt;wxyz中的第二个字母x</span></div><div class="line"><span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"><span class="comment">// 从第二个字母开始依次处理每个字母</span></div><div class="line"><span class="keyword">while</span> (*p) &#123;</div><div class="line">    <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">    <span class="comment">// 在处理的时候，把</span></div><div class="line">    <span class="comment">// [0, len(ar1))拷贝到</span></div><div class="line">    <span class="comment">// [i*len(ar1), (i+1)*len(ar1) )</span></div><div class="line">    <span class="comment">// 然后再修改pos位置的字母</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">        <span class="comment">// 注意处理的字符串</span></div><div class="line">        <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">        assert(<span class="number">0</span> &lt;= (npos+i) &amp;&amp; (npos+i) &lt; retLen);</div><div class="line">        assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">        ret[npos+i][pos] = *p;</div><div class="line">    &#125;</div><div class="line">    p++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这里并没有使用任何第三方库。直接使用一下递归就可以了。</p>
-<h1 id="完整的代码"><a href="#完整的代码" class="headerlink" title="完整的代码"></a>完整的代码</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/*单字符串快速查找*/</span></div><div class="line"><span class="keyword">char</span>* str_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="string">"abc"</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="string">"def"</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="string">"ghi"</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="string">"jkl"</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="string">"mno"</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="string">"pqrs"</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="string">"tuv"</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="string">"wxyz"</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这里递归进行处理</div><div class="line"> * str指向当前要处理的字符指针</div><div class="line"> * ret已经申请好所有的空间。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">append_char</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *a, <span class="keyword">char</span> *str, <span class="keyword">char</span> **ret)</span> </span>&#123;</div><div class="line">    <span class="comment">/*已经结束*/</span></div><div class="line">    <span class="keyword">if</span> (!str || !(*str)) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*当前字符映射过去的字符串*/</span></div><div class="line">    <span class="keyword">char</span> *dic = str_rec[*str];</div><div class="line">    <span class="keyword">if</span> (!dic || !(*dic)) <span class="keyword">return</span>;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理dic里面的第一个字符*/</span></div><div class="line">    <span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line">    <span class="keyword">size_t</span> pos = str - a;</div><div class="line">    <span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">        ret[i][pos] = *dic;</div><div class="line">        i++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*当前ret的长度*/</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line">    <span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">            <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">            ret[npos+i][pos] = *p;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    append_char(a, str + <span class="number">1</span>, ret);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Return an array of size *returnSize.</div><div class="line"> * Note: The returned array must be malloced, assume caller calls free().</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">char</span>** <span class="title">letterCombinations</span><span class="params">(<span class="keyword">char</span>* digits, <span class="keyword">int</span>* returnSize)</span> </span>&#123;</div><div class="line">    <span class="comment">/*如果为空串*/</span></div><div class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == digits || *digits == <span class="number">0</span>) &#123;</div><div class="line">        *returnSize = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* d_len表示当前数字串的长度，</span></div><div class="line">     * 结果字符串的长度是d_len + 1</div><div class="line">     */</div><div class="line">    <span class="keyword">int</span> d_len = p - digits;</div><div class="line"></div><div class="line">    <span class="comment">/*申请结果空间*/</span></div><div class="line">    <span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line">    <span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line">    <span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">        <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// 这里要多申请一个char</span></div><div class="line">        ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">        <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理第一个字符*/</span></div><div class="line">    <span class="keyword">char</span> *str = str_rec[*digits];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>;  str[i]; i++) &#123;</div><div class="line">        ret[i][<span class="number">0</span>] = str[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    append_char(digits, digits + <span class="number">1</span>, ret);</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>在提交的时候，总是遇到</p>
-<figure class="highlight"><table><tr><td class="code"><pre><div class="line">sysmalloc: Assertion `(old_top == (((mbinptr) (((char *) &amp;((av)-&gt;bins[((1) - 1) * 2])) - __builtin_offsetof (struct malloc_chunk, fd)))) &amp;&amp; old_size == 0) || ((unsigned long) (old_size) &gt;= (unsigned long)((((__builtin_offsetof (struct malloc_chunk, fd_nextsize))+((2 *(sizeof(size_t))) - 1)) &amp; ~((2 *(sizeof(size_t))) - 1))) &amp;&amp; ((old_top)-&gt;size &amp; 0x1) &amp;&amp; ((unsigned long) old_end &amp; pagemask) == 0)' failed.</div></pre></td></tr></table></figure>
-<p>说的是内存访问越界。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 这里在申请内存的时候，要多一个char</span></div><div class="line"><span class="comment">// 并且要把申请的内存空间请0.</span></div><div class="line"><span class="comment">// memset(ret[i], 0, d_len);会导致上面那个错. </span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// ERROR: 这里要多申请一个char!!!</span></div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h1 id="If-else的结构"><a href="#If-else的结构" class="headerlink" title="If else的结构"></a>If else的结构</h1><p>有时候想在编译的时候，实现这样的效果，就是根据传入的值来决定需要产生的类型。<br>比如：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">function</span><span class="params">(type X, type Y)</span> </span>&#123;</div><div class="line">    <span class="comment">// if a == true 定义类型X</span></div><div class="line">    <span class="keyword">constexpr</span> <span class="keyword">bool</span> a = <span class="literal">true</span>/<span class="literal">false</span>;</div><div class="line">    <span class="keyword">if</span> (a) &#123;</div><div class="line">        X var;</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        Y var;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 如果想在这里引用var，应该怎么办?</span></div><div class="line">    <span class="comment">// ?? 实际上是不能在这里用的。</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>一种解决办法是，写一个父类，然后把<code>X/Y</code>声明成<code>Base</code>的子类。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> Base &#123;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> X : <span class="keyword">public</span> Base &#123;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Y : <span class="keyword">public</span> Base &#123;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">function</span><span class="params">(<span class="keyword">bool</span> a, type X, type Y)</span> </span>&#123;</div><div class="line">    Base * b = <span class="literal">nullptr</span>;</div><div class="line">    <span class="keyword">if</span> (a) &#123;</div><div class="line">        b = <span class="keyword">new</span> X();</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        b = <span class="keyword">new</span> Y();</div><div class="line">    &#125;</div><div class="line">    b.接口调用();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>但是这么写会很烦人：</p>
+<ol>
+<li>引入了不必要的父类</li>
+<li>XY可能已经有自己的父类</li>
+<li>X/Y如果还需要与Z在其他地方生成这样的代码关系，那还得生成一个父类</li>
+</ol>
+<p>这个时候，采用面向对象的方法代码会写得比较丑，那么一种办法是引入模板偏特化。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> <span class="keyword">bool</span>, <span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond &#123;</div><div class="line">    <span class="keyword">typedef</span> If type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond&lt;<span class="literal">false</span>, If, Then&gt;&#123;</div><div class="line">    <span class="keyword">typedef</span> Then type;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>使用方式</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">class</span> X&#123;&#125;;</div><div class="line"><span class="keyword">class</span> Y&#123;&#125;;</div><div class="line">cond&lt;<span class="literal">true</span>, X, Y&gt;::type 此时为 X</div><div class="line">cond&lt;<span class="literal">false</span>, X, Y&gt;::type 就是Y</div></pre></td></tr></table></figure>
+<h2 id="Example"><a href="#Example" class="headerlink" title="Example"></a>Example</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">bool</span> Bool, <span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond &#123;</div><div class="line">    <span class="keyword">typedef</span> If type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> If, <span class="keyword">typename</span> Then&gt;</div><div class="line"><span class="keyword">struct</span> cond&lt;<span class="literal">false</span>, If, Then&gt;&#123;</div><div class="line">    <span class="keyword">typedef</span> Then type;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> If &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"If"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Then &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">        <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Then"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="comment">// 需要注意的是，true/false这里需要是编译期间就可以决定的常量。</span></div><div class="line">    <span class="comment">// 不能写成bool a = true, 然后cond&lt;a, If, Then&gt;这样。</span></div><div class="line">    cond&lt;<span class="literal">true</span>, If, Then&gt;::type::print();</div><div class="line">    cond&lt;<span class="literal">false</span>, If, Then&gt;::type::print();</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里相当于在进行类型运算:</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">if</span> (<span class="keyword">constexpr</span> <span class="literal">true</span>) &#123;</div><div class="line">    <span class="keyword">return</span> type=X;</div><div class="line">&#125; <span class="keyword">else</span> &#123;</div><div class="line">    <span class="keyword">return</span> type=Y;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里就需要引出后面要介绍的模板元编程。</p>
+
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+      
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/1.type_traits" data-title="1.1 type_traits" data-url="undefined"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+
+  
+    <article id="post-leetcode/222" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/05/02/leetcode/222/" class="article-date">
+  	<time datetime="2018-05-02T22:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/blog/2018/05/02/leetcode/222/">LeetCode.22 反转二叉树</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Invert a binary tree.</div><div class="line"></div><div class="line">Example:</div><div class="line"></div><div class="line">Input:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  2     7</div><div class="line"> / \   / \</div><div class="line">1   3 6   9</div><div class="line">Output:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  7     2</div><div class="line"> / \   / \</div><div class="line">9   6 3   1</div></pre></td></tr></table></figure>
+<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="简洁写法"><a href="#简洁写法" class="headerlink" title="简洁写法"></a>简洁写法</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Definition for a binary tree node.</div><div class="line"> * struct TreeNode &#123;</div><div class="line"> *     int val;</div><div class="line"> *     TreeNode *left;</div><div class="line"> *     TreeNode *right;</div><div class="line"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</div><div class="line"> * &#125;;</div><div class="line"> */</div><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">TreeNode* <span class="title">invertTree_recursive</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (root==<span class="literal">NULL</span>) <span class="keyword">return</span> root;</div><div class="line">        TreeNode* node = invertTree_recursive(root-&gt;left);</div><div class="line">        root-&gt;left = invertTree_recursive(root-&gt;right);</div><div class="line">        root-&gt;right = node;</div><div class="line">        <span class="keyword">return</span> root;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="带栈"><a href="#带栈" class="headerlink" title="带栈"></a>带栈</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 带栈的写法</div><div class="line">TreeNode* invertTree(TreeNode* root) &#123;</div><div class="line">    if (!root) return nullptr;</div><div class="line">    stack&lt;TreeNode*&gt; s;</div><div class="line">    s.push(root);</div><div class="line">    while (!s.empty()) &#123;</div><div class="line">        auto p = s.top(); s.pop();</div><div class="line">        std::swap(p-&gt;left, p-&gt;right);</div><div class="line">        if (p-&gt;left) s.push(p-&gt;left);</div><div class="line">        if (p-&gt;right) s.push(p-&gt;right);</div><div class="line">    &#125;</div><div class="line">    return root;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -410,7 +701,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-leetcode/17" data-title="LeetCode.17 九键字母组合" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-leetcode/222" data-title="LeetCode.22 反转二叉树" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -438,7 +729,7 @@
   
     <div class="article-meta">
       <a href="/blog/2018/05/02/leetcode/22/" class="article-date">
-  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+  	<time datetime="2018-05-02T22:28:32.000Z" itemprop="datePublished">2018-05-02</time>
 </a>
     </div>
   
@@ -541,11 +832,11 @@
 
 
   
-    <article id="post-leetcode/222" class="article article-type-post" itemscope itemprop="blogPost">
+    <article id="post-leetcode/17" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/blog/2018/05/02/leetcode/222/" class="article-date">
-  	<time datetime="2018-05-02T14:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+      <a href="/blog/2018/05/02/leetcode/17/" class="article-date">
+  	<time datetime="2018-05-02T22:28:32.000Z" itemprop="datePublished">2018-05-02</time>
 </a>
     </div>
   
@@ -558,7 +849,7 @@
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/05/02/leetcode/222/">LeetCode.22 反转二叉树</a>
+      <a class="article-title" href="/blog/2018/05/02/leetcode/17/">LeetCode.17 九键字母组合</a>
     </h1>
   
 
@@ -567,9 +858,24 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Invert a binary tree.</div><div class="line"></div><div class="line">Example:</div><div class="line"></div><div class="line">Input:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  2     7</div><div class="line"> / \   / \</div><div class="line">1   3 6   9</div><div class="line">Output:</div><div class="line"></div><div class="line">     4</div><div class="line">   /   \</div><div class="line">  7     2</div><div class="line"> / \   / \</div><div class="line">9   6 3   1</div></pre></td></tr></table></figure>
-<h1 id="解答"><a href="#解答" class="headerlink" title="解答"></a>解答</h1><h2 id="简洁写法"><a href="#简洁写法" class="headerlink" title="简洁写法"></a>简洁写法</h2><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"> * Definition for a binary tree node.</div><div class="line"> * struct TreeNode &#123;</div><div class="line"> *     int val;</div><div class="line"> *     TreeNode *left;</div><div class="line"> *     TreeNode *right;</div><div class="line"> *     TreeNode(int x) : val(x), left(NULL), right(NULL) &#123;&#125;</div><div class="line"> * &#125;;</div><div class="line"> */</div><div class="line"><span class="keyword">class</span> Solution &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="function">TreeNode* <span class="title">invertTree_recursive</span><span class="params">(TreeNode* root)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (root==<span class="literal">NULL</span>) <span class="keyword">return</span> root;</div><div class="line">        TreeNode* node = invertTree_recursive(root-&gt;left);</div><div class="line">        root-&gt;left = invertTree_recursive(root-&gt;right);</div><div class="line">        root-&gt;right = node;</div><div class="line">        <span class="keyword">return</span> root;</div><div class="line">    &#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-<h2 id="带栈"><a href="#带栈" class="headerlink" title="带栈"></a>带栈</h2><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">// 带栈的写法</div><div class="line">TreeNode* invertTree(TreeNode* root) &#123;</div><div class="line">    if (!root) return nullptr;</div><div class="line">    stack&lt;TreeNode*&gt; s;</div><div class="line">    s.push(root);</div><div class="line">    while (!s.empty()) &#123;</div><div class="line">        auto p = s.top(); s.pop();</div><div class="line">        std::swap(p-&gt;left, p-&gt;right);</div><div class="line">        if (p-&gt;left) s.push(p-&gt;left);</div><div class="line">        if (p-&gt;right) s.push(p-&gt;right);</div><div class="line">    &#125;</div><div class="line">    return root;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+        <h1 id="题目含义"><a href="#题目含义" class="headerlink" title="题目含义"></a>题目含义</h1><p><img src="http://upload.wikimedia.org/wikipedia/commons/thumb/7/73/Telephone-keypad2.svg/200px-Telephone-keypad2.svg.png" alt=""></p>
+<p>对于这样的一个按键。如果按下一串数字，会出现什么样的字母组合。</p>
+<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Input: &quot;23&quot;</div><div class="line">Output: [&quot;ad&quot;, &quot;ae&quot;, &quot;af&quot;, &quot;bd&quot;, &quot;be&quot;, &quot;bf&quot;, &quot;cd&quot;, &quot;ce&quot;, &quot;cf&quot;].</div></pre></td></tr></table></figure>
+<p>输出的时候，不需要考虑顺序。</p>
+<h1 id="思路"><a href="#思路" class="headerlink" title="思路"></a>思路</h1><p>总的思想还是比较简单的。首先根据每个数字上面的字母数，得到结果总数。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>得到总的结果数之后，可以一次性地把所有需要动态申请的内存都申请完。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">/*申请结果空间*/</span></div><div class="line"><span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line"><span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line"><span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>);</div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>初始处理，比如给定的数字串是”999”。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="number">1.</span> 第一个数字为<span class="number">9</span></div><div class="line">   生成相应的字符串</div><div class="line">   ar1 = </div><div class="line">   [</div><div class="line">    <span class="string">"w"</span>,</div><div class="line">    <span class="string">"x"</span>,</div><div class="line">    <span class="string">"y"</span>,</div><div class="line">    <span class="string">"z"</span>,</div><div class="line">   ]</div><div class="line"></div><div class="line"><span class="number">2.</span> 第二个数字为<span class="number">9</span></div><div class="line">   ar2 = []</div><div class="line">   <span class="keyword">for</span> c in <span class="string">"wxyz"</span>:</div><div class="line">       新数组 = ar1 + c;</div><div class="line">       ar2 = [ar2; 新数组]</div><div class="line">   如果把循环展开，就是</div><div class="line">   c = <span class="string">"w"</span></div><div class="line">   新数组 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   ar2 = [<span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>]</div><div class="line">   </div><div class="line">   第二次循环</div><div class="line">   c = <span class="string">"x"</span></div><div class="line">   新数组 = [<span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>]</div><div class="line">   ar2 = [</div><div class="line">   <span class="string">"ww"</span>, <span class="string">"xw"</span>, <span class="string">"yw"</span>, <span class="string">"zw"</span>,</div><div class="line">   <span class="string">"wx"</span>, <span class="string">"xx"</span>, <span class="string">"yx"</span>, <span class="string">"zx"</span>,</div><div class="line">   ]</div><div class="line">   ...</div><div class="line">   </div><div class="line">   假设ar1长度为N。</div><div class="line">   那么后面每次循环的时候，只需要把</div><div class="line">   这N个字符串拷贝到新的位置。</div><div class="line">        a. 第一次添加的是<span class="number">0</span>~N<span class="number">-1</span></div><div class="line">        b. 第二次处理的字符串是N~<span class="number">2</span>N<span class="number">-1</span></div><div class="line">        c. 第三次处理的是<span class="number">2</span>N~<span class="number">3</span>N<span class="number">-1</span></div><div class="line"><span class="number">3.</span> 递归处理第三个数字</div></pre></td></tr></table></figure>
+<p>这段代码的关键就是在:</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line"><span class="comment">// pos指向当前需要处理的是哪个数字</span></div><div class="line"><span class="comment">// 同时也是结果字符串需要填充的字符</span></div><div class="line"><span class="comment">// 串的位置。</span></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这段代码利用9-&gt;"wxyz"中的"w"来生成</div><div class="line"> * ar1，并且得到长度len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">size_t</span> pos = str - a;</div><div class="line"><span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">    ret[i][pos] = *dic;</div><div class="line">    assert(<span class="number">0</span> &lt;= i &amp;&amp; i &lt; retLen);</div><div class="line">    assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">    i++;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * curlen就是指len(ar1);</div><div class="line"> */</div><div class="line"><span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line"><span class="comment">// *p指向9-&gt;wxyz中的第二个字母x</span></div><div class="line"><span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"><span class="comment">// 从第二个字母开始依次处理每个字母</span></div><div class="line"><span class="keyword">while</span> (*p) &#123;</div><div class="line">    <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">    <span class="comment">// 在处理的时候，把</span></div><div class="line">    <span class="comment">// [0, len(ar1))拷贝到</span></div><div class="line">    <span class="comment">// [i*len(ar1), (i+1)*len(ar1) )</span></div><div class="line">    <span class="comment">// 然后再修改pos位置的字母</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">        <span class="comment">// 注意处理的字符串</span></div><div class="line">        <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">        assert(<span class="number">0</span> &lt;= (npos+i) &amp;&amp; (npos+i) &lt; retLen);</div><div class="line">        assert(<span class="number">0</span> &lt;= pos &amp;&amp; pos &lt; dstrLen);</div><div class="line">        ret[npos+i][pos] = *p;</div><div class="line">    &#125;</div><div class="line">    p++;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里并没有使用任何第三方库。直接使用一下递归就可以了。</p>
+<h1 id="完整的代码"><a href="#完整的代码" class="headerlink" title="完整的代码"></a>完整的代码</h1><figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">/*单字符串快速查找*/</span></div><div class="line"><span class="keyword">char</span>* str_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="string">"abc"</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="string">"def"</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="string">"ghi"</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="string">"jkl"</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="string">"mno"</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="string">"pqrs"</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="string">"tuv"</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="string">"wxyz"</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">int</span> len_rec[] = &#123;</div><div class="line">  [<span class="string">'2'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'3'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'4'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'5'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'6'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'7'</span>] = <span class="number">4</span>,</div><div class="line">  [<span class="string">'8'</span>] = <span class="number">3</span>,</div><div class="line">  [<span class="string">'9'</span>] = <span class="number">4</span>,</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">/*</span></div><div class="line"> * 这里递归进行处理</div><div class="line"> * str指向当前要处理的字符指针</div><div class="line"> * ret已经申请好所有的空间。</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">append_char</span><span class="params">(<span class="keyword">const</span> <span class="keyword">char</span> *a, <span class="keyword">char</span> *str, <span class="keyword">char</span> **ret)</span> </span>&#123;</div><div class="line">    <span class="comment">/*已经结束*/</span></div><div class="line">    <span class="keyword">if</span> (!str || !(*str)) &#123;</div><div class="line">        <span class="keyword">return</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*当前字符映射过去的字符串*/</span></div><div class="line">    <span class="keyword">char</span> *dic = str_rec[*str];</div><div class="line">    <span class="keyword">if</span> (!dic || !(*dic)) <span class="keyword">return</span>;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理dic里面的第一个字符*/</span></div><div class="line">    <span class="keyword">size_t</span> i = <span class="number">0</span>;</div><div class="line">    <span class="keyword">size_t</span> pos = str - a;</div><div class="line">    <span class="keyword">while</span> (ret[i][<span class="number">0</span>]) &#123;  <span class="comment">// ERROR: ret[i] -&gt; ret[i][0]</span></div><div class="line">        ret[i][pos] = *dic;</div><div class="line">        i++;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">/*当前ret的长度*/</span></div><div class="line">    <span class="keyword">const</span> <span class="keyword">size_t</span> curlen = i;</div><div class="line">    <span class="keyword">char</span> *p = dic + <span class="number">1</span>;</div><div class="line"></div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        <span class="keyword">size_t</span> npos = (p-dic)*curlen;</div><div class="line">        <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; curlen; i++) &#123;</div><div class="line">            <span class="built_in">strcpy</span>(ret[npos + i], ret[i]);</div><div class="line">            ret[npos+i][pos] = *p;</div><div class="line">        &#125;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    append_char(a, str + <span class="number">1</span>, ret);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="comment">/**</span></div><div class="line"> * Return an array of size *returnSize.</div><div class="line"> * Note: The returned array must be malloced, assume caller calls free().</div><div class="line"> */</div><div class="line"><span class="function"><span class="keyword">char</span>** <span class="title">letterCombinations</span><span class="params">(<span class="keyword">char</span>* digits, <span class="keyword">int</span>* returnSize)</span> </span>&#123;</div><div class="line">    <span class="comment">/*如果为空串*/</span></div><div class="line">    <span class="keyword">if</span> (<span class="literal">NULL</span> == digits || *digits == <span class="number">0</span>) &#123;</div><div class="line">        *returnSize = <span class="number">0</span>;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*计算总的结果数*/</span></div><div class="line">    *returnSize = <span class="number">1</span>;</div><div class="line">    <span class="keyword">char</span> *p = digits;</div><div class="line">    <span class="keyword">while</span> (*p) &#123;</div><div class="line">        (*returnSize) *= len_rec[*p] &gt; <span class="number">0</span> ? len_rec[*p] : <span class="number">1</span>;</div><div class="line">        p++;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">/* d_len表示当前数字串的长度，</span></div><div class="line">     * 结果字符串的长度是d_len + 1</div><div class="line">     */</div><div class="line">    <span class="keyword">int</span> d_len = p - digits;</div><div class="line"></div><div class="line">    <span class="comment">/*申请结果空间*/</span></div><div class="line">    <span class="keyword">size_t</span> retSize = <span class="keyword">sizeof</span>(<span class="keyword">char</span>*) * (*returnSize + <span class="number">1</span>);</div><div class="line">    <span class="keyword">char</span> **ret = (<span class="keyword">char</span>**)<span class="built_in">malloc</span>(retSize);</div><div class="line">    <span class="built_in">memset</span>(ret, <span class="number">0</span>, retSize);</div><div class="line"></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">        <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// 这里要多申请一个char</span></div><div class="line">        ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">        <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">    &#125;</div><div class="line">    </div><div class="line">    <span class="comment">/*处理第一个字符*/</span></div><div class="line">    <span class="keyword">char</span> *str = str_rec[*digits];</div><div class="line">    <span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>;  str[i]; i++) &#123;</div><div class="line">        ret[i][<span class="number">0</span>] = str[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    append_char(digits, digits + <span class="number">1</span>, ret);</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h2><p>在提交的时候，总是遇到</p>
+<figure class="highlight"><table><tr><td class="code"><pre><div class="line">sysmalloc: Assertion `(old_top == (((mbinptr) (((char *) &amp;((av)-&gt;bins[((1) - 1) * 2])) - __builtin_offsetof (struct malloc_chunk, fd)))) &amp;&amp; old_size == 0) || ((unsigned long) (old_size) &gt;= (unsigned long)((((__builtin_offsetof (struct malloc_chunk, fd_nextsize))+((2 *(sizeof(size_t))) - 1)) &amp; ~((2 *(sizeof(size_t))) - 1))) &amp;&amp; ((old_top)-&gt;size &amp; 0x1) &amp;&amp; ((unsigned long) old_end &amp; pagemask) == 0)' failed.</div></pre></td></tr></table></figure>
+<p>说的是内存访问越界。</p>
+<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 这里在申请内存的时候，要多一个char</span></div><div class="line"><span class="comment">// 并且要把申请的内存空间请0.</span></div><div class="line"><span class="comment">// memset(ret[i], 0, d_len);会导致上面那个错. </span></div><div class="line"><span class="keyword">for</span> (<span class="keyword">size_t</span> i = <span class="number">0</span>; i &lt; *returnSize; i++) &#123;</div><div class="line">    <span class="keyword">size_t</span> n = <span class="keyword">sizeof</span>(<span class="keyword">char</span>) * (d_len + <span class="number">1</span>); <span class="comment">// ERROR: 这里要多申请一个char!!!</span></div><div class="line">    ret[i] = (<span class="keyword">char</span>*)<span class="built_in">malloc</span>(n); <span class="comment">// ERROR: char *buf -&gt; ret[i]</span></div><div class="line">    <span class="built_in">memset</span>(ret[i], <span class="number">0</span>, n);    <span class="comment">// ERROR: 这里一定要把n长度的字符串清0，而不只是d_len</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
 
       
     </div>
@@ -603,7 +909,7 @@
 
   <section id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-leetcode/222" data-title="LeetCode.22 反转二叉树" data-url="undefined"></div>
+    <div class="ds-thread" data-thread-key="post-leetcode/17" data-title="LeetCode.17 九键字母组合" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -631,7 +937,7 @@
   
     <div class="article-meta">
       <a href="/blog/2018/05/02/leetcode/10/" class="article-date">
-  	<time datetime="2018-05-02T02:28:32.000Z" itemprop="datePublished">2018-05-02</time>
+  	<time datetime="2018-05-02T10:28:32.000Z" itemprop="datePublished">2018-05-02</time>
 </a>
     </div>
   
@@ -728,7 +1034,7 @@
   
     <div class="article-meta">
       <a href="/blog/2018/05/01/leetcode/4/" class="article-date">
-  	<time datetime="2018-05-01T14:28:32.000Z" itemprop="datePublished">2018-05-01</time>
+  	<time datetime="2018-05-01T22:28:32.000Z" itemprop="datePublished">2018-05-01</time>
 </a>
     </div>
   
@@ -850,7 +1156,7 @@
   
     <div class="article-meta">
       <a href="/blog/2018/04/28/mit.6.828/jos-lab3/" class="article-date">
-  	<time datetime="2018-04-28T02:28:32.000Z" itemprop="datePublished">2018-04-28</time>
+  	<time datetime="2018-04-28T10:28:32.000Z" itemprop="datePublished">2018-04-28</time>
 </a>
     </div>
   
@@ -1057,380 +1363,6 @@
   <section id="comments">
     <!-- 多说评论框 start -->
     <div class="ds-thread" data-thread-key="post-mit.6.828/jos-lab3" data-title="MIT 6.828 Lab3" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-mit.6.828/jos-lab2" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/04/19/mit.6.828/jos-lab2/" class="article-date">
-  	<time datetime="2018-04-19T14:28:32.000Z" itemprop="datePublished">2018-04-19</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/04/19/mit.6.828/jos-lab2/">MIT 6.828 Lab2</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Exercise-1"><a href="#Exercise-1" class="headerlink" title="Exercise 1"></a>Exercise 1</h1><p>In the file kern/pmap.c, you must implement code for the following functions (probably in the order given).</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">boot_alloc()</div><div class="line">mem_init() (only up to the call to check_page_free_list(<span class="number">1</span>))</div><div class="line">page_init()</div><div class="line">page_alloc()</div><div class="line">page_free()</div></pre></td></tr></table></figure>
-<p><code>check_page_free_list()</code> and <code>check_page_alloc()</code> test your physical page allocator. You should boot JOS and see whether <code>check_page_alloc()</code> reports success. Fix your code so that it passes. You may find it helpful to add your own assert()s to verify that your assumptions are correct.</p>
-<p>总的来说，就是需要实现</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line">boot_alloc()</div><div class="line">mem_init() <span class="comment">// 只需要实现到check_page_free_list(1)这里。</span></div><div class="line">page_init()</div><div class="line">page_alloc()</div><div class="line">page_free()</div></pre></td></tr></table></figure>
-<h1 id="bootloader读入内核代码之后的分布"><a href="#bootloader读入内核代码之后的分布" class="headerlink" title="bootloader读入内核代码之后的分布"></a>bootloader读入内核代码之后的分布</h1><p><a href="http://lzz5235.github.io/2014/03/04/jos.html" target="_blank" rel="external">内存分布</a></p>
-<p>这里主要是引用一下这个图：</p>
-<p><img src="http://lzz5235.github.io/assets/pic/235.png" alt=""></p>
-<p>可以发现，在刚读取完成内核代码到内存之后。形成的结构如上图所示。</p>
-<h1 id="开启分页"><a href="#开启分页" class="headerlink" title="开启分页"></a>开启分页</h1><p>分页的机制在《x86汇编语言－从实模式到保护模式》里面介绍得比较清楚。这里就不多说，只引用<a href="http://neilsh.me/2015/07/02/os_setup_and_virtual_memory_setup/" target="_blank" rel="external">一张图</a>：</p>
-<p><img src="http://ww1.sinaimg.cn/large/7f793092gw1etosykok6uj216o1kwdq0.jpg" alt=""></p>
-<h2 id="UVPT"><a href="#UVPT" class="headerlink" title="UVPT"></a>UVPT</h2><p>UVPT: 需要看 <a href="https://pdos.csail.mit.edu/6.828/2014/lec/l-josmem.html" target="_blank" rel="external">https://pdos.csail.mit.edu/6.828/2014/lec/l-josmem.html</a></p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">UVPT = 0x3BD &lt;&lt; 22</div></pre></td></tr></table></figure>
-<h3 id="Case-1"><a href="#Case-1" class="headerlink" title="Case 1"></a>Case 1</h3><p>如果一个虚拟地址等于<code>0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0</code>。<br>使用<code>kern_pgdir</code>的时候，这个虚拟地址MCU处理之后就是<code>kern_pgdir</code>。</p>
-<p>所以 <code>*(0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0) == kern_pgdir</code>。<br>那么，假设有如下代码：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> *p = <span class="number">0x3BD</span>  &lt;&lt; <span class="number">22</span> | <span class="number">0x3BD</span> &lt;&lt; <span class="number">12</span> | <span class="number">0</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span>; i++) &#123;</div><div class="line">    p[i]; <span class="comment">// 这里实际上就是在遍历kern_pgdir[i];    </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>所以<code>0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0~4096</code>byte地址，就是映射到了<code>char kern_pgdir[4096]</code><br>这个数组。</p>
-<h3 id="Case-2"><a href="#Case-2" class="headerlink" title="Case 2"></a>Case 2</h3><p>那么假设虚拟地址是<code>0x3BD  &lt;&lt; 22 | 0~1024 | 0</code>这个时候情况又是如何？比如用户程序访问<code>0x3BD &lt;&lt; 22</code>这个地址。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">1. CR3 = kern_pgdir</div><div class="line">2. 高10位值为0x3BD, 页目录项为kern_pgdir[0x3BD]</div><div class="line">   kern_pgdir[PDX(UVPT)] = PADDR(kern_pgdir) | PTE_U | PTE_P;</div><div class="line">   不用说，又回到了kern_pgdir</div><div class="line">3. 中间10位为0，那么页表为kern_pgdir[0x3BD]指向的物理地址的第0项。</div><div class="line">   由于kern_pgdir[0x3BD]指向的是kern_pgdir，所以这里页表为kern_pgdir[0]。</div><div class="line">   kern_pgdir[0]用户程序是可以访问的。在Case 1里面已经验证过了。</div><div class="line">4. 虚拟地址就是kern_pgdir[0]指向的物理地址的第0项。不过这个物理地址，用户程序不一定可以访问。</div></pre></td></tr></table></figure>
-<p>所以总结一下就是<code>0x3BD &lt;&lt; 22 | 0 ~ 1024 | xxxx</code>。这个时候，前面<code>20</code>位的地址一解释。指向的地址就是一个<br>页表地址<code>kern_pgdir[i]</code>。如果再加上<code>offset = xxxx</code>。实际上这个地址，虚拟地址不一定可以访问。</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>0x3BD  &lt;&lt; 22 | 0x3BD &lt;&lt; 12 | 0~4096</code>byte地址，就是映射到了<code>char kern_pgdir[4096]</code></p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> *p = <span class="number">0x3BD</span>  &lt;&lt; <span class="number">22</span> | <span class="number">0x3BD</span> &lt;&lt; <span class="number">12</span> | <span class="number">0</span>;</div><div class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1024</span>; i++) &#123;</div><div class="line">    p[i]; <span class="comment">// 这里实际上就是在遍历uint32_t kern_pgdir[i];    </span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p><code>UVPT ~ UVPT + 4MB</code>这个虚拟地址应该会有至少一个页目录项。一个页目录项刚好点4MB。结合Case 2。可以发现，<br>用户程序通过kern_pgdir这个数组里面的内容，就知道这4MB空间里面的页表的内容。比如是否有物理地址映射？<br>是否已经分配内存。比如：</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">int</span> *p = <span class="number">0x3BD</span>  &lt;&lt; <span class="number">22</span> | <span class="number">0x3BD</span> &lt;&lt; <span class="number">12</span> | <span class="number">0</span>;</div><div class="line"><span class="keyword">for</span> (i = <span class="number">0</span>; i &lt; <span class="number">1024</span>; i++) &#123;</div><div class="line">    <span class="keyword">if</span> (*(p+i) &amp; <span class="number">0x01</span>) &#123;</div><div class="line">        <span class="comment">// 二级页表存在</span></div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        <span class="comment">// 二级页表不存在</span></div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="boot-alloc"><a href="#boot-alloc" class="headerlink" title="boot_alloc"></a>boot_alloc</h2><p>这个函数首先来，<code>end</code>变量是定义在<code>kernel.ld</code>文件里面的。指向了内核地址的尾巴。<br>也就是在向内核要虚拟地址的时候，可以从这里开始要。</p>
-<p><strong>注意</strong>这里要到的地址是虚拟地址。不是物理地址。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// This simple physical memory allocator is used only while JOS is setting</span></div><div class="line"><span class="comment">// up its virtual memory system.  page_alloc() is the real allocator.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// If n&gt;0, allocates enough pages of contiguous physical memory to hold 'n'</span></div><div class="line"><span class="comment">// bytes.  Doesn't initialize the memory.  Returns a kernel virtual address.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// If n==0, returns the address of the next free page without allocating</span></div><div class="line"><span class="comment">// anything.</span></div><div class="line"><span class="comment">//</span></div><div class="line"><span class="comment">// If we're out of memory, boot_alloc should panic.</span></div><div class="line"><span class="comment">// This function may ONLY be used during initialization,</span></div><div class="line"><span class="comment">// before the page_free_list list has been set up.</span></div><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> *</span></div><div class="line"><span class="title">boot_alloc</span><span class="params">(<span class="keyword">uint32_t</span> n)</span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">char</span> *nextfree;    <span class="comment">// virtual address of next byte of free memory</span></div><div class="line">    <span class="keyword">char</span> *result;</div><div class="line"></div><div class="line">    <span class="comment">// Initialize nextfree if this is the first time.</span></div><div class="line">    <span class="comment">// 'end' is a magic symbol automatically generated by the linker,</span></div><div class="line">    <span class="comment">// which points to the end of the kernel's bss segment:</span></div><div class="line">    <span class="comment">// the first virtual address that the linker did *not* assign</span></div><div class="line">    <span class="comment">// to any kernel code or global variables.</span></div><div class="line">    <span class="keyword">if</span> (!nextfree) &#123;</div><div class="line">        <span class="keyword">extern</span> <span class="keyword">char</span> end[];</div><div class="line">        nextfree = ROUNDUP((<span class="keyword">char</span> *) end, PGSIZE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// Allocate a chunk large enough to hold 'n' bytes, then update</span></div><div class="line">    <span class="comment">// nextfree.  Make sure nextfree is kept aligned</span></div><div class="line">    <span class="comment">// to a multiple of PGSIZE.</span></div><div class="line">    <span class="comment">//</span></div><div class="line">    <span class="comment">// LAB 2: Your code here.</span></div><div class="line">    <span class="keyword">if</span> (<span class="number">0</span> == n) &#123;</div><div class="line">        <span class="keyword">return</span> nextfree;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    n = ROUNDUP(n, PGSIZE);</div><div class="line">    result = nextfree;</div><div class="line">    nextfree += n;</div><div class="line">    <span class="keyword">return</span> result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="mem-init"><a href="#mem-init" class="headerlink" title="mem_init"></a>mem_init</h2><p>这个函数里面分为页管理链表分配空间。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line">n = <span class="keyword">sizeof</span>(<span class="keyword">struct</span> PageInfo) * npages;</div><div class="line">pages = (<span class="keyword">struct</span> PageInfo*)boot_alloc(n);</div><div class="line"><span class="built_in">memset</span>(pagees, <span class="number">0</span>, n);</div></pre></td></tr></table></figure>
-<p>注意看注释，要求全部初始化为0的。</p>
-<h2 id="page-init"><a href="#page-init" class="headerlink" title="page_init"></a>page_init</h2><p>这里要做的事情很简单，就是把空闲的内存通过双向链表串起来。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">page_init</span><span class="params">(<span class="keyword">void</span>)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// The example code here marks all physical pages as free.</span></div><div class="line">    <span class="comment">// However this is not truly the case.  What memory is free?</span></div><div class="line">    <span class="comment">//  1) Mark physical page 0 as in use.</span></div><div class="line">    <span class="comment">//     This way we preserve the real-mode IDT and BIOS structures</span></div><div class="line">    <span class="comment">//     in case we ever need them.  (Currently we don't, but...)</span></div><div class="line">    <span class="comment">//  2) The rest of base memory, [PGSIZE, npages_basemem * PGSIZE)</span></div><div class="line">    <span class="comment">//     is free.</span></div><div class="line">    <span class="comment">//  3) Then comes the IO hole [IOPHYSMEM, EXTPHYSMEM), which must</span></div><div class="line">    <span class="comment">//     never be allocated.</span></div><div class="line">    <span class="comment">//  4) Then extended memory [EXTPHYSMEM, ...).</span></div><div class="line">    <span class="comment">//     Some of it is in use, some is free. Where is the kernel</span></div><div class="line">    <span class="comment">//     in physical memory?  Which pages are already in use for</span></div><div class="line">    <span class="comment">//     page tables and other data structures?</span></div><div class="line">    <span class="comment">//</span></div><div class="line">    <span class="comment">// Change the code to reflect this.</span></div><div class="line">    <span class="comment">// NB: DO NOT actually touch the physical memory corresponding to</span></div><div class="line">    <span class="comment">// free pages!</span></div><div class="line">    <span class="keyword">size_t</span> i;</div><div class="line">    <span class="comment">// 这里采用的思路是：凡是不能被分配的内存页，都不加到链表里面。</span></div><div class="line">    <span class="comment">// 只处理可以被使用的内存页。</span></div><div class="line">    assert(!page_free_list);</div><div class="line">    <span class="comment">// 1. page 0是要被用来做实模式的IDT BIOS数据结构，尽管从来不会用，以后也不会用</span></div><div class="line">    <span class="comment">//    这不是浪费么。不管了。</span></div><div class="line">    <span class="comment">// 2. 接下来的[PGSIZE, npages_basemem * PGSIZE)是可用的。</span></div><div class="line">    <span class="keyword">for</span> (i = <span class="number">1</span>; i &lt; npages_basemem; i++) &#123;</div><div class="line">        pages[i].pp_ref = <span class="number">0</span>;</div><div class="line">        pages[i].pp_link = page_free_list;</div><div class="line">        page_free_list = &amp;pages[i];</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">// 3. IO空洞，绝对不能使用。</span></div><div class="line">    <span class="comment">//    链表直接跳过。不管。</span></div><div class="line"></div><div class="line">    <span class="comment">// 4. 直接找到kernel内存的尾巴</span></div><div class="line">    <span class="comment">//    注意这里取了PADDR之后要除PGSIZE.</span></div><div class="line">    <span class="keyword">for</span> (i = PADDR(boot_alloc(<span class="number">0</span>))/PGSIZE; i &lt; npages; i++) &#123;        </div><div class="line">        pages[i].pp_ref = <span class="number">0</span>;</div><div class="line">        pages[i].pp_link = page_free_list;</div><div class="line">        page_free_list = &amp;pages[i];</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="page-alloc"><a href="#page-alloc" class="headerlink" title="page_alloc"></a>page_alloc</h2><p>page_alloc的功能就是从链表中分配一页。这里需要完全照着注释来实现。比如<code>pp_link</code>要设置为空。<code>pp_ref</code>不要去修改。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">struct</span> PageInfo *</span></div><div class="line"><span class="title">page_alloc</span><span class="params">(<span class="keyword">int</span> alloc_flags)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">struct</span> PageInfo *ret = page_free_list;</div><div class="line">    <span class="keyword">if</span> (!page_free_list) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    &#125;</div><div class="line">    page_free_list = ret-&gt;pp_link;</div><div class="line">    ret-&gt;pp_link = <span class="literal">NULL</span>;</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (alloc_flags &amp; ALLOC_ZERO) &#123;</div><div class="line">        <span class="built_in">memset</span>(page2kva(ret), <span class="number">0</span>, PGSIZE);</div><div class="line">    &#125;</div><div class="line">    <span class="keyword">return</span> ret;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="page-free"><a href="#page-free" class="headerlink" title="page_free"></a>page_free</h2><p>这里会把一个<code>pp_ref</code>为0的页表放回到链表中。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">page_free</span><span class="params">(<span class="keyword">struct</span> PageInfo *pp)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="comment">// Hint: You may want to panic if pp-&gt;pp_ref is nonzero or</span></div><div class="line">    <span class="comment">// pp-&gt;pp_link is not NULL.</span></div><div class="line">    assert(!pp-&gt;pp_ref);</div><div class="line">    assert(!pp-&gt;pp_link);</div><div class="line"></div><div class="line">    pp-&gt;pp_link = page_free_list;</div><div class="line">    page_free_list = pp;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="Excersize-3"><a href="#Excersize-3" class="headerlink" title="Excersize 3"></a>Excersize 3</h1><figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">　　xp/Nx paddr -- 查看paddr物理地址处开始的，N个字的16进制的表示结果。</div><div class="line">　　info registers -- 展示所有内部寄存器的状态。</div><div class="line">　　info mem -- 展示所有已经被页表映射的虚拟地址空间，以及它们的访问优先级。</div><div class="line">　　info pg -- 展示当前页表的结构。</div></pre></td></tr></table></figure>
-<h1 id="Excersize-4"><a href="#Excersize-4" class="headerlink" title="Excersize 4"></a>Excersize 4</h1><h2 id="pgdir-walk"><a href="#pgdir-walk" class="headerlink" title="pgdir_walk"></a>pgdir_walk</h2><p><code>pgdir_walk</code>只是在给定的页表中查一下虚拟地址的<strong>页目录项</strong>。并不需要页目录项与虚拟地址绑定。如果存在页目录项，那么只需要直接返回相应的页目录项。<br>就是在写<code>if/else</code>的时候要考虑各种情况。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="keyword">pte_t</span> *</div><div class="line">pgdir_walk(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">const</span> <span class="keyword">void</span> *va, <span class="keyword">int</span> create)</div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    assert(pgdir);</div><div class="line">    <span class="keyword">pde_t</span> *pde = &amp;pgdir[PDX(va)];</div><div class="line"></div><div class="line">    <span class="keyword">if</span> (!(*pde &amp; PTE_P)) &#123;</div><div class="line">        <span class="keyword">if</span> (!create) <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">        <span class="keyword">struct</span> PageInfo *page = page_alloc(ALLOC_ZERO);</div><div class="line">        <span class="keyword">if</span> (!page) <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">        page-&gt;pp_ref++;</div><div class="line">        assert(page-&gt;pp_ref == <span class="number">1</span>);</div><div class="line">        assert(page-&gt;pp_link == <span class="literal">NULL</span>);</div><div class="line"></div><div class="line">        *pde = page2pa(page) | PTE_P | PTE_U | PTE_W;</div><div class="line">    &#125;</div><div class="line">    <span class="comment">// 获取页表项</span></div><div class="line">    <span class="keyword">return</span> (<span class="keyword">pte_t</span>*)(KADDR(PTE_ADDR(*pde))) + PTX(va);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="boot-map-region"><a href="#boot-map-region" class="headerlink" title="boot_map_region"></a>boot_map_region</h2><p>把一个虚拟内存映射一个物理内存。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span></span></div><div class="line"><span class="title">boot_map_region</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">uintptr_t</span> va, <span class="keyword">size_t</span> size, <span class="keyword">physaddr_t</span> pa, <span class="keyword">int</span> perm)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">for</span> (<span class="keyword">uint32_t</span> i = <span class="number">0</span>; i &lt; size; i += PGSIZE) &#123;</div><div class="line">        <span class="keyword">pte_t</span> *pte = pgdir_walk(pgdir, (<span class="keyword">const</span> <span class="keyword">void</span> *)va, <span class="literal">true</span>);</div><div class="line">        *pte = pa | perm | PTE_P;</div><div class="line">        va += PGSIZE;</div><div class="line">        pa += PGSIZE;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>注意这里的设置。</p>
-<h2 id="page-insert"><a href="#page-insert" class="headerlink" title="page_insert"></a>page_insert</h2><p>写这个函数的时候，要特别仔细地把注释读一下。<code>boot_map_region</code>在映射的时候。<br>并没有考虑到页表的占用释放回收什么的（直接把这个空间里面的物理内存映射到了<code>kern_pgdir</code>里面），这是因为<code>boot_map_region</code>这个函数操作的都是已经在kernel里面申请好的内存。并且页表的管理是从<code>boot_alloc(0)</code>之后才开始管理的。所以内核里面的页在添加到的<code>kernel_pgdir</code>的时候并不会用<code>PageInfo</code>来进行管理。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">int</span></span></div><div class="line"><span class="title">page_insert</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">struct</span> PageInfo *pp, <span class="keyword">void</span> *va, <span class="keyword">int</span> perm)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">pte_t</span> *pte = pgdir_walk(pgdir, va, <span class="literal">true</span>);</div><div class="line">    <span class="keyword">if</span> (!pte)</div><div class="line">        <span class="keyword">return</span> -E_NO_MEM;</div><div class="line"></div><div class="line">    pp-&gt;pp_ref++;</div><div class="line">    <span class="keyword">if</span> (*pte &amp; PTE_P)</div><div class="line">        page_remove(pgdir, va);</div><div class="line">    *pte = page2pa(pp) | perm | PTE_P;</div><div class="line">    tlb_invalidate(pgdir, va);</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="page-lookup"><a href="#page-lookup" class="headerlink" title="page_lookup"></a>page_lookup</h2><p>这个函数的功能就是给定一个虚拟地址。然后根据这个虚拟地址来找到相应的物理地址。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">struct</span> PageInfo *</span></div><div class="line"><span class="title">page_lookup</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">void</span> *va, <span class="keyword">pte_t</span> **pte_store)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">pte_t</span> *pte = pgdir_walk(pgdir, va, <span class="literal">false</span>);</div><div class="line">    <span class="keyword">if</span> (!pte || !(*pte &amp; PTE_P)) <span class="keyword">return</span> <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">if</span> (pte_store) *pte_store = pte;</div><div class="line">    <span class="keyword">return</span> pa2page(PTE_ADDR(*pte));</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="page-remove"><a href="#page-remove" class="headerlink" title="page_remove"></a>page_remove</h2><p><code>page_remove</code>这个函数的功能主要是取消虚拟地址与物理地址的关联。<br>这里需要注意的是。释放了虚拟内存与物理内存的映射之后。并没有直接把相应的物理内存直接放到链表里面。这主要是因为，可能存在多个虚拟内存映射到同一个物理内页面的情况。虽然这个虚拟内存不在与这个物理内存发生联系了。但是其他的虚拟地址还是有可能继续与这个物理内存关联并且还在使用的。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span></span></div><div class="line"><span class="title">page_remove</span><span class="params">(<span class="keyword">pde_t</span> *pgdir, <span class="keyword">void</span> *va)</span></div><div class="line">&#123;</div><div class="line">    <span class="comment">// Fill this function in</span></div><div class="line">    <span class="keyword">pte_t</span> *pte = <span class="literal">NULL</span>;</div><div class="line">    <span class="keyword">struct</span> PageInfo *pp = page_lookup(pgdir, va, &amp;pte);</div><div class="line">    <span class="keyword">if</span> (!pp) <span class="keyword">return</span>;</div><div class="line">    *pte = <span class="number">0</span>;</div><div class="line">    page_decref(pp);</div><div class="line">    tlb_invalidate(pgdir, va);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h2 id="Excersize-5"><a href="#Excersize-5" class="headerlink" title="Excersize 5"></a>Excersize 5</h2><p>mem_init()</p>
-<p>这里主要是要把内核里面一些区域设置到页目录中去。</p>
-<figure class="highlight c"><table><tr><td class="code"><pre><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line"><span class="comment">// 注意这里用的是PTSIZE</span></div><div class="line"><span class="comment">// 一种保守的作法是把pages align到页大小之后再进行映射。</span></div><div class="line">boot_map_region(kern_pgdir, UPAGES, PTSIZE, PADDR(pages), PTE_U);</div><div class="line"></div><div class="line"><span class="comment">//////////////////////////////////////////////////////////////////////</span></div><div class="line"><span class="comment">// Use the physical memory that 'bootstack' refers to as the kernel</span></div><div class="line"><span class="comment">// stack.  The kernel stack grows down from virtual address KSTACKTOP.</span></div><div class="line"><span class="comment">// We consider the entire range from [KSTACKTOP-PTSIZE, KSTACKTOP)</span></div><div class="line"><span class="comment">// to be the kernel stack, but break this into two pieces:</span></div><div class="line"><span class="comment">//     * [KSTACKTOP-KSTKSIZE, KSTACKTOP) -- backed by physical memory</span></div><div class="line"><span class="comment">//     * [KSTACKTOP-PTSIZE, KSTACKTOP-KSTKSIZE) -- not backed; so if</span></div><div class="line"><span class="comment">//       the kernel overflows its stack, it will fault rather than</span></div><div class="line"><span class="comment">//       overwrite memory.  Known as a "guard page".</span></div><div class="line"><span class="comment">//     Permissions: kernel RW, user NONE</span></div><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line">boot_map_region(kern_pgdir, KSTACKTOP-KSTKSIZE, KSTKSIZE, PADDR(bootstack), PTE_W);    </div><div class="line"></div><div class="line"><span class="comment">//////////////////////////////////////////////////////////////////////</span></div><div class="line"><span class="comment">// Map all of physical memory at KERNBASE.</span></div><div class="line"><span class="comment">// Ie.  the VA range [KERNBASE, 2^32) should map to</span></div><div class="line"><span class="comment">//      the PA range [0, 2^32 - KERNBASE)</span></div><div class="line"><span class="comment">// We might not have 2^32 - KERNBASE bytes of physical memory, but</span></div><div class="line"><span class="comment">// we just set up the mapping anyway.</span></div><div class="line"><span class="comment">// Permissions: kernel RW, user NONE</span></div><div class="line"><span class="comment">// Your code goes here:</span></div><div class="line"><span class="comment">// KERNBASE    0x F0000000</span></div><div class="line"><span class="comment">// 2^32 =      0x 1000 0000</span></div><div class="line"><span class="comment">// 256MB</span></div><div class="line">boot_map_region(kern_pgdir, KERNBASE, <span class="number">0x10000000</span>, <span class="number">0</span>, PTE_W);</div></pre></td></tr></table></figure>
-<p>接下来还有一系列小问题。比如</p>
-<h3 id="kern-pgdir里面的内容是什么？"><a href="#kern-pgdir里面的内容是什么？" class="headerlink" title="kern_pgdir里面的内容是什么？"></a>kern_pgdir里面的内容是什么？</h3><p>这个问题其实只需要看一下<code>mem_init</code>里面的<code>boot_map_region</code>就可以了。</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">What entries (rows) in the page directory have been filled in at this point? What addresses do they map and where do they point? In other words, fill out this table as much as possible:</div><div class="line">Entry    Base Virtual Address    Points to (logically):</div><div class="line">1023    ?    Page table for top 4MB of phys memory</div><div class="line">1022    ?    ?</div><div class="line">.    ?    ?</div><div class="line">.    ?    ?</div><div class="line">.    ?    ?</div><div class="line">2    0x00800000    ?</div><div class="line">1    0x00400000    ?</div><div class="line">0    0x00000000    [see next question]</div></pre></td></tr></table></figure>
-<h3 id="内存保护"><a href="#内存保护" class="headerlink" title="内存保护"></a>内存保护</h3><p>We have placed the kernel and user environment in the same address space. Why will user programs not be able to read or write the kernel’s memory? What specific mechanisms protect the kernel memory?</p>
-<p>这个问题是因为页表里面有各种保护机制。</p>
-<h3 id="最大能支持的内存是多少？"><a href="#最大能支持的内存是多少？" class="headerlink" title="最大能支持的内存是多少？"></a>最大能支持的内存是多少？</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">* ULIM, MMIOBASE --&gt;  +------------------------------+ 0xef800000</div><div class="line"> *                     |  Cur. Page Table (User R-)   | R-/R-  PTSIZE</div><div class="line"> *    UVPT      ----&gt;  +------------------------------+ 0xef400000</div><div class="line"> *                     |          RO PAGES            | R-/R-  PTSIZE</div><div class="line"> *    UPAGES    ----&gt;  +------------------------------+ 0xef000000</div></pre></td></tr></table></figure>
-<p>这里UPAGES对应的就是<code>pages</code>这个链表。程序空间在利用虚拟地址访问<code>pages</code>的时候。一旦大于<code>4MB</code>，比如越界到了<code>UVPT</code>这个空间。由于这部分虚拟地址是放到了<code>kern_pgdir</code>里面。所以这个时候超出的部分就不能访问了。也就意味着：物理空间上，<code>pages</code>占用多大空间都没有问题。但是虚拟地址空间在访问<code>UPAGES</code>的时候就是不能访问全。因此，能支持的内存大小就变成了2GB。</p>
-<h3 id="How-much-space-overhead-is-there-for-managing-memory-if-we-actually-had-the-maximum-amount-of-physical-memory-How-is-this-overhead-broken-down"><a href="#How-much-space-overhead-is-there-for-managing-memory-if-we-actually-had-the-maximum-amount-of-physical-memory-How-is-this-overhead-broken-down" class="headerlink" title="How much space overhead is there for managing memory, if we actually had the maximum amount of physical memory? How is this overhead broken down?"></a>How much space overhead is there for managing memory, if we actually had the maximum amount of physical memory? How is this overhead broken down?</h3><p>这里是说现在管理内存的开销是多少？其实直接看虚拟地址就可以明白了。一个页目录表占用4MB。而<code>UPAGES</code>占用了4MB。所以合在一起就是8MB。如果要减小开销。</p>
-<h3 id="内存访问的问题"><a href="#内存访问的问题" class="headerlink" title="内存访问的问题"></a>内存访问的问题</h3><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">Q1. Revisit the page table setup in kern/entry.S and kern/entrypgdir.c. Immediately after we turn on paging, EIP is still a low number (a little over 1MB). At what point do we transition to running at an EIP above KERNBASE?</div><div class="line"></div><div class="line">Q2. What makes it possible for us to continue executing at a low EIP between when we enable paging and when we begin running at an EIP above KERNBASE? Why is this transition necessary?</div></pre></td></tr></table></figure>
-<p>Q1. 当还在利用<code>kern/entry.S</code>和<code>kern/entrypgdir.c</code>的时候。一打开分页的时候，EIP还在一个低端的物理地址上。是通过什么方式让EIP跑到<code>KERNBASE</code>之上的内核虚拟地址空间运行的？</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">    mov    $relocated, %eax</div><div class="line">    jmp    *%eax</div><div class="line">relocated:</div><div class="line"></div><div class="line">    # Clear the frame pointer register (EBP)</div><div class="line">    # so that once we get into debugging C code,</div><div class="line">    # stack backtraces will be terminated properly.</div><div class="line">    movl    $0x0,%ebp            # nuke frame pointer</div></pre></td></tr></table></figure>
-<p>Q2. 问的是说，实际上当打开分页的时候，EIP还是在低地址运行。然后再通过跳转跑到高端地址。打开分页的时候，EIP指向下一条指令。即｀move $relocated, %eax`的内存地址。为什么访问这个内存地址不会失败?</p>
-<figure class="highlight plain"><table><tr><td class="code"><pre><div class="line"> kern/entrypgdir.c 中将 0 ~ 4MB 和 KERNBASE ~ KERNBASE + 4 MB 的虚拟地址都映射到了 0 ~ 4MB 的物理地址上，因此无论 EIP 在高位和低位都能执行。必需这么做是因为如果只映射高位地址，那么在开启分页机制的下一条语句就会crash。</div><div class="line">`</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/mit-6-828/">mit.6.828</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/mit-6-828/">mit.6.828</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-mit.6.828/jos-lab2" data-title="MIT 6.828 Lab2" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/3.chrono.time_point" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/04/15/ceph/3.chrono.time_point/" class="article-date">
-  	<time datetime="2018-04-14T21:28:32.000Z" itemprop="datePublished">2018-04-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/04/15/ceph/3.chrono.time_point/">1.2 Chrono time_point</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>时钟的说明：</p>
-<ul>
-<li>system_clock：从系统获取的时钟；</li>
-<li>steady_clock：不能被修改的时钟；</li>
-<li>high_resolution_clock：高精度时钟，实际上是system_clock或者steady_clock的别名。</li>
-</ul>
-<p><code>steady_clock</code>可以获取稳定可靠的时间间隔，后一次调用now()的值和前一次的差值是不因为修改了系统时间而改变，它保证了稳定的时间间隔。</p>
-<p>除了表示时间片段，有时候我们可能更想知道一个具体的时间点，这里就要提一下<code>time_point</code>，<code>time_point</code>表示的是：</p>
-<ul>
-<li>用来获取1970.1.1以来的秒数和当前的时间</li>
-<li>可以做一些时间的比较和算术运算</li>
-<li>可以和ctime库结合起来显示时间</li>
-</ul>
-<p>看一下类的声明：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">class</span> system_clock</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> microseconds                     duration;</div><div class="line">    <span class="keyword">typedef</span> duration::rep                    rep;</div><div class="line">    <span class="keyword">typedef</span> duration::period                 period;</div><div class="line">    <span class="keyword">typedef</span> chrono::time_point&lt;system_clock&gt; time_point;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> is_steady = <span class="literal">false</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">now</span><span class="params">()</span> _NOEXCEPT</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> time_t     <span class="title">to_time_t</span>  <span class="params">(<span class="keyword">const</span> time_point&amp; <span class="number">__</span>t)</span> _NOEXCEPT</span>;</div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">from_time_t</span><span class="params">(<span class="keyword">time_t</span> <span class="number">__</span>t)</span> _NOEXCEPT</span>;</div><div class="line">&#125;;</div><div class="line"><span class="meta">#<span class="meta-keyword">ifndef</span> _LIBCPP_HAS_NO_MONOTONIC_CLOCK</span></div><div class="line"><span class="keyword">class</span> steady_clock</div><div class="line">&#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    <span class="keyword">typedef</span> nanoseconds                                   duration;</div><div class="line">    <span class="keyword">typedef</span> duration::rep                                 rep;</div><div class="line">    <span class="keyword">typedef</span> duration::period                              period;</div><div class="line">    <span class="keyword">typedef</span> chrono::time_point&lt;steady_clock, duration&gt;    time_point;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">const</span> <span class="keyword">bool</span> is_steady = <span class="literal">true</span>;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">static</span> time_point <span class="title">now</span><span class="params">()</span> _NOEXCEPT</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">typedef</span> steady_clock high_resolution_clock;</div><div class="line"><span class="meta">#<span class="meta-keyword">else</span></span></div><div class="line"><span class="keyword">typedef</span> system_clock high_resolution_clock;</div><div class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></div></pre></td></tr></table></figure>
-<p>这里本来应该是有三种<code>clock</code>的，也就是</p>
-<ul>
-<li>system_clock</li>
-<li>steady_clock</li>
-<li>high_resolution_clock</li>
-</ul>
-<p>但是从这里的定义来看，难道有的平台没有<code>steady_clock</code>？并且<code>high_resolution_clock</code>的定义是随着<code>_LIBCPP_HAS_NO_MONOTONIC_CLOCK</code>。这里的意思是说，</p>
-<ul>
-<li>如果没有单调的时钟，那么就需要自己定义一个<code>steady_clock</code>。</li>
-<li>如果有，就不用定义了，直接用<code>system_clock</code>。</li>
-</ul>
-<p>获取一段代码的运行时间</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// steady_clock example</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ratio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line"></div><div class="line">  steady_clock::time_point t1 = steady_clock::now();</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"printing out 1000 stars...\n"</span>;</div><div class="line">  <span class="keyword">for</span> (<span class="keyword">int</span> i=<span class="number">0</span>; i&lt;<span class="number">1000</span>; ++i) <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"*"</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">  steady_clock::time_point t2 = steady_clock::now();</div><div class="line"></div><div class="line">  <span class="comment">// 这里转换成为时间段，只不过是用double</span></div><div class="line">  <span class="comment">// 来表示，所以可以表示比如0.5秒，0.01秒这种case.</span></div><div class="line">  duration&lt;<span class="keyword">double</span>&gt; time_span = duration_cast&lt;duration&lt;<span class="keyword">double</span>&gt;&gt;(t2 - t1);</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"It took me "</span> &lt;&lt; time_span.count() &lt;&lt; <span class="string">" seconds."</span>;</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="system-clock"><a href="#system-clock" class="headerlink" title="system_clock"></a>system_clock</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// system_clock example</span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ratio&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span> <span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">  <span class="keyword">using</span> <span class="built_in">std</span>::chrono::system_clock;</div><div class="line">  <span class="comment">// 这里声明一天的类型</span></div><div class="line">  <span class="comment">// 其实用std::chrono::hours day(24);</span></div><div class="line">  <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">int</span>, <span class="built_in">std</span>::ratio&lt;<span class="number">60</span>*<span class="number">60</span>*<span class="number">24</span>&gt; &gt; one_day(<span class="number">1</span>);</div><div class="line">  <span class="comment">// 取得当前的时间点</span></div><div class="line">  system_clock::time_point today = system_clock::now();</div><div class="line">  <span class="comment">// 当前的时间点，加上一段时间</span></div><div class="line">  system_clock::time_point tomorrow = today + one_day;</div><div class="line"></div><div class="line">  <span class="built_in">std</span>::<span class="keyword">time_t</span> tt;</div><div class="line">  tt = system_clock::<span class="keyword">to_time_t</span> (today);</div><div class="line"></div><div class="line">  <span class="comment">// 注意ctime是把time_t转换成为字符串</span></div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"today is: "</span> &lt;&lt; ctime(&amp;tt);</div><div class="line"></div><div class="line">  tt = system_clock::<span class="keyword">to_time_t</span>(tomorrow);</div><div class="line">  <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"tomorrow will be: "</span> &lt;&lt; ctime(&amp;tt);</div><div class="line"></div><div class="line">  <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>时间的加减</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iomanip&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;ctime&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></div><div class="line">&#123;</div><div class="line">    <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line">    system_clock::time_point now = system_clock::now();</div><div class="line">    <span class="built_in">std</span>::<span class="keyword">time_t</span> last = system_clock::<span class="keyword">to_time_t</span>(now - <span class="built_in">std</span>::chrono::hours(<span class="number">24</span>));</div><div class="line">　　<span class="built_in">std</span>::<span class="keyword">time_t</span> next= system_clock::<span class="keyword">to_time_t</span>(now - <span class="built_in">std</span>::chrono::hours(<span class="number">24</span>));</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"One day ago, the time was "</span>&lt;&lt; <span class="built_in">std</span>::put_time(<span class="built_in">std</span>::localtime(&amp;last), <span class="string">"%F %T"</span>) &lt;&lt; <span class="string">'\n'</span>;</div><div class="line">　　<span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"Next day, the time was "</span>&lt;&lt; <span class="built_in">std</span>::put_time(<span class="built_in">std</span>::localtime(&amp;next), <span class="string">"%F %T"</span>) &lt;&lt; <span class="string">'\n'</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="string">"hello word"</span>&lt;&lt;<span class="built_in">endl</span>;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    timer t; <span class="comment">//开始计时</span></div><div class="line">    fun()</div><div class="line">    <span class="built_in">cout</span>&lt;&lt;t.elapsed()&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//打印fun函数耗时多少毫秒</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h1 id="自定义定时器"><a href="#自定义定时器" class="headerlink" title="自定义定时器"></a>自定义定时器</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>::chrono;</div><div class="line"></div><div class="line"><span class="keyword">class</span> Timer &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Timer() : m_begin(high_resolution_clock::now()) &#123;&#125;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">reset</span><span class="params">()</span> </span>&#123; m_begin = high_resolution_clock::now(); &#125;</div><div class="line"></div><div class="line">    <span class="comment">//默认输出秒</span></div><div class="line">　　<span class="function"><span class="keyword">double</span> <span class="title">elapsed</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</div><div class="line">　　　　<span class="keyword">return</span> duration_cast&lt;duration&lt;<span class="keyword">double</span>&gt;&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">　　&#125;</div><div class="line"></div><div class="line"><span class="comment">//默认输出毫秒</span></div><div class="line">    <span class="comment">//int64_t elapsed() const</span></div><div class="line">    <span class="comment">//&#123;</span></div><div class="line">        <span class="comment">//return duration_cast&lt;chrono::milliseconds&gt;(high_resolution_clock::now() - m_begin).count();</span></div><div class="line">    <span class="comment">//&#125;</span></div><div class="line"></div><div class="line">    <span class="comment">//微秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_micro() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::microseconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//纳秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_nano() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::nanoseconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//秒</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_seconds() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::seconds&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//分</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_minutes() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::minutes&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="comment">//时</span></div><div class="line">    <span class="keyword">int64_t</span> elapsed_hours() <span class="keyword">const</span></div><div class="line">    &#123;</div><div class="line">        <span class="keyword">return</span> duration_cast&lt;chrono::hours&gt;(high_resolution_clock::now() - m_begin).count();</div><div class="line">    &#125;</div><div class="line"></div><div class="line"><span class="keyword">private</span>:</div><div class="line">    time_point&lt;high_resolution_clock&gt; m_begin;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/3.chrono.time_point" data-title="1.2 Chrono time_point" data-url="undefined"></div>
-    <!-- 多说评论框 end -->
-    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
-    <script type="text/javascript">
-    var duoshuoQuery = {short_name:'undefined'};
-      (function() {
-        var ds = document.createElement('script');
-        ds.type = 'text/javascript';ds.async = true;
-        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
-        ds.charset = 'UTF-8';
-        (document.getElementsByTagName('head')[0] 
-         || document.getElementsByTagName('body')[0]).appendChild(ds);
-      })();
-      </script>
-    <!-- 多说公共JS代码 end -->
-  </section>
-
-
-
-
-
-
-
-  
-    <article id="post-ceph/2.chrono" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/blog/2018/04/15/ceph/2.chrono/" class="article-date">
-  	<time datetime="2018-04-14T21:28:32.000Z" itemprop="datePublished">2018-04-15</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/blog/2018/04/15/ceph/2.chrono/">1.2 Chrono Duration</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>首先看一下标准库的使用以及概念。首先是一个概念<code>ratio</code>，<code>ratio</code>表示的是一个概念，就是单位。</p>
-<p>Durations表示的是一段时间。比如10秒钟，2个小时。</p>
-<h1 id="Ratio"><a href="#Ratio" class="headerlink" title="Ratio"></a>Ratio</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">intmax_t</span> N, <span class="keyword">intmax_t</span> D = <span class="number">1</span>&gt; <span class="keyword">class</span> ratio;</div></pre></td></tr></table></figure>
-<p>先看<code>D</code>，<code>D</code>表示一秒可以被切分成多少份。<code>N</code>就是表示有多少份。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1</span>&gt;                      seconds</div></pre></td></tr></table></figure>
-<p>这里就是表示1秒。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000</span>&gt;               microseconds</div></pre></td></tr></table></figure>
-<p>这个就是表示毫秒。</p>
-<p>另外一种简单的观点，就是<code>N/D</code>秒就是<code>ratio</code>的值。</p>
-<p>比如</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line">ratio&lt;<span class="number">3600</span>, <span class="number">1</span>&gt;                hours          <span class="number">3600</span>/<span class="number">1</span> = <span class="number">3600</span>秒</div><div class="line">ratio&lt;<span class="number">60</span>, <span class="number">1</span>&gt;                  minutes          <span class="number">60</span>/<span class="number">1</span> = <span class="number">60</span>秒</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1</span>&gt;                   seconds</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000</span>&gt;                microseconds</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000000</span>&gt;             microseconds</div><div class="line">ratio&lt;<span class="number">1</span>, <span class="number">1000000000</span>&gt;          nanosecons</div></pre></td></tr></table></figure>
-<p><strong>注意</strong>我们自己可以定义Period，比如<code>ratio&lt;1, -2&gt;</code>表示单位时间是<code>-0.5</code>秒。</p>
-<h1 id="Durations"><a href="#Durations" class="headerlink" title="Durations"></a>Durations</h1><p>这个用来表示一段时间，比如一天，2个小时，10秒钟。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> Rep, <span class="keyword">class</span> Period = ratio&lt;<span class="number">1</span>&gt; &gt; <span class="keyword">class</span> duration;</div></pre></td></tr></table></figure>
-<p>Rep表示一种数值类型，用来表示Period的数量，比如<code>int float double</code><br>Period是ratio类型，用来表示时间度量单位。比如经过了2纳秒。这里Period就是用<code>ratio&lt;1, 1000000000&gt;          nanosecons</code>来表示。</p>
-<h1 id="转换"><a href="#转换" class="headerlink" title="转换"></a>转换</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span> &lt;<span class="keyword">class</span> ToDuration, <span class="keyword">class</span> Rep, <span class="keyword">class</span> Period&gt;</div><div class="line"><span class="function"><span class="keyword">constexpr</span> ToDuration <span class="title">duration_cast</span> <span class="params">(<span class="keyword">const</span> duration&lt;Rep,Period&gt;&amp; dtn)</span></span>;</div></pre></td></tr></table></figure>
-<p>这个函数的作用是把一种duration转换成另外一种durantion的表达。</p>
-<h1 id="常用类型"><a href="#常用类型" class="headerlink" title="常用类型"></a>常用类型</h1><p>当然，对于很多常用的时间类型，标准库里面也进行了定义。不过需要注意的是，这些不是一个常量，而是一个类型。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">/// nanoseconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, nano&gt;         nanoseconds;</div><div class="line"><span class="comment">/// microseconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, micro&gt;        microseconds;</div><div class="line"><span class="comment">/// milliseconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, milli&gt;        milliseconds;</div><div class="line"><span class="comment">/// seconds</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>&gt; 		        seconds</div><div class="line"><span class="comment">/// minutes</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, ratio&lt; <span class="number">60</span>&gt;&gt;   minutes</div><div class="line"><span class="comment">/// hours</span></div><div class="line"><span class="keyword">typedef</span> duration&lt;<span class="keyword">int64_t</span>, ratio&lt;<span class="number">3600</span>&gt;&gt;  hours;</div></pre></td></tr></table></figure>
-<p>所以在使用的时候，可以直接使用这些时间单位。比如休眠一段时间。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="built_in">std</span>::this_thread::sleep_for(<span class="built_in">std</span>::chrono::seconds(<span class="number">3</span>)); <span class="comment">//休眠三秒</span></div><div class="line"><span class="built_in">std</span>::this_thread::sleep_for(<span class="built_in">std</span>::chrono::milliseconds(<span class="number">100</span>)); <span class="comment">//休眠100毫秒</span></div></pre></td></tr></table></figure>
-<h1 id="Count"><a href="#Count" class="headerlink" title="Count"></a>Count</h1><p>有时候，也可以计算有多个少<code>X</code>为单位的时间。这个<code>X</code>可以是毫秒，也可能是纳秒等等。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="comment">// 这里只有3毫秒，所以count结果为3.</span></div><div class="line">    <span class="built_in">std</span>::chrono::milliseconds ms&#123;<span class="number">3</span>&#125;; <span class="comment">// 3 毫秒</span></div><div class="line">    <span class="comment">// 6000 microseconds constructed from 3 milliseconds</span></div><div class="line">    <span class="comment">// 这里单位变成了micro second</span></div><div class="line">    <span class="comment">// 2*ms则是6ms，也就是6000微秒</span></div><div class="line">    <span class="built_in">std</span>::chrono::microseconds us = <span class="number">2</span>*ms; <span class="comment">//6000微秒</span></div><div class="line">    <span class="comment">// 30Hz clock using fractional ticks</span></div><div class="line">    <span class="built_in">std</span>::chrono::duration&lt;<span class="keyword">double</span>, <span class="built_in">std</span>::ratio&lt;<span class="number">1</span>, <span class="number">30</span>&gt;&gt; hz30(<span class="number">3.5</span>);</div><div class="line">    <span class="comment">// 这里的输出是3.5</span></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; <span class="string">"hz30 has"</span> &lt;&lt; hz30.count() &lt;&lt; <span class="string">" ticks\n"</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt;  <span class="string">"3 ms duration has "</span> &lt;&lt; ms.count() &lt;&lt; <span class="string">" ticks\n"</span>&lt;&lt;  <span class="string">"6000 us duration has "</span> &lt;&lt; us.count() &lt;&lt; <span class="string">" ticks\n"</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>程序的输出</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">hz30 has3.5 ticks</div><div class="line">3 ms duration has 3 ticks</div><div class="line">6000 us duration has 6000 ticks</div></pre></td></tr></table></figure>
-<h1 id="时间的计算"><a href="#时间的计算" class="headerlink" title="时间的计算"></a>时间的计算</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">minutes <span class="title">t1</span><span class="params">( <span class="number">10</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">seconds <span class="title">t2</span><span class="params">( <span class="number">60</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::seconds t3 = t1 - t2;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; t3.count() &lt;&lt; <span class="string">" second"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>程序的输出</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><div class="line">540 second</div></pre></td></tr></table></figure>
-<h1 id="时间的转换"><a href="#时间的转换" class="headerlink" title="时间的转换"></a>时间的转换</h1><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;chrono&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">minutes <span class="title">t1</span><span class="params">( <span class="number">10</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::<span class="function">seconds <span class="title">t2</span><span class="params">( <span class="number">60</span> )</span></span>;</div><div class="line">    <span class="built_in">std</span>::chrono::seconds t3 = t1 - t2;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; t3.count() &lt;&lt; <span class="string">" second"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt;</div><div class="line">        <span class="built_in">std</span>::chrono::duration_cast&lt;<span class="built_in">std</span>::chrono::minutes&gt;(t3).count()</div><div class="line">        &lt;&lt; <span class="string">"minutes"</span> &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/ceph/">ceph</a></li></ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-	<a class="article-category-link" href="/blog/categories/ceph/">ceph</a>
-	</div>
-
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-  <section id="comments">
-    <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="post-ceph/2.chrono" data-title="1.2 Chrono Duration" data-url="undefined"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">

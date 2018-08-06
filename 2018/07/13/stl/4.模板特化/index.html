@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.4 模板偏特化 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="偏特化前面介绍过，模板的偏特化可以有两种形式
+template&amp;lt;typename T, int N&amp;gt;struct Vec&amp;#123;    T v_[N];&amp;#125;;template&amp;lt;&amp;gt;struct Vec&amp;lt;float, 4&amp;gt; &amp;#123;    float v_[4];&amp;#125;;template&amp;lt;int N&amp;gt;struct Vec&amp;lt;bo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.4 模板偏特化">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/07/13/stl/4.模板特化/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="偏特化前面介绍过，模板的偏特化可以有两种形式
+template&amp;lt;typename T, int N&amp;gt;struct Vec&amp;#123;    T v_[N];&amp;#125;;template&amp;lt;&amp;gt;struct Vec&amp;lt;float, 4&amp;gt; &amp;#123;    float v_[4];&amp;#125;;template&amp;lt;int N&amp;gt;struct Vec&amp;lt;bo">
+<meta property="og:updated_time" content="2018-07-28T02:04:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.4 模板偏特化">
+<meta name="twitter:description" content="偏特化前面介绍过，模板的偏特化可以有两种形式
+template&amp;lt;typename T, int N&amp;gt;struct Vec&amp;#123;    T v_[N];&amp;#125;;template&amp;lt;&amp;gt;struct Vec&amp;lt;float, 4&amp;gt; &amp;#123;    float v_[4];&amp;#125;;template&amp;lt;int N&amp;gt;struct Vec&amp;lt;bo">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 16.67px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 13.33px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-stl/4.模板特化" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/13/stl/4.模板特化/" class="article-date">
+  	<time datetime="2018-07-13T05:28:32.000Z" itemprop="datePublished">2018-07-13</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.4 模板偏特化
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="偏特化"><a href="#偏特化" class="headerlink" title="偏特化"></a>偏特化</h1><p>前面介绍过，模板的偏特化可以有两种形式</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&#123;</div><div class="line">    T v_[N];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">float</span>, <span class="number">4</span>&gt; &#123;</div><div class="line">    <span class="keyword">float</span> v_[<span class="number">4</span>];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">bool</span>, N&gt;&#123;</div><div class="line">    <span class="keyword">char</span> v_[(N+<span class="keyword">sizeof</span>(<span class="keyword">char</span>)<span class="number">-1</span>)/<span class="keyword">sizeof</span>(<span class="keyword">char</span>)];</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li>把所有的参数具体化，比如<code>T = float, N = 4</code></li>
+<li>把部分参数具体化，比如<code>T = bool</code></li>
+</ul>
+<p>需要注意的是，已经被具体化的参数就不要再出现在<code>template&lt;&gt;</code>这里面了。如果所有的参数都被具体化的，那么<code>template&lt;&gt;</code>这里面就什么都没有了。</p>
+<p>比较复杂的是两种情况，也就是模板特化与<code>模板模板参数</code>混在一起的时候。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;typeinfo&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="built_in">std</span>;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> T, <span class="keyword">class</span> U&gt; <span class="keyword">class</span> A &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    T t_;</div><div class="line">    U u_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> U&gt; <span class="keyword">class</span> A&lt;<span class="keyword">int</span>, U&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">   <span class="keyword">short</span> x;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// V这里的参数只能从T/U/X里面选择。</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">typename</span> U, <span class="keyword">typename</span> X, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">typename</span>&gt; <span class="keyword">class</span> V&gt; <span class="keyword">class</span> B &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    V&lt;T, U&gt; v_;</div><div class="line">    <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="built_in">cout</span> &lt;&lt; <span class="string">"B"</span> &lt;&lt; <span class="built_in">endl</span>;</div><div class="line">    &#125;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">B&lt;<span class="keyword">int</span>, <span class="keyword">int</span>, <span class="keyword">float</span>, A&gt; c;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</div><div class="line">    c.print();</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>接着再分析另外一个例子。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="comment">// 完全特例化</span></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">int</span>, <span class="keyword">float</span>, <span class="number">2</span>, Arg&gt;;</div><div class="line"></div><div class="line"><span class="comment">// 第一个参数有const修饰</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T1, T2, i, CP&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>需要注意的是后面的那个<code>class CP</code>在选择类型的时候，只能从<code>T1/T2/i</code>里面选择了。</p>
+<h1 id="类型组合的特化"><a href="#类型组合的特化" class="headerlink" title="类型组合的特化"></a>类型组合的特化</h1><p>再看一个有趣的例子。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="comment">// 第一二个参数为Arg的实例且满足一定关系，第四个参数为Arg</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;Arg&lt;T, i&gt;, Arg&lt;T, i+<span class="number">10</span>&gt;, i, Arg&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>也就是说，在特化的时候，可以写成这样。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;参数范围A&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;由A范围组合出按照顺序满足条件的这个具体类型即可&gt; &#123; &#125;;</div></pre></td></tr></table></figure>
+<p>那么在类里面使用<code>Arg</code>的时候，可以选择的参数范围就是已知的类型。比如：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt; <span class="keyword">class</span> Arg&#123; &#125;; <span class="comment">// 用于模板型模板参数</span></div><div class="line"><span class="comment">// 通例</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2, <span class="keyword">int</span> i, <span class="keyword">template</span>&lt;<span class="keyword">typename</span>, <span class="keyword">int</span>&gt; <span class="keyword">class</span> CP&gt;</div><div class="line"><span class="keyword">class</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> i&gt;</div><div class="line"><span class="keyword">class</span> Example&lt;<span class="keyword">const</span> T, Arg&lt;T,i+<span class="number">10</span>&gt;, i, Arg&gt; &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    Arg&lt;T, i&gt; s_;</div><div class="line">    Arg&lt;<span class="keyword">const</span> T, i&gt; a_;</div><div class="line">    Arg&lt;Arg&lt;T,i&gt;,i&gt; b_;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>所以，可以看出<code>Arg</code>这个模板类可以使用<code>T,i, const T, Arg&lt;T,i+10&gt;, i,</code>都可以。</p>
+<p>关于模板特化</p>
+<ul>
+<li>Base模板需要提前声明</li>
+<li>如果模板A是模板B的子集，优先匹配A。</li>
+<li>如果两个模板有交集，且不成子集关系，编译报错。</li>
+</ul>
+<h1 id="模板偏特化元编程"><a href="#模板偏特化元编程" class="headerlink" title="模板偏特化元编程"></a>模板偏特化元编程</h1><p>可以利用偏特化来实现<code>if/else</code>对类型的操作。比如判断两个类型是否相等。代码如下：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T1, <span class="keyword">typename</span> T2&gt;</div><div class="line"><span class="keyword">struct</span> is_same &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">false</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">struct</span> is_same&lt;T,T&gt; &#123;</div><div class="line">    <span class="keyword">static</span> <span class="keyword">constexpr</span> <span class="keyword">bool</span> value = <span class="literal">true</span>;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="comment">// 自定义类型，只是用来测试is_same模板</span></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Example &#123; &#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> uint;</div><div class="line">    <span class="keyword">typedef</span> uint uint2;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;<span class="keyword">unsigned</span>, uint2&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">unsigned</span>, <span class="number">2</span>&gt;, Example&lt;uint2, <span class="number">2</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; is_same&lt;Example&lt;<span class="keyword">int</span>, <span class="number">2</span>&gt;, Example&lt;<span class="keyword">int</span>, <span class="number">3</span>&gt;&gt;::value &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="计算阶乘"><a href="#计算阶乘" class="headerlink" title="计算阶乘"></a>计算阶乘</h1><figure class="highlight plain"><table><tr><td class="code"><pre><div class="line">#include &lt;iostream&gt;</div><div class="line">#include &lt;stdint.h&gt;</div><div class="line"></div><div class="line">template&lt;int N&gt;</div><div class="line">struct order &#123;</div><div class="line">    static constexpr int64_t value = N * order&lt;N-1&gt;::value;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">// 由于只有一个参数需要偏特化，所以</div><div class="line">// 这里用template&lt;&gt;</div><div class="line">template&lt;&gt;</div><div class="line">struct order&lt;0&gt; &#123;</div><div class="line">    static constexpr int64_t value = 1;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">int main(void) &#123;</div><div class="line">    std::cout &lt;&lt; order&lt;10&gt;::value &lt;&lt; std::endl;</div><div class="line">    return 0;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/07/14/stl/5.模板实例化/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          1.5 模板实例化
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/07/12/stl/3.模板模板参数/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.3 模板模板参数</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/4.模板特化" data-title="1.4 模板偏特化" data-url="https://jiyou.github.io/blog/blog/2018/07/13/stl/4.模板特化/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>

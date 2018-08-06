@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <title>1.2 模板元编程 | 缘生故如幻</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="模板示例这里自己实现一个判断两个对象是否相等的模板函数。同时也定义一个模板类。
+#include &amp;lt;iostream&amp;gt;template&amp;lt;typename T&amp;gt;bool equ(const T &amp;amp;a, const T &amp;amp;b) &amp;#123;    return !(a &amp;lt; b) &amp;amp;&amp;amp; !(b &amp;lt; a);&amp;#125;template&amp;l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="1.2 模板元编程">
+<meta property="og:url" content="https://jiyou.github.io/blog/2018/07/31/stl/2.模板简介/index.html">
+<meta property="og:site_name" content="缘生故如幻">
+<meta property="og:description" content="模板示例这里自己实现一个判断两个对象是否相等的模板函数。同时也定义一个模板类。
+#include &amp;lt;iostream&amp;gt;template&amp;lt;typename T&amp;gt;bool equ(const T &amp;amp;a, const T &amp;amp;b) &amp;#123;    return !(a &amp;lt; b) &amp;amp;&amp;amp; !(b &amp;lt; a);&amp;#125;template&amp;l">
+<meta property="og:updated_time" content="2018-07-28T02:04:04.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="1.2 模板元编程">
+<meta name="twitter:description" content="模板示例这里自己实现一个判断两个对象是否相等的模板函数。同时也定义一个模板类。
+#include &amp;lt;iostream&amp;gt;template&amp;lt;typename T&amp;gt;bool equ(const T &amp;amp;a, const T &amp;amp;b) &amp;#123;    return !(a &amp;lt; b) &amp;amp;&amp;amp; !(b &amp;lt; a);&amp;#125;template&amp;l">
+  
+    <link rel="alternative" href="/atom.xml" title="缘生故如幻" type="application/atom+xml">
+  
+  
+  <link rel="stylesheet" href="/blog/css/style.css">
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img lazy-src="/blog//img/head.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">You Ji</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+		
+
+		
+			<div class="switch-btn">
+				<div class="icon">
+					<div class="icon-ctn">
+						<div class="icon-wrap icon-house" data-idx="0">
+							<div class="birdhouse"></div>
+							<div class="birdhouse_holes"></div>
+						</div>
+						<div class="icon-wrap icon-ribbon hide" data-idx="1">
+							<div class="ribbon"></div>
+						</div>
+						
+						<div class="icon-wrap icon-link hide" data-idx="2">
+							<div class="loopback_l"></div>
+							<div class="loopback_r"></div>
+						</div>
+						
+						
+						<div class="icon-wrap icon-me hide" data-idx="3">
+							<div class="user"></div>
+							<div class="shoulder"></div>
+						</div>
+						
+					</div>
+					
+				</div>
+				<div class="tips-box hide">
+					<div class="tips-arrow"></div>
+					<ul class="tips-inner">
+						<li>Menu</li>
+						<li>Tags</li>
+						
+						<li>Links</li>
+						
+						
+						<li>Über</li>
+						
+					</ul>
+				</div>
+			</div>
+		
+
+		<div class="switch-area">
+			<div class="switch-wrap">
+				<section class="switch-part switch-part1">
+					<nav class="header-menu">
+						<ul>
+						
+							<li><a href="/blog/">主页</a></li>
+				        
+							<li><a href="/blog/archives">所有文章</a></li>
+				        
+							<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+				        
+							<li><a href="/blog/tags/leetcode">leetcode</a></li>
+				        
+							<li><a href="/blog/tags/blog">blog</a></li>
+				        
+							<li><a href="/blog/tags/ceph">ceph</a></li>
+				        
+							<li><a href="/blog/tags/stl">stl</a></li>
+				        
+						</ul>
+					</nav>
+					<nav class="header-nav">
+						<div class="social">
+							
+								<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+					        
+								<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+					        
+						</div>
+					</nav>
+				</section>
+				
+				
+				<section class="switch-part switch-part2">
+					<div class="widget tagcloud" id="js-tagcloud">
+						<a href="/blog/tags/ceph/" style="font-size: 16.67px;">ceph</a> <a href="/blog/tags/leetcode/" style="font-size: 13.33px;">leetcode</a> <a href="/blog/tags/mit-6-828/" style="font-size: 10px;">mit.6.828</a> <a href="/blog/tags/stl/" style="font-size: 20px;">stl</a> <a href="/blog/tags/算法/" style="font-size: 13.33px;">算法</a>
+					</div>
+				</section>
+				
+				
+				
+				<section class="switch-part switch-part3">
+					<div id="js-friends">
+					
+			          <a target="_blank" class="main-nav-link switch-friends-link" href="https://github.com/JiYou">github</a>
+			        
+			        </div>
+				</section>
+				
+
+				
+				
+				<section class="switch-part switch-part4">
+				
+					<div id="js-aboutme">code</div>
+				</section>
+				
+			</div>
+		</div>
+	</header>				
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"></div>
+  		<h1 class="header-author js-mobile-header hide">You Ji</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img lazy-src="/blog//img/head.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">You Ji</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">心言直故，如是乃至始终地位，中间永无诸委曲相。</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/blog/">主页</a></li>
+		        
+					<li><a href="/blog/archives">所有文章</a></li>
+		        
+					<li><a href="/blog/tags/MIT-6-828">mit.6.828</a></li>
+		        
+					<li><a href="/blog/tags/leetcode">leetcode</a></li>
+		        
+					<li><a href="/blog/tags/blog">blog</a></li>
+		        
+					<li><a href="/blog/tags/ceph">ceph</a></li>
+		        
+					<li><a href="/blog/tags/stl">stl</a></li>
+		        
+		        <div class="clearfix"></div>
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="https://github.com/JiYou" title="github">github</a>
+			        
+						<a class="zhihu" target="_blank" href="https://zhuanlan.zhihu.com/codeit" title="zhihu">zhihu</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap"><article id="post-stl/2.模板简介" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/blog/2018/07/31/stl/2.模板简介/" class="article-date">
+  	<time datetime="2018-07-31T14:41:19.852Z" itemprop="datePublished">2018-07-31</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      1.2 模板元编程
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+	<div class="article-tag tagcloud">
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/blog/tags/stl/">stl</a></li></ul>
+	</div>
+
+        
+	<div class="article-category tagcloud">
+	<a class="article-category-link" href="/blog/categories/stl/">stl</a>
+	</div>
+
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="模板示例"><a href="#模板示例" class="headerlink" title="模板示例"></a>模板示例</h1><p>这里自己实现一个判断两个对象是否相等的模板函数。同时也定义一个模板类。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="function"><span class="keyword">bool</span> <span class="title">equ</span><span class="params">(<span class="keyword">const</span> T &amp;a, <span class="keyword">const</span> T &amp;b)</span> </span>&#123;</div><div class="line">    <span class="keyword">return</span> !(a &lt; b) &amp;&amp; !(b &lt; a);</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">class</span> number &#123;</div><div class="line"><span class="keyword">public</span>:</div><div class="line">    number(<span class="keyword">const</span> T &amp;v): v_(v) &#123; &#125;</div><div class="line">    <span class="keyword">bool</span> <span class="keyword">operator</span> &lt; (<span class="keyword">const</span> number &amp;n) <span class="keyword">const</span> ;</div><div class="line"><span class="keyword">private</span>:</div><div class="line">    T v_;</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt;</div><div class="line"><span class="keyword">bool</span> number&lt;T&gt;::<span class="keyword">operator</span> &lt;(<span class="keyword">const</span> number &amp;n) <span class="keyword">const</span> &#123;</div><div class="line">    <span class="keyword">return</span> v_ &lt; n.v_;</div><div class="line">&#125;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    number&lt;<span class="keyword">int</span>&gt; a(<span class="number">1</span>), b(<span class="number">1</span>);</div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; equ(a, b) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line"></div><div class="line">    <span class="built_in">std</span>::<span class="built_in">cout</span> &lt;&lt; equ&lt;<span class="keyword">double</span>&gt;(<span class="number">1.0</span>, <span class="number">2.0</span>) &lt;&lt; <span class="built_in">std</span>::<span class="built_in">endl</span>;</div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="模板的参数"><a href="#模板的参数" class="headerlink" title="模板的参数"></a>模板的参数</h1><ul>
+<li>类型参数（type template parameter），用 typename 或 class 标记；(最好是用<code>typename</code>)</li>
+<li>非类型参数（non-type template parameter）可以是：整数及枚举类型、对象或函数的指针、对象或函数的引用、对象的成员指针，非类型参数是模板实例的常量；</li>
+<li>模板型参数（template template parameter），如<code>template&lt;typename T, template&lt;typename&gt; class A&gt; someclass {};</code>；</li>
+<li>模板参数可以有默认值（函数模板参数默认是从 C++11 开始支持）；</li>
+<li>函数模板的和函数参数类型有关的模板参数可以自动推导，<strong>类模板参数不存在推导机制</strong>；</li>
+<li>C++11 引入变长模板参数。</li>
+</ul>
+<p>总结一下：</p>
+<ul>
+<li>参数必须是字面量。无论常数，类型，自定义类型，模板类型都是编译时的常量。运行时的变量是不能用的。</li>
+<li>类和函数模板参数都可以有默认值</li>
+<li>函数可以自动推导，类模板不可以。</li>
+</ul>
+<p><strong>运行时变量不可以</strong></p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&#123;</div><div class="line">    T v_[N];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">float</span>, <span class="number">4</span>&gt; &#123;</div><div class="line">    <span class="keyword">float</span> v_[<span class="number">4</span>];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">bool</span>, N&gt;&#123;</div><div class="line">    <span class="keyword">char</span> v_[(N+<span class="keyword">sizeof</span>(<span class="keyword">char</span>)<span class="number">-1</span>)/<span class="keyword">sizeof</span>(<span class="keyword">char</span>)];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span> </span>&#123;</div><div class="line">    <span class="keyword">int</span> N = <span class="number">10</span>;        <span class="comment">// 这里是一个变量</span></div><div class="line">    Vec&lt;<span class="keyword">bool</span>, N&gt; bits; <span class="comment">// Compile ERROR! 利用变量来模板化类</span></div><div class="line">    <span class="keyword">return</span> <span class="number">0</span>;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>那么函数是否可以呢？</p>
+<h1 id="特化"><a href="#特化" class="headerlink" title="特化"></a>特化</h1><p>特化的时候，可以：</p>
+<ul>
+<li>将<code>Base</code>模板里面的类具体化。</li>
+<li>只具体化某个模板参数，其他的保留。</li>
+</ul>
+<h2 id="所有的参数具体化"><a href="#所有的参数具体化" class="headerlink" title="所有的参数具体化"></a>所有的参数具体化</h2><figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&#123;</div><div class="line">    T v_[N];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">float</span>, <span class="number">4</span>&gt; &#123;</div><div class="line">    <span class="keyword">float</span> v_[<span class="number">4</span>];</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>比如在<code>base</code>类里面声明了两个参数，这两个参数都可以具体化。<code>T = float, N = 4</code>。</p>
+<h2 id="具体化某部分参数"><a href="#具体化某部分参数" class="headerlink" title="具体化某部分参数"></a>具体化某部分参数</h2><p><code>base</code>类的参数是<code>typename T, int N</code>，那么可不可以只具体化<code>typename T = bool</code>呢？答案是可以的。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T, <span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&#123;</div><div class="line">    T v_[N];</div><div class="line">&#125;;</div><div class="line"></div><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">int</span> N&gt;</div><div class="line"><span class="keyword">struct</span> Vec&lt;<span class="keyword">bool</span>, N&gt; &#123;</div><div class="line">    <span class="keyword">char</span> v_[(N+<span class="keyword">sizeof</span>(<span class="keyword">char</span>)<span class="number">-1</span>)/<span class="keyword">sizeof</span>(<span class="keyword">char</span>)];</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>术语:</p>
+<ul>
+<li><p>最简单的情况是对每个模板参数指定一个具体值，这成为完全特例化（<code>full specialization</code>），</p>
+</li>
+<li><p>另外，可以限制模板参数在一个范围取值或满足一定关系等，这称为部分特例化（<code>partial specialization</code>）</p>
+</li>
+</ul>
+<p>用数学上集合的概念，通例模板参数所有可取的值组合构成全集U，完全特例化对U中某个元素进行专门定义，部分特例化对U的某个真子集进行专门定义。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/blog/2018/08/01/ceph/6.store_test.cc/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          1.5 store_test.cc代码阅读
+        
+      </div>
+    </a>
+  
+  
+    <a href="/blog/2018/07/31/ceph/4.CompatSet/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">1.3 CompatSet</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
+
+
+
+
+
+
+
+  <section id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="post-stl/2.模板简介" data-title="1.2 模板元编程" data-url="https://jiyou.github.io/blog/blog/2018/07/31/stl/2.模板简介/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:'undefined'};
+      (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+      })();
+      </script>
+    <!-- 多说公共JS代码 end -->
+  </section>
+
+
+
+
+
+
+</div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2018 You Ji
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    
+  <link rel="stylesheet" href="/blog/fancybox/jquery.fancybox.css">
+
+
+<script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: true,
+		animate: true,
+		isHome: false,
+		isPost: true,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: false,
+		root: /blog/
+	}
+</script>
+<script src="/blog/js/require-2.1.6_jquery-1.9.1.min.js"></script>
+<script src="/blog/js/main.js"></script>
+
+
+
+
+
+
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+</script>
+
+
+
+  </div>
+</body>
+</html>
